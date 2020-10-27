@@ -1,10 +1,10 @@
 import { Document } from 'mongoose';
-import { ITask } from './task';
+import { ITaskModel } from './task';
 
-export interface IUser extends Document {
+export interface IUserModel extends Document {
   firstName: string;
   lastName: string;
   email: string;
   password: string;
-  tasks: ITask[];
+  tasks: ITaskModel[];
 }

@@ -6,7 +6,7 @@ import React, {
   useEffect,
 } from 'react';
 import axios from 'axios';
-import { ITaskForm } from '../type';
+import { AlertType, ITaskForm } from '../type';
 import { Paper } from '@material-ui/core';
 import { Tasks } from '../enums';
 import { GlobalContext } from '../context/GlobalState';
@@ -14,9 +14,17 @@ import { GlobalContext } from '../context/GlobalState';
 const JobForm: React.FC = () => {
   const { state, dispatch } = useContext(GlobalContext);
   const { edit, currentTask } = state.tasks;
-  const [alerts, setAlerts] = useState({
+  const [deleteMode, setDeleteMode] = useState(false);
+  const [alerts, setAlerts] = useState<{
+    success: AlertType;
+    update: AlertType;
+    delete: AlertType;
+    error: AlertType;
+  }>({
     success: null,
     update: null,
+    delete: null,
+    error: null,
   });
 
   const [formData, setFormData] = useState<ITaskForm>({
@@ -68,7 +76,7 @@ const JobForm: React.FC = () => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  const handleSubmit = (e: FormEvent): void => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const token = localStorage.getItem('token');
     axios
@@ -87,7 +95,7 @@ const JobForm: React.FC = () => {
       });
   };
 
-  const handleEdit = (e: FormEvent) => {
+  const handleEdit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const token = localStorage.getItem('token');
     axios
@@ -106,9 +114,33 @@ const JobForm: React.FC = () => {
       });
   };
 
+  const handleDelete = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+    axios
+      .delete(`api/task/${formData.projectNumber}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then(() => {
+        setAlerts({ ...alerts, delete: 'Task deleted!' });
+        setTimeout(() => {
+          setAlerts({ ...alerts, delete: null });
+        }, 3000);
+        getTasks();
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
+
   return (
     <Paper>
-      <form className="job-form" onSubmit={edit ? handleEdit : handleSubmit}>
+      <form
+        className="job-form"
+        onSubmit={
+          edit && deleteMode ? handleDelete : edit ? handleEdit : handleSubmit
+        }
+      >
         {alerts.success && (
           <div className="alert alert-success text-center" role="alert">
             {alerts.success}
@@ -117,6 +149,11 @@ const JobForm: React.FC = () => {
         {alerts.update && (
           <div className="alert alert-primary text-center" role="alert">
             {alerts.update}
+          </div>
+        )}
+        {alerts.delete && (
+          <div className="alert alert-warning text-center" role="alert">
+            {alerts.delete}
           </div>
         )}
         <div className="form-row">
@@ -215,9 +252,24 @@ const JobForm: React.FC = () => {
           </div>
         </div>
         <div className="submit">
-          <button type="submit" className="btn btn-primary">
-            {!edit ? 'Submit' : 'Update'}
-          </button>
+          {edit ? (
+            <>
+              <button type="submit" className="btn btn-primary mr-1">
+                Update
+              </button>
+              <button
+                type="submit"
+                className="btn btn-danger ml-1"
+                onClick={() => setDeleteMode(true)}
+              >
+                Delete
+              </button>
+            </>
+          ) : (
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
+          )}
         </div>
       </form>
     </Paper>

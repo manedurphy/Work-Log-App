@@ -1,4 +1,5 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { ISecureRequest } from '@overnightjs/jwt';
 import {
   Controller,
   Middleware,
@@ -11,8 +12,7 @@ import { Logger } from '@overnightjs/logger';
 import customJwtManager from './jwtController';
 import Task from '../models/task';
 import User from '../models/user';
-import { ITask } from 'src/interfaces/task';
-import { ISecureRequest } from '@overnightjs/jwt';
+import { ITaskModel } from 'src/interfaces/task';
 
 @Controller('api/task')
 export class TaskController {
@@ -21,7 +21,7 @@ export class TaskController {
   private async getAllTasks(req: ISecureRequest, res: Response) {
     try {
       Logger.Info(req.body, true);
-      const tasks: ITask[] = await Task.find({ userId: req.payload._id });
+      const tasks: ITaskModel[] = await Task.find({ userId: req.payload._id });
 
       res.status(200).json(tasks);
     } catch (error) {
@@ -70,7 +70,7 @@ export class TaskController {
       const hoursRemaining =
         parseFloat(hoursAvailableToWork) - parseFloat(hoursWorked);
 
-      const task: ITask = new Task({
+      const task: ITaskModel = new Task({
         name,
         projectNumber: parseFloat(projectNumber),
         hours: {
@@ -137,6 +137,24 @@ export class TaskController {
         updatedTask
       );
       res.status(200).json({ message: 'Task Updated!' });
+    } catch (error) {
+      return res.status(500).json({ message: 'Internal Server Error' });
+    }
+  }
+
+  @Delete(':id')
+  @Middleware(customJwtManager.middleware)
+  private async deleteTask(req: ISecureRequest, res: Response) {
+    try {
+      const task = await Task.findOne({
+        projectNumber: +req.params.id,
+        userId: req.payload._id,
+      });
+      if (!task)
+        return res.status(404).json({ message: 'Task could not be found' });
+
+      await task.remove();
+      res.status(204).end();
     } catch (error) {
       return res.status(500).json({ message: 'Internal Server Error' });
     }

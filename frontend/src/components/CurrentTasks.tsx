@@ -11,6 +11,7 @@ import moment from 'moment';
 import axios from 'axios';
 import { Tasks } from '../enums';
 import { GlobalContext } from '../context/GlobalState';
+import { AlertType } from '../type';
 
 function preventDefault(event: any) {
   event.preventDefault();
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
 const CurrentTasks: React.FC = () => {
   const classes = useStyles();
-  const [alert, setAlert] = useState<string | null>(null);
+  const [alert, setAlert] = useState<AlertType>(null);
   const { state, dispatch } = useContext(GlobalContext);
   const { currentTasks } = state.tasks;
 

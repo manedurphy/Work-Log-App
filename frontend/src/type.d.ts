@@ -66,3 +66,6 @@ export type UserAction =
         email: '';
       };
     };
+
+/**Alerts */
+export type AlertType = string | null;

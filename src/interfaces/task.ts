@@ -1,6 +1,6 @@
 import { Document, Types } from 'mongoose';
 
-export interface ITask extends Document {
+export interface ITaskModel extends Document {
   name: string;
   projectNumber: number;
   hours: {

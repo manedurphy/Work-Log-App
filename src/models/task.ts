@@ -1,4 +1,4 @@
-import { ITask } from '../interfaces/task';
+import { ITaskModel } from '../interfaces/task';
 import { model, Schema, Types } from 'mongoose';
 
 const taskSchema: Schema = new Schema(
@@ -56,4 +56,4 @@ const taskSchema: Schema = new Schema(
   { timestamps: true }
 );
 
-export default model<ITask>('Task', taskSchema);
+export default model<ITaskModel>('Task', taskSchema);

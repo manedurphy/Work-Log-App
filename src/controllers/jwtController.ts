@@ -2,7 +2,7 @@ import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
 import { Get, Post, Controller, Middleware } from '@overnightjs/core';
 import { Request, Response } from 'express';
 import User from '../models/user';
-import { IUser } from '../interfaces/user';
+import { IUserModel } from '../interfaces/user';
 import { config } from 'dotenv';
 config();
 
@@ -44,7 +44,7 @@ export class JWTController {
       if (password !== password2)
         return res.status(400).json({ message: 'Passwords did not match' });
 
-      const user: IUser = new User({
+      const user: IUserModel = new User({
         firstName,
         lastName,
         email,
