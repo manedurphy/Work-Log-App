@@ -3,8 +3,6 @@ import { Get, Post, Controller, Middleware } from '@overnightjs/core';
 import { Request, Response } from 'express';
 import User from '../models/user';
 import { IUserModel } from '../interfaces/user';
-import { config } from 'dotenv';
-config();
 
 const customJwtManager = new JwtManager(
   process.env.OVERNIGHT_JWT_SECRET as string,
