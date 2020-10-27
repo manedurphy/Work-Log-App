@@ -100,7 +100,7 @@ const JobForm: React.FC = () => {
 
       setAlerts({ ...alerts, [command]: res.data.message });
       setTimeout(() => {
-        setAlerts({ ...alerts, [command]: null });
+        setAlerts({ success: null, update: null, delete: null, error: null });
       }, 3000);
       getTasks();
     } catch (err) {
