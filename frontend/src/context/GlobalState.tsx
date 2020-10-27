@@ -2,29 +2,11 @@ import React, { useReducer, useEffect } from 'react';
 import combineReducers from 'react-combine-reducers';
 import axios from 'axios';
 import { initialTaskState } from './task-context';
-import {
-  ITask,
-  TaskAction,
-  TaskStateType,
-  UserAction,
-  UserStateType,
-} from '../type';
+import { ITask, GlobalStateType, GlobalAction, GlobalReducer } from '../type';
 import { taskReducer, userReducer } from './reducers';
 import { AxiosResponse } from 'axios';
 import { Tasks } from '../enums';
 import { initialUserState } from './user-context';
-
-type GlobalStateType = {
-  tasks: TaskStateType;
-  user: UserStateType;
-};
-
-type GlobalAction = TaskAction | UserAction;
-
-type GlobalReducer = (
-  state: GlobalStateType,
-  action: GlobalAction
-) => GlobalStateType;
 
 const [globalReducer, initialGlobalState] = combineReducers<GlobalReducer>({
   tasks: [taskReducer, initialTaskState],

@@ -26,7 +26,7 @@ import Deposits from './CurrentWeek';
 import CurrentTasks from './CurrentTasks';
 import JobForm from './JobForm';
 import { Redirect } from 'react-router-dom';
-import { GlobalContext } from '../context/GlobalState';
+import { getToken, GlobalContext } from '../context/GlobalState';
 import { Users } from '../enums';
 
 function Copyright() {
@@ -34,7 +34,7 @@ function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+        Work Log
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -129,7 +129,7 @@ const Dashboard: React.FC = (): JSX.Element => {
   const { dispatch } = useContext(GlobalContext);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = getToken();
     axios
       .get('/api/auth/token', { headers: { Authorization: `Bearer ${token}` } })
       .then((res) => {
@@ -220,7 +220,6 @@ const Dashboard: React.FC = (): JSX.Element => {
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
-            {/* Chart */}
             <Grid item xs={12} md={8} lg={7}>
               <Paper className={fixedHeightPaper}>
                 <Chart />
@@ -243,7 +242,6 @@ const Dashboard: React.FC = (): JSX.Element => {
           </Box>
         </Container>
       </main>
-      {/* {!isLoggedIn && <Redirect to="/login" />} */}
     </div>
   );
 };

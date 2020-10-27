@@ -16,6 +16,9 @@ import { ITaskModel } from 'src/interfaces/task';
 
 @Controller('api/task')
 export class TaskController {
+  private serverError = (res: Response) =>
+    res.status(500).json('Internal Server Error');
+
   @Get('')
   @Middleware(customJwtManager.middleware)
   private async getAllTasks(req: ISecureRequest, res: Response) {
@@ -43,7 +46,7 @@ export class TaskController {
 
       return res.status(200).json(task);
     } catch (error) {
-      return res.status(500).json({ message: 'Internal Server Error' });
+      this.serverError(res);
     }
   }
 
@@ -93,7 +96,7 @@ export class TaskController {
       await task.save();
       res.status(201).json({ message: 'Task Created!' });
     } catch (error) {
-      res.status(500).json({ message: 'Internal Server Error' });
+      this.serverError(res);
     }
   }
 
@@ -138,7 +141,7 @@ export class TaskController {
       );
       res.status(200).json({ message: 'Task Updated!' });
     } catch (error) {
-      return res.status(500).json({ message: 'Internal Server Error' });
+      this.serverError(res);
     }
   }
 
@@ -156,7 +159,7 @@ export class TaskController {
       await task.remove();
       res.status(200).json({ message: 'Task Deleted!' });
     } catch (error) {
-      return res.status(500).json({ message: 'Internal Server Error' });
+      this.serverError(res);
     }
   }
 }

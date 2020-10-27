@@ -5,8 +5,8 @@ import React, {
   FormEvent,
   useEffect,
 } from 'react';
-import axios from 'axios';
-import { AlertType, ITaskForm } from '../type';
+import axios, { AxiosResponse } from 'axios';
+import { AlertType, ITaskForm, MessageType } from '../type';
 import { Paper } from '@material-ui/core';
 import { Tasks } from '../enums';
 import { getToken, GlobalContext } from '../context/GlobalState';
@@ -78,9 +78,9 @@ const JobForm: React.FC = () => {
 
   const handleForm = async (e: FormEvent<HTMLFormElement>, command: string) => {
     e.preventDefault();
-    let res;
-
+    let res: AxiosResponse<MessageType>;
     const token = getToken();
+
     try {
       command === 'success'
         ? (res = await axios.post('api/task', formData, {

@@ -13,6 +13,9 @@ const customJwtManager = new JwtManager(
 
 @Controller('api/auth')
 export class JWTController {
+  private serverError = (res: Response) =>
+    res.status(500).json('Internal Server Error');
+
   @Get('token')
   @Middleware(customJwtManager.middleware)
   private async checkToken(req: ISecureRequest, res: Response) {
@@ -57,7 +60,7 @@ export class JWTController {
         success: true,
       });
     } catch (error) {
-      res.status(500).json({ message: 'Internal server error' });
+      this.serverError(res);
     }
   }
 
@@ -89,7 +92,7 @@ export class JWTController {
         },
       });
     } catch (error) {
-      res.status(500).json({ message: 'Internal server error' });
+      this.serverError(res);
     }
   }
 }

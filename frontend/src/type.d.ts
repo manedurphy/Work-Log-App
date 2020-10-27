@@ -67,5 +67,21 @@ export type UserAction =
       };
     };
 
-/**Alerts */
+/**ALERTS */
 export type AlertType = string | null;
+export type MessageType = {
+  message: string;
+};
+
+/** GLOBALS */
+type GlobalStateType = {
+  tasks: TaskStateType;
+  user: UserStateType;
+};
+
+type GlobalAction = TaskAction | UserAction;
+
+type GlobalReducer = (
+  state: GlobalStateType,
+  action: GlobalAction
+) => GlobalStateType;

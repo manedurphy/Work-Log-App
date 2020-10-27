@@ -1,4 +1,4 @@
-import { TaskStateType, TaskAction, UserStateType } from '../type';
+import { TaskStateType, TaskAction } from '../type';
 import { Tasks, Users } from '../enums';
 
 export const taskReducer = (
