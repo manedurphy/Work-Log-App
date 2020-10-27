@@ -82,19 +82,21 @@ const JobForm: React.FC = () => {
 
     const token = getToken();
     try {
-      if (command === 'success') {
-        res = await axios.post('api/task', formData, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-      } else if (command === 'update') {
-        res = await axios.put(`api/task/${formData.projectNumber}`, formData, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-      } else {
-        res = await axios.delete(`api/task/${formData.projectNumber}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-      }
+      command === 'success'
+        ? (res = await axios.post('api/task', formData, {
+            headers: { Authorization: `Bearer ${token}` },
+          }))
+        : command === 'update'
+        ? (res = await axios.put(
+            `api/task/${formData.projectNumber}`,
+            formData,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          ))
+        : (res = await axios.delete(`api/task/${formData.projectNumber}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }));
 
       setAlerts({ ...alerts, [command]: res.data.message });
       setTimeout(() => {
