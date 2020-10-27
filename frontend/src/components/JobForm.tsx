@@ -9,7 +9,7 @@ import axios from 'axios';
 import { AlertType, ITaskForm } from '../type';
 import { Paper } from '@material-ui/core';
 import { Tasks } from '../enums';
-import { GlobalContext } from '../context/GlobalState';
+import { getToken, GlobalContext } from '../context/GlobalState';
 
 const JobForm: React.FC = () => {
   const { state, dispatch } = useContext(GlobalContext);
@@ -53,7 +53,7 @@ const JobForm: React.FC = () => {
   }, [edit]);
 
   const getTasks = async (): Promise<void> => {
-    const token = localStorage.getItem('token');
+    const token = getToken();
     const res = await axios.get('/api/task', {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -78,7 +78,7 @@ const JobForm: React.FC = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
+    const token = getToken();
     axios
       .post('api/task', formData, {
         headers: { Authorization: `Bearer ${token}` },
@@ -91,13 +91,16 @@ const JobForm: React.FC = () => {
         getTasks();
       })
       .catch((err) => {
-        throw err;
+        setAlerts({ ...alerts, error: err.response.data.message });
+        setTimeout(() => {
+          setAlerts({ ...alerts, error: null });
+        }, 3000);
       });
   };
 
   const handleEdit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
+    const token = getToken();
     axios
       .put(`api/task/${formData.projectNumber}`, formData, {
         headers: { Authorization: `Bearer ${token}` },
@@ -110,26 +113,32 @@ const JobForm: React.FC = () => {
         getTasks();
       })
       .catch((err) => {
-        throw err;
+        setAlerts({ ...alerts, error: err.response.data.message });
+        setTimeout(() => {
+          setAlerts({ ...alerts, error: null });
+        }, 3000);
       });
   };
 
   const handleDelete = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
+    const token = getToken();
     axios
       .delete(`api/task/${formData.projectNumber}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-      .then(() => {
-        setAlerts({ ...alerts, delete: 'Task deleted!' });
+      .then((res) => {
+        setAlerts({ ...alerts, delete: res.data.message });
         setTimeout(() => {
           setAlerts({ ...alerts, delete: null });
         }, 3000);
         getTasks();
       })
       .catch((err) => {
-        throw err;
+        setAlerts({ ...alerts, error: err.response.data.message });
+        setTimeout(() => {
+          setAlerts({ ...alerts, error: null });
+        }, 3000);
       });
   };
 
@@ -154,6 +163,11 @@ const JobForm: React.FC = () => {
         {alerts.delete && (
           <div className="alert alert-warning text-center" role="alert">
             {alerts.delete}
+          </div>
+        )}
+        {alerts.error && (
+          <div className="alert alert-danger text-center" role="alert">
+            {alerts.error}
           </div>
         )}
         <div className="form-row">

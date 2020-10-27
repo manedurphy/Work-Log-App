@@ -39,6 +39,10 @@ export const GlobalContext = React.createContext<{
   dispatch: () => null,
 });
 
+export const getToken = (): string | null => {
+  return localStorage.getItem('token');
+};
+
 const GlobalState: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer<GlobalReducer>(
     globalReducer,
@@ -46,7 +50,7 @@ const GlobalState: React.FC = ({ children }) => {
   );
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = getToken();
     axios
       .get('/api/task', { headers: { Authorization: `Bearer ${token}` } })
       .then((res: AxiosResponse<ITask[]>) => {

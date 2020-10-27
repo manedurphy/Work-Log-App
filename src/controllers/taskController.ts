@@ -154,7 +154,7 @@ export class TaskController {
         return res.status(404).json({ message: 'Task could not be found' });
 
       await task.remove();
-      res.status(204).end();
+      res.status(200).json({ message: 'Task Deleted!' });
     } catch (error) {
       return res.status(500).json({ message: 'Internal Server Error' });
     }
