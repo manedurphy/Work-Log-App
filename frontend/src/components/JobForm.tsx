@@ -76,70 +76,37 @@ const JobForm: React.FC = () => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleForm = async (e: FormEvent<HTMLFormElement>, command: string) => {
     e.preventDefault();
-    const token = getToken();
-    axios
-      .post('api/task', formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        setAlerts({ ...alerts, success: res.data.message });
-        setTimeout(() => {
-          setAlerts({ ...alerts, success: null });
-        }, 3000);
-        getTasks();
-      })
-      .catch((err) => {
-        setAlerts({ ...alerts, error: err.response.data.message });
-        setTimeout(() => {
-          setAlerts({ ...alerts, error: null });
-        }, 3000);
-      });
-  };
+    let res;
 
-  const handleEdit = (e: FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
     const token = getToken();
-    axios
-      .put(`api/task/${formData.projectNumber}`, formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        setAlerts({ ...alerts, update: res.data.message });
-        setTimeout(() => {
-          setAlerts({ ...alerts, update: null });
-        }, 3000);
-        getTasks();
-      })
-      .catch((err) => {
-        setAlerts({ ...alerts, error: err.response.data.message });
-        setTimeout(() => {
-          setAlerts({ ...alerts, error: null });
-        }, 3000);
-      });
-  };
+    try {
+      if (command === 'success') {
+        res = await axios.post('api/task', formData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } else if (command === 'update') {
+        res = await axios.put(`api/task/${formData.projectNumber}`, formData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } else {
+        res = await axios.delete(`api/task/${formData.projectNumber}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      }
 
-  const handleDelete = (e: FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    const token = getToken();
-    axios
-      .delete(`api/task/${formData.projectNumber}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        setAlerts({ ...alerts, delete: res.data.message });
-        setTimeout(() => {
-          setAlerts({ ...alerts, delete: null });
-        }, 3000);
-        getTasks();
-      })
-      .catch((err) => {
-        setAlerts({ ...alerts, error: err.response.data.message });
-        setTimeout(() => {
-          setAlerts({ ...alerts, error: null });
-        }, 3000);
-      });
+      setAlerts({ ...alerts, [command]: res.data.message });
+      setTimeout(() => {
+        setAlerts({ ...alerts, [command]: null });
+      }, 3000);
+      getTasks();
+    } catch (err) {
+      setAlerts({ ...alerts, error: err.response.data.message });
+      setTimeout(() => {
+        setAlerts({ ...alerts, error: null });
+      }, 3000);
+    }
   };
 
   return (
@@ -147,7 +114,11 @@ const JobForm: React.FC = () => {
       <form
         className="job-form"
         onSubmit={
-          edit && deleteMode ? handleDelete : edit ? handleEdit : handleSubmit
+          edit && deleteMode
+            ? (e) => handleForm(e, 'delete')
+            : edit
+            ? (e) => handleForm(e, 'update')
+            : (e) => handleForm(e, 'success')
         }
       >
         {alerts.success && (
@@ -268,7 +239,11 @@ const JobForm: React.FC = () => {
         <div className="submit">
           {edit ? (
             <>
-              <button type="submit" className="btn btn-primary mr-1">
+              <button
+                type="submit"
+                className="btn btn-primary mr-1"
+                onClick={() => setDeleteMode(false)}
+              >
                 Update
               </button>
               <button
