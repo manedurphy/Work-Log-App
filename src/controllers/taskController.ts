@@ -13,6 +13,7 @@ import customJwtManager from './jwtController';
 import Task from '../models/task';
 import User from '../models/user';
 import { ITaskModel } from 'src/interfaces/task';
+import { Types } from 'mongoose';
 
 @Controller('api/task')
 export class TaskController {
@@ -52,7 +53,7 @@ export class TaskController {
 
   @Post('')
   @Middleware(customJwtManager.middleware)
-  private async add({ req, res }: { req: ISecureRequest; res: Response }) {
+  private async add(req: ISecureRequest, res: Response) {
     Logger.Info(req.body, true);
     try {
       const {
@@ -70,21 +71,20 @@ export class TaskController {
       if (!user)
         return res.status(404).json({ message: 'User could not be found' });
 
-      const hoursRemaining =
-        parseFloat(hoursAvailableToWork) - parseFloat(hoursWorked);
+      const hoursRemaining = +hoursAvailableToWork - +hoursWorked;
 
       const task: ITaskModel = new Task({
         name,
-        projectNumber: parseFloat(projectNumber),
+        projectNumber: +projectNumber,
         hours: {
-          hoursAvailableToWork: parseFloat(hoursAvailableToWork),
-          hoursWorked: parseFloat(hoursWorked),
+          hoursAvailableToWork: +hoursAvailableToWork,
+          hoursWorked: +hoursWorked,
           hoursRemaining,
         },
         reviews: {
-          numberOfReviews: parseFloat(numberOfReviews),
-          reviewHours: parseFloat(reviewHours),
-          hoursRequiredByBim: parseFloat(hoursRequiredByBim),
+          numberOfReviews: +numberOfReviews,
+          reviewHours: +reviewHours,
+          hoursRequiredByBim: +hoursRequiredByBim,
         },
         description,
         userId: user?._id,
@@ -165,9 +165,18 @@ export class TaskController {
         projectNumber: +req.params.id,
         userId: req.payload._id,
       });
-      if (!task)
+
+      const user = await User.findById({ _id: req.payload._id });
+      if (!task || !user)
         return res.status(404).json({ message: 'Task could not be found' });
 
+      const filterTasks = user.tasks.filter(
+        (userTask) =>
+          Types.ObjectId(userTask._id).toHexString() !==
+          Types.ObjectId(task._id).toHexString()
+      );
+
+      await user.updateOne({ tasks: filterTasks });
       await task.remove();
       res.status(200).json({ message: 'Task Deleted!' });
     } catch (error) {

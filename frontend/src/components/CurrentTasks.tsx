@@ -26,7 +26,13 @@ const useStyles = makeStyles((theme) => ({
 
 const CurrentTasks: React.FC = () => {
   const classes = useStyles();
-  const [alert, setAlert] = useState<AlertType>(null);
+  const [alerts, setAlert] = useState<{
+    success: AlertType;
+    error: AlertType;
+  }>({
+    success: null,
+    error: null,
+  });
   const { state, dispatch } = useContext(GlobalContext);
   const { currentTasks } = state.tasks;
 
@@ -44,9 +50,9 @@ const CurrentTasks: React.FC = () => {
         dispatch({ type: Tasks.updateTask, payload: res.data });
       })
       .catch((err) => {
-        setAlert(err.response.data.message);
+        setAlert({ ...alerts, error: err.response.data.message });
         setTimeout(() => {
-          setAlert(null);
+          setAlert({ success: null, error: null });
         }, 3000);
       });
   };
@@ -59,20 +65,34 @@ const CurrentTasks: React.FC = () => {
       })
       .then((res) => {
         res.data.complete = true;
-        console.log(res.data);
-        axios.put(`api/task/${res.data.projectNumber}`, res.data, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        axios
+          .put(`api/task/${res.data.projectNumber}`, res.data, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          .then((res) => {
+            setAlert({ ...alerts, success: res.data.message });
+            setTimeout(() => {
+              setAlert({ success: null, error: null });
+            }, 3000);
+          });
       })
       .catch((err) => {
-        throw err;
+        setAlert({ ...alerts, error: err.response.data.message });
+        setTimeout(() => {
+          setAlert({ success: null, error: null });
+        }, 3000);
       });
   };
   return (
     <React.Fragment>
-      {alert && (
+      {alerts.error && (
         <div className="alert alert-danger text-center" role="alert">
-          {alert}
+          {alerts.error}
+        </div>
+      )}
+      {alerts.success && (
+        <div className="alert alert-success text-center" role="alert">
+          {alerts.success}
         </div>
       )}
       <Title>Current Tasks</Title>

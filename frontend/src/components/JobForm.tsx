@@ -80,6 +80,7 @@ const JobForm: React.FC = () => {
     e.preventDefault();
     let res: AxiosResponse<MessageType>;
     const token = getToken();
+    console.log(formData);
 
     try {
       command === 'success'
