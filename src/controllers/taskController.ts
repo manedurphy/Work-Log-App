@@ -52,7 +52,7 @@ export class TaskController {
 
   @Post('')
   @Middleware(customJwtManager.middleware)
-  private async add(req: ISecureRequest, res: Response) {
+  private async add({ req, res }: { req: ISecureRequest; res: Response }) {
     Logger.Info(req.body, true);
     try {
       const {
@@ -114,23 +114,35 @@ export class TaskController {
         numberOfReviews,
         reviewHours,
         hoursRequiredByBim,
+        complete,
       } = req.body;
 
-      const hoursRemaining =
-        parseFloat(hoursAvailableToWork) - parseFloat(hoursWorked);
+      let isComplete = !!complete;
+      if (isComplete) {
+        await Task.findOneAndUpdate(
+          {
+            projectNumber: +req.params.id,
+            userId: req.payload._id,
+          },
+          req.body
+        );
+        return res.status(200).json({ message: 'Task Complete!' });
+      }
+
+      const hoursRemaining = +hoursAvailableToWork - +hoursWorked;
 
       const updatedTask = {
         name,
-        projectNumber: parseFloat(projectNumber),
+        projectNumber: +projectNumber,
         hours: {
-          hoursAvailableToWork: parseFloat(hoursAvailableToWork),
-          hoursWorked: parseFloat(hoursWorked),
+          hoursAvailableToWork: +hoursAvailableToWork,
+          hoursWorked: +hoursWorked,
           hoursRemaining,
         },
         reviews: {
-          numberOfReviews: parseFloat(numberOfReviews),
-          reviewHours: parseFloat(reviewHours),
-          hoursRequiredByBim: parseFloat(hoursRequiredByBim),
+          numberOfReviews: +numberOfReviews,
+          reviewHours: +reviewHours,
+          hoursRequiredByBim: +hoursRequiredByBim,
         },
         description,
       };

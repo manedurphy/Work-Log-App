@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { ChangeEvent, useContext, useState } from 'react';
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -8,10 +8,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Title from './Title';
 import moment from 'moment';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { Tasks } from '../enums';
-import { GlobalContext } from '../context/GlobalState';
-import { AlertType } from '../type';
+import { getToken, GlobalContext } from '../context/GlobalState';
+import { AlertType, ITask } from '../type';
+import { Checkbox } from '@material-ui/core';
 
 function preventDefault(event: any) {
   event.preventDefault();
@@ -49,6 +50,24 @@ const CurrentTasks: React.FC = () => {
         }, 3000);
       });
   };
+
+  const handleComplete = (e: ChangeEvent<HTMLInputElement>) => {
+    const token = getToken();
+    axios
+      .get(`api/task/${e.target.value}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        res.data.complete = true;
+        console.log(res.data);
+        axios.put(`api/task/${res.data.projectNumber}`, res.data, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
   return (
     <React.Fragment>
       {alert && (
@@ -67,6 +86,7 @@ const CurrentTasks: React.FC = () => {
             <TableCell>Hours Remaining</TableCell>
             <TableCell>Reviews</TableCell>
             <TableCell>Hours for BIM</TableCell>
+            <TableCell>Job Complete?</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -86,6 +106,13 @@ const CurrentTasks: React.FC = () => {
               <TableCell>{row.hours.hoursRemaining}</TableCell>
               <TableCell>{row.reviews.numberOfReviews}</TableCell>
               <TableCell>{row.reviews.hoursRequiredByBim}</TableCell>
+              <TableCell>
+                <Checkbox
+                  value={row.name}
+                  color="primary"
+                  onChange={handleComplete}
+                />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
