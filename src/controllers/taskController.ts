@@ -25,7 +25,8 @@ export class TaskController {
   private async getAllTasks(req: ISecureRequest, res: Response) {
     try {
       Logger.Info(req.body, true);
-      const tasks: ITaskModel[] = await Task.find({ userId: req.payload._id });
+      let tasks: ITaskModel[] = await Task.find({ userId: req.payload._id });
+      tasks = tasks.filter((task) => !task.complete);
 
       res.status(200).json(tasks);
     } catch (error) {
@@ -90,7 +91,7 @@ export class TaskController {
         userId: user?._id,
       });
 
-      user.tasks.push(task);
+      user.tasks.currentTasks.push(task);
 
       await user.save();
       await task.save();
@@ -119,13 +120,29 @@ export class TaskController {
 
       let isComplete = !!complete;
       if (isComplete) {
-        await Task.findOneAndUpdate(
+        const task = await Task.findOneAndUpdate(
           {
             projectNumber: +req.params.id,
             userId: req.payload._id,
           },
           req.body
         );
+
+        const user = await User.findById({ _id: req.payload._id });
+        user?.tasks.completedTasks.push(task!);
+
+        const filterTasks = user!.tasks.currentTasks.filter(
+          (userTask) =>
+            Types.ObjectId(userTask._id).toHexString() !==
+            Types.ObjectId(task!._id).toHexString()
+        );
+
+        await user?.updateOne({
+          tasks: {
+            currentTasks: filterTasks,
+            completedTasks: user.tasks.completedTasks,
+          },
+        });
         return res.status(200).json({ message: 'Task Complete!' });
       }
 
@@ -167,16 +184,23 @@ export class TaskController {
       });
 
       const user = await User.findById({ _id: req.payload._id });
-      if (!task || !user)
+      const completedUserTasks = user?.tasks.completedTasks;
+      if (!task)
         return res.status(404).json({ message: 'Task could not be found' });
 
-      const filterTasks = user.tasks.filter(
+      const filterTasks = user!.tasks.currentTasks.filter(
         (userTask) =>
           Types.ObjectId(userTask._id).toHexString() !==
           Types.ObjectId(task._id).toHexString()
       );
 
-      await user.updateOne({ tasks: filterTasks });
+      await user!.updateOne({
+        tasks: {
+          currentTasks: filterTasks,
+          completedTasks: completedUserTasks,
+        },
+      });
+
       await task.remove();
       res.status(200).json({ message: 'Task Deleted!' });
     } catch (error) {

@@ -21,8 +21,14 @@ const userSchema: Schema = new Schema(
       required: true,
     },
     tasks: {
-      type: [Types.ObjectId],
-      ref: 'Task',
+      currentTasks: {
+        type: [Types.ObjectId],
+        ref: 'Task',
+      },
+      completedTasks: {
+        type: [Types.ObjectId],
+        ref: 'Task',
+      },
     },
   },
   { timestamps: true }

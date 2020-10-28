@@ -50,6 +50,18 @@ const JobForm: React.FC = () => {
         reviewHours: currentTask.reviews.reviewHours.toString(),
         hoursRequiredByBim: currentTask.reviews.hoursRequiredByBim.toString(),
       });
+
+    !edit &&
+      setFormData({
+        name: '',
+        projectNumber: '',
+        hoursAvailableToWork: '',
+        hoursWorked: '',
+        description: '',
+        numberOfReviews: '',
+        reviewHours: '',
+        hoursRequiredByBim: '',
+      });
   }, [edit]);
 
   const getTasks = async (): Promise<void> => {
@@ -80,7 +92,6 @@ const JobForm: React.FC = () => {
     e.preventDefault();
     let res: AxiosResponse<MessageType>;
     const token = getToken();
-    console.log(formData);
 
     try {
       command === 'success'

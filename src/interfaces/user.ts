@@ -6,5 +6,8 @@ export interface IUserModel extends Document {
   lastName: string;
   email: string;
   password: string;
-  tasks: ITaskModel[];
+  tasks: {
+    currentTasks: ITaskModel[];
+    completedTasks: ITaskModel[];
+  };
 }

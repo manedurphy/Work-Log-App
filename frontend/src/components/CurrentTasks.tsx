@@ -36,6 +36,14 @@ const CurrentTasks: React.FC = () => {
   const { state, dispatch } = useContext(GlobalContext);
   const { currentTasks } = state.tasks;
 
+  const getTasks = async (): Promise<void> => {
+    const token = getToken();
+    const res = await axios.get('/api/task', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    dispatch({ type: Tasks.updateTasks, payload: res.data });
+  };
+
   const handleClick = (
     e: React.MouseEvent<HTMLTableRowElement, MouseEvent>
   ) => {
@@ -74,6 +82,7 @@ const CurrentTasks: React.FC = () => {
             setTimeout(() => {
               setAlert({ success: null, error: null });
             }, 3000);
+            getTasks();
           });
       })
       .catch((err) => {
