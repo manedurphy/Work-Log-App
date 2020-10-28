@@ -75,7 +75,7 @@ export class TaskController {
       const hoursRemaining = +hoursAvailableToWork - +hoursWorked;
 
       const task: ITaskModel = new Task({
-        name,
+        name: name.trim(),
         projectNumber: +projectNumber,
         hours: {
           hoursAvailableToWork: +hoursAvailableToWork,
@@ -87,7 +87,7 @@ export class TaskController {
           reviewHours: +reviewHours,
           hoursRequiredByBim: +hoursRequiredByBim,
         },
-        description,
+        description: description.trim(),
         userId: user?._id,
       });
 

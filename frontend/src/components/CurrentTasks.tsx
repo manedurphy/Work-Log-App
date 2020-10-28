@@ -35,6 +35,7 @@ const CurrentTasks: React.FC = () => {
   });
   const { state, dispatch } = useContext(GlobalContext);
   const { currentTasks } = state.tasks;
+  const [modify, setModify] = useState(false);
 
   const getTasks = async (): Promise<void> => {
     const token = getToken();
@@ -45,11 +46,10 @@ const CurrentTasks: React.FC = () => {
   };
 
   const handleClick = (
-    e: React.MouseEvent<HTMLTableRowElement, MouseEvent>
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    task: string
   ) => {
-    const token = localStorage.getItem('token');
-    const children = e.currentTarget.childNodes;
-    const task = children[1].textContent;
+    const token = getToken();
     axios
       .get(`api/task/${task}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -115,14 +115,19 @@ const CurrentTasks: React.FC = () => {
             <TableCell>Hours Remaining</TableCell>
             <TableCell>Reviews</TableCell>
             <TableCell>Hours for BIM</TableCell>
-            <TableCell>Job Complete?</TableCell>
+            {modify && (
+              <>
+                <TableCell>Job Complete?</TableCell>
+                <TableCell>Modify?</TableCell>
+              </>
+            )}
           </TableRow>
         </TableHead>
         <TableBody>
           {currentTasks.map((row) => (
             <TableRow
               key={row._id}
-              onClick={handleClick}
+              onClick={() => setModify(!modify)}
               style={{ cursor: 'pointer' }}
               id="tableId"
             >
@@ -135,13 +140,26 @@ const CurrentTasks: React.FC = () => {
               <TableCell>{row.hours.hoursRemaining}</TableCell>
               <TableCell>{row.reviews.numberOfReviews}</TableCell>
               <TableCell>{row.reviews.hoursRequiredByBim}</TableCell>
-              <TableCell>
-                <Checkbox
-                  value={row.name}
-                  color="primary"
-                  onChange={handleComplete}
-                />
-              </TableCell>
+              {modify && (
+                <>
+                  <TableCell>
+                    <Checkbox
+                      value={row.name}
+                      color="primary"
+                      onChange={handleComplete}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <button
+                      className="btn btn-primary mr-1"
+                      onClick={(e) => handleClick(e, row.name)}
+                    >
+                      Edit
+                    </button>
+                    <button className="btn btn-danger ml-1">Delete</button>
+                  </TableCell>
+                </>
+              )}
             </TableRow>
           ))}
         </TableBody>
