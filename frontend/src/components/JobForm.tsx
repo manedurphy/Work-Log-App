@@ -130,7 +130,7 @@ const JobForm: React.FC = () => {
         onSubmit={
           edit && deleteMode
             ? (e) => handleForm(e, 'delete')
-            : edit && !deleteMode
+            : edit
             ? (e) => handleForm(e, 'update')
             : (e) => handleForm(e, 'success')
         }

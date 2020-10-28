@@ -12,7 +12,10 @@ import axios, { AxiosResponse } from 'axios';
 import { Tasks } from '../enums';
 import { getToken, GlobalContext } from '../context/GlobalState';
 import { AlertType, ITask } from '../type';
-import { Checkbox } from '@material-ui/core';
+import { Checkbox, IconButton } from '@material-ui/core';
+import { ChevronLeft, ChevronRight } from '@material-ui/icons';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 function preventDefault(event: any) {
   event.preventDefault();
@@ -28,9 +31,11 @@ const CurrentTasks: React.FC = () => {
   const classes = useStyles();
   const [alerts, setAlert] = useState<{
     success: AlertType;
+    delete: AlertType;
     error: AlertType;
   }>({
     success: null,
+    delete: null,
     error: null,
   });
   const { state, dispatch } = useContext(GlobalContext);
@@ -60,7 +65,31 @@ const CurrentTasks: React.FC = () => {
       .catch((err) => {
         setAlert({ ...alerts, error: err.response.data.message });
         setTimeout(() => {
-          setAlert({ success: null, error: null });
+          setAlert({ success: null, delete: null, error: null });
+        }, 3000);
+      });
+  };
+
+  const handleDelete = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    projectNumber: number
+  ) => {
+    const token = getToken();
+    axios
+      .delete(`api/task/${projectNumber}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        setAlert({ ...alerts, delete: res.data.message });
+        setTimeout(() => {
+          setAlert({ success: null, delete: null, error: null });
+        }, 3000);
+        getTasks();
+      })
+      .catch((err) => {
+        setAlert({ ...alerts, error: err.response.data.message });
+        setTimeout(() => {
+          setAlert({ success: null, delete: null, error: null });
         }, 3000);
       });
   };
@@ -80,7 +109,7 @@ const CurrentTasks: React.FC = () => {
           .then((res) => {
             setAlert({ ...alerts, success: res.data.message });
             setTimeout(() => {
-              setAlert({ success: null, error: null });
+              setAlert({ success: null, delete: null, error: null });
             }, 3000);
             getTasks();
           });
@@ -88,7 +117,7 @@ const CurrentTasks: React.FC = () => {
       .catch((err) => {
         setAlert({ ...alerts, error: err.response.data.message });
         setTimeout(() => {
-          setAlert({ success: null, error: null });
+          setAlert({ success: null, delete: null, error: null });
         }, 3000);
       });
   };
@@ -104,6 +133,12 @@ const CurrentTasks: React.FC = () => {
           {alerts.success}
         </div>
       )}
+      {alerts.delete && (
+        <div className="alert alert-warning text-center" role="alert">
+          {alerts.delete}
+        </div>
+      )}
+
       <Title>Current Tasks</Title>
       <Table size="small">
         <TableHead>
@@ -117,20 +152,17 @@ const CurrentTasks: React.FC = () => {
             <TableCell>Hours for BIM</TableCell>
             {modify && (
               <>
-                <TableCell>Job Complete?</TableCell>
-                <TableCell>Modify?</TableCell>
+                <TableCell>Task Complete</TableCell>
+                <TableCell>Edit / Delete</TableCell>
               </>
             )}
+            {!modify && <TableCell>More</TableCell>}
+            {modify && <TableCell>Less</TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
           {currentTasks.map((row) => (
-            <TableRow
-              key={row._id}
-              onClick={() => setModify(!modify)}
-              style={{ cursor: 'pointer' }}
-              id="tableId"
-            >
+            <TableRow key={row._id} style={{ cursor: 'pointer' }} id="tableId">
               <TableCell>
                 {moment().format(row.createdAt).slice(0, 10)}
               </TableCell>
@@ -140,6 +172,7 @@ const CurrentTasks: React.FC = () => {
               <TableCell>{row.hours.hoursRemaining}</TableCell>
               <TableCell>{row.reviews.numberOfReviews}</TableCell>
               <TableCell>{row.reviews.hoursRequiredByBim}</TableCell>
+
               {modify && (
                 <>
                   <TableCell>
@@ -150,15 +183,30 @@ const CurrentTasks: React.FC = () => {
                     />
                   </TableCell>
                   <TableCell>
-                    <button
-                      className="btn btn-primary mr-1"
-                      onClick={(e) => handleClick(e, row.name)}
+                    <IconButton onClick={(e) => handleClick(e, row.name)}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={(e) => handleDelete(e, row.projectNumber)}
                     >
-                      Edit
-                    </button>
-                    <button className="btn btn-danger ml-1">Delete</button>
+                      <DeleteIcon />
+                    </IconButton>
                   </TableCell>
                 </>
+              )}
+              {!modify && (
+                <TableCell>
+                  <IconButton onClick={() => setModify(!modify)}>
+                    <ChevronRight />
+                  </IconButton>
+                </TableCell>
+              )}
+              {modify && (
+                <TableCell>
+                  <IconButton onClick={() => setModify(!modify)}>
+                    <ChevronLeft />
+                  </IconButton>
+                </TableCell>
               )}
             </TableRow>
           ))}
