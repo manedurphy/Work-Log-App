@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -11,9 +11,8 @@ import moment from 'moment';
 import axios, { AxiosResponse } from 'axios';
 import { Tasks } from '../enums';
 import { getToken, GlobalContext } from '../context/GlobalState';
-import { AlertType, ITask, MessageType } from '../type';
-import { Checkbox, IconButton, Paper } from '@material-ui/core';
-import { ChevronLeft, ChevronRight } from '@material-ui/icons';
+import { AlertType, MessageType } from '../type';
+import { IconButton } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -52,6 +51,19 @@ const CurrentTasks: React.FC = () => {
     dispatch({ type: Tasks.updateTasks, payload: res.data });
   };
 
+  const setAlertsAndGetTasks = (
+    command: string,
+    message: string,
+    err: Error | null = null
+  ) => {
+    if (!err) getTasks();
+
+    setAlerts({ ...alerts, [command]: message });
+    setTimeout(() => {
+      setAlerts({ success: null, delete: null, error: null });
+    }, 3000);
+  };
+
   const handleAction = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     projectNumber: number,
@@ -75,15 +87,13 @@ const CurrentTasks: React.FC = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        setAlerts({ ...alerts, [command]: res.data.message });
-        getTasks();
+        setAlertsAndGetTasks(command, res.data.message);
       } else if (command === 'delete') {
         res = await axios.delete(`api/task/${projectNumber}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        setAlerts({ ...alerts, [command]: res.data.message });
-        getTasks();
+        setAlertsAndGetTasks(command, res.data.message);
       } else {
         const task = await axios.get(`api/task/${projectNumber}`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -91,15 +101,8 @@ const CurrentTasks: React.FC = () => {
 
         dispatch({ type: Tasks.updateTask, payload: task.data });
       }
-
-      setTimeout(() => {
-        setAlerts({ success: null, delete: null, error: null });
-      }, 3000);
     } catch (err) {
-      setAlerts({ ...alerts, error: err.response.data.message });
-      setTimeout(() => {
-        setAlerts({ success: null, delete: null, error: null });
-      }, 3000);
+      setAlertsAndGetTasks('error', err.response.data.message, err);
     }
   };
 
