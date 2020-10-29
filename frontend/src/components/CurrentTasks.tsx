@@ -12,10 +12,12 @@ import axios, { AxiosResponse } from 'axios';
 import { Tasks } from '../enums';
 import { getToken, GlobalContext } from '../context/GlobalState';
 import { AlertType, ITask } from '../type';
-import { Checkbox, IconButton } from '@material-ui/core';
+import { Checkbox, IconButton, Paper } from '@material-ui/core';
 import { ChevronLeft, ChevronRight } from '@material-ui/icons';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
 function preventDefault(event: any) {
   event.preventDefault();
@@ -150,14 +152,15 @@ const CurrentTasks: React.FC = () => {
             <TableCell>Hours Remaining</TableCell>
             <TableCell>Reviews</TableCell>
             <TableCell>Hours for BIM</TableCell>
-            {modify && (
+            <TableCell>Actions</TableCell>
+            {/* {modify && (
               <>
                 <TableCell>Task Complete</TableCell>
                 <TableCell>Edit / Delete</TableCell>
               </>
             )}
             {!modify && <TableCell>More</TableCell>}
-            {modify && <TableCell>Less</TableCell>}
+            {modify && <TableCell>Less</TableCell>} */}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -172,8 +175,31 @@ const CurrentTasks: React.FC = () => {
               <TableCell>{row.hours.hoursRemaining}</TableCell>
               <TableCell>{row.reviews.numberOfReviews}</TableCell>
               <TableCell>{row.reviews.hoursRequiredByBim}</TableCell>
+              <TableCell className="action-cell">
+                <IconButton onClick={() => setModify(!modify)}>
+                  <MoreVertIcon />
+                </IconButton>
+                {modify && (
+                  <Paper className="action-drop-down">
+                    <div className="drop-down-item pt-1">
+                      <EditIcon />
+                      <p>Edit task</p>
+                    </div>
+                    <hr className="m-1" />
+                    <div className="drop-down-item">
+                      <DeleteIcon />
+                      <p>Delete task</p>
+                    </div>
+                    <hr className="m-1" />
+                    <div className="drop-down-item">
+                      <CheckCircleOutlineIcon />
+                      <p>Complete task</p>
+                    </div>
+                  </Paper>
+                )}
+              </TableCell>
 
-              {modify && (
+              {/* {modify && (
                 <>
                   <TableCell>
                     <Checkbox
@@ -207,7 +233,7 @@ const CurrentTasks: React.FC = () => {
                     <ChevronLeft />
                   </IconButton>
                 </TableCell>
-              )}
+              )} */}
             </TableRow>
           ))}
         </TableBody>

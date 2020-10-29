@@ -29,6 +29,24 @@ code {
   justify-content: center;
 }
 
+/* Actions Drop Down */
+.action-cell {
+  position: relative;
+}
+
+.action-drop-down {
+  position: absolute;
+  width: 190px;
+  z-index: 100;
+  transform: translateX(-50%, -50%);
+}
+
+.drop-down-item {
+  width: 80%;
+  display: flex;
+  justify-content: start;
+}
+
 /* LOADER */
 .loader {
   margin: 100px auto;
