@@ -11,7 +11,7 @@ import moment from 'moment';
 import axios, { AxiosResponse } from 'axios';
 import { Tasks } from '../enums';
 import { getToken, GlobalContext } from '../context/GlobalState';
-import { AlertType, ITask } from '../type';
+import { AlertType, ITask, MessageType } from '../type';
 import { Checkbox, IconButton, Paper } from '@material-ui/core';
 import { ChevronLeft, ChevronRight } from '@material-ui/icons';
 import EditIcon from '@material-ui/icons/Edit';
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 
 const CurrentTasks: React.FC = () => {
   const classes = useStyles();
-  const [alerts, setAlert] = useState<{
+  const [alerts, setAlerts] = useState<{
     success: AlertType;
     delete: AlertType;
     error: AlertType;
@@ -52,80 +52,57 @@ const CurrentTasks: React.FC = () => {
     dispatch({ type: Tasks.updateTasks, payload: res.data });
   };
 
-  const handleClick = (
+  const handleAction = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    projectNumber: number
+    projectNumber: number,
+    command: string
   ) => {
+    e.preventDefault();
+    let res: AxiosResponse<MessageType>;
     const token = getToken();
-    axios
-      .get(`api/task/${projectNumber}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        dispatch({ type: Tasks.updateTask, payload: res.data });
-      })
-      .catch((err) => {
-        setAlert({ ...alerts, error: err.response.data.message });
-        setTimeout(() => {
-          setAlert({ success: null, delete: null, error: null });
-        }, 3000);
-      });
-  };
 
-  const handleDelete = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    projectNumber: number
-  ) => {
-    const token = getToken();
-    axios
-      .delete(`api/task/${projectNumber}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        setAlert({ ...alerts, delete: res.data.message });
-        setTimeout(() => {
-          setAlert({ success: null, delete: null, error: null });
-        }, 3000);
-        getTasks();
-      })
-      .catch((err) => {
-        setAlert({ ...alerts, error: err.response.data.message });
-        setTimeout(() => {
-          setAlert({ success: null, delete: null, error: null });
-        }, 3000);
-      });
-  };
+    try {
+      if (command === 'success') {
+        const task = await axios.get(`api/task/${projectNumber}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        task.data.complete = true;
 
-  const handleComplete = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    projectNumber: number
-  ) => {
-    const token = getToken();
-    axios
-      .get(`api/task/${projectNumber}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        res.data.complete = true;
-        axios
-          .put(`api/task/${res.data.projectNumber}`, res.data, {
+        res = await axios.put(
+          `api/task/${task.data.projectNumber}`,
+          task.data,
+          {
             headers: { Authorization: `Bearer ${token}` },
-          })
-          .then((res) => {
-            setAlert({ ...alerts, success: res.data.message });
-            setTimeout(() => {
-              setAlert({ success: null, delete: null, error: null });
-            }, 3000);
-            getTasks();
-          });
-      })
-      .catch((err) => {
-        setAlert({ ...alerts, error: err.response.data.message });
-        setTimeout(() => {
-          setAlert({ success: null, delete: null, error: null });
-        }, 3000);
-      });
+          }
+        );
+        setAlerts({ ...alerts, [command]: res.data.message });
+        getTasks();
+      } else if (command === 'delete') {
+        res = await axios.delete(`api/task/${projectNumber}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        setAlerts({ ...alerts, [command]: res.data.message });
+        getTasks();
+      } else {
+        const task = await axios.get(`api/task/${projectNumber}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        dispatch({ type: Tasks.updateTask, payload: task.data });
+      }
+
+      setTimeout(() => {
+        setAlerts({ success: null, delete: null, error: null });
+      }, 3000);
+    } catch (err) {
+      setAlerts({ ...alerts, error: err.response.data.message });
+      setTimeout(() => {
+        setAlerts({ success: null, delete: null, error: null });
+      }, 3000);
+    }
   };
+
   return (
     <React.Fragment>
       {alerts.error && (
@@ -156,14 +133,6 @@ const CurrentTasks: React.FC = () => {
             <TableCell>Reviews</TableCell>
             <TableCell>Hours for BIM</TableCell>
             <TableCell>Actions</TableCell>
-            {/* {modify && (
-              <>
-                <TableCell>Task Complete</TableCell>
-                <TableCell>Edit / Delete</TableCell>
-              </>
-            )}
-            {!modify && <TableCell>More</TableCell>}
-            {modify && <TableCell>Less</TableCell>} */}
           </TableRow>
         </TableHead>
         <TableBody className="action-cell">
@@ -186,59 +155,29 @@ const CurrentTasks: React.FC = () => {
                 ) : (
                   <>
                     <IconButton
-                      onClick={(e) => handleClick(e, row.projectNumber)}
+                      onClick={(e) =>
+                        handleAction(e, row.projectNumber, 'edit')
+                      }
                     >
                       <EditIcon />
                     </IconButton>
                     <IconButton
-                      onClick={(e) => handleDelete(e, row.projectNumber)}
+                      onClick={(e) =>
+                        handleAction(e, row.projectNumber, 'delete')
+                      }
                     >
                       <DeleteIcon />
                     </IconButton>
                     <IconButton
-                      onClick={(e) => handleComplete(e, row.projectNumber)}
+                      onClick={(e) =>
+                        handleAction(e, row.projectNumber, 'success')
+                      }
                     >
                       <CheckCircleOutlineIcon />
                     </IconButton>
                   </>
                 )}
               </TableCell>
-
-              {/* {modify && (
-                <>
-                  <TableCell>
-                    <Checkbox
-                      value={row.name}
-                      color="primary"
-                      onChange={handleComplete}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <IconButton onClick={(e) => handleClick(e, row.name)}>
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      onClick={(e) => handleDelete(e, row.projectNumber)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </>
-              )}
-              {!modify && (
-                <TableCell>
-                  <IconButton onClick={() => setModify(!modify)}>
-                    <ChevronRight />
-                  </IconButton>
-                </TableCell>
-              )}
-              {modify && (
-                <TableCell>
-                  <IconButton onClick={() => setModify(!modify)}>
-                    <ChevronLeft />
-                  </IconButton>
-                </TableCell>
-              )} */}
             </TableRow>
           ))}
         </TableBody>

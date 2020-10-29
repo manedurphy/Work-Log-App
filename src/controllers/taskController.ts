@@ -18,7 +18,7 @@ import { Types } from 'mongoose';
 @Controller('api/task')
 export class TaskController {
   private serverError = (res: Response) =>
-    res.status(500).json('Internal Server Error');
+    res.status(500).json({ message: 'Internal Server Error' });
 
   @Get('')
   @Middleware(customJwtManager.middleware)
