@@ -40,7 +40,7 @@ export class TaskController {
     Logger.Info(req.params.id);
     try {
       const task = await Task.findOne({
-        name: req.params.id,
+        projectNumber: +req.params.id,
         userId: req.payload._id,
       });
       if (!task)

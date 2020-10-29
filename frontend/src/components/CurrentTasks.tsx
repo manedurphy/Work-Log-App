@@ -54,11 +54,11 @@ const CurrentTasks: React.FC = () => {
 
   const handleClick = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    task: string
+    projectNumber: number
   ) => {
     const token = getToken();
     axios
-      .get(`api/task/${task}`, {
+      .get(`api/task/${projectNumber}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -96,10 +96,13 @@ const CurrentTasks: React.FC = () => {
       });
   };
 
-  const handleComplete = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleComplete = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    projectNumber: number
+  ) => {
     const token = getToken();
     axios
-      .get(`api/task/${e.target.value}`, {
+      .get(`api/task/${projectNumber}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -163,7 +166,7 @@ const CurrentTasks: React.FC = () => {
             {modify && <TableCell>Less</TableCell>} */}
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody className="action-cell">
           {currentTasks.map((row) => (
             <TableRow key={row._id} style={{ cursor: 'pointer' }} id="tableId">
               <TableCell>
@@ -175,27 +178,29 @@ const CurrentTasks: React.FC = () => {
               <TableCell>{row.hours.hoursRemaining}</TableCell>
               <TableCell>{row.reviews.numberOfReviews}</TableCell>
               <TableCell>{row.reviews.hoursRequiredByBim}</TableCell>
-              <TableCell className="action-cell">
-                <IconButton onClick={() => setModify(!modify)}>
-                  <MoreVertIcon />
-                </IconButton>
-                {modify && (
-                  <Paper className="action-drop-down">
-                    <div className="drop-down-item pt-1">
+              <TableCell>
+                {!modify ? (
+                  <IconButton onClick={() => setModify(!modify)}>
+                    <MoreVertIcon />
+                  </IconButton>
+                ) : (
+                  <>
+                    <IconButton
+                      onClick={(e) => handleClick(e, row.projectNumber)}
+                    >
                       <EditIcon />
-                      <p>Edit task</p>
-                    </div>
-                    <hr className="m-1" />
-                    <div className="drop-down-item">
+                    </IconButton>
+                    <IconButton
+                      onClick={(e) => handleDelete(e, row.projectNumber)}
+                    >
                       <DeleteIcon />
-                      <p>Delete task</p>
-                    </div>
-                    <hr className="m-1" />
-                    <div className="drop-down-item">
+                    </IconButton>
+                    <IconButton
+                      onClick={(e) => handleComplete(e, row.projectNumber)}
+                    >
                       <CheckCircleOutlineIcon />
-                      <p>Complete task</p>
-                    </div>
-                  </Paper>
+                    </IconButton>
+                  </>
                 )}
               </TableCell>
 

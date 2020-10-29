@@ -38,13 +38,18 @@ code {
   position: absolute;
   width: 190px;
   z-index: 100;
-  transform: translateX(-50%, -50%);
+  right: 250px;
+  /* transform: translateX(-50%, -50%); */
 }
 
 .drop-down-item {
   width: 80%;
   display: flex;
   justify-content: start;
+}
+
+.makeStyles-paper-14 {
+  overflow: hidden;
 }
 
 /* LOADER */
