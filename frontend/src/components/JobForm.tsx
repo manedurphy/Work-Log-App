@@ -120,10 +120,9 @@ const JobForm: React.FC = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
       }
-
       setAlertsAndGetTasks(command, res.data.message);
     } catch (err) {
-      setAlertsAndGetTasks(command, err.response.data.message, err);
+      setAlertsAndGetTasks("error", err.response.data.message, err);
     }
   };
 

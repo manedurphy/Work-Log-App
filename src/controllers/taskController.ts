@@ -1,5 +1,5 @@
-import { Response } from 'express';
-import { ISecureRequest } from '@overnightjs/jwt';
+import { Response } from "express";
+import { ISecureRequest } from "@overnightjs/jwt";
 import {
   Controller,
   Middleware,
@@ -7,20 +7,21 @@ import {
   Put,
   Post,
   Delete,
-} from '@overnightjs/core';
-import { Logger } from '@overnightjs/logger';
-import customJwtManager from './jwtController';
-import Task from '../models/task';
-import User from '../models/user';
-import { ITaskModel } from 'src/interfaces/task';
-import { Types } from 'mongoose';
+} from "@overnightjs/core";
+import { body, validationResult } from "express-validator";
+import { Logger } from "@overnightjs/logger";
+import customJwtManager from "./jwtController";
+import Task from "../models/task";
+import User from "../models/user";
+import { ITaskModel } from "src/interfaces/task";
+import { Types } from "mongoose";
 
-@Controller('api/task')
+@Controller("api/task")
 export class TaskController {
   private serverError = (res: Response) =>
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({ message: "Internal Server Error" });
 
-  @Get('')
+  @Get("")
   @Middleware(customJwtManager.middleware)
   private async getAllTasks(req: ISecureRequest, res: Response) {
     try {
@@ -34,7 +35,7 @@ export class TaskController {
     }
   }
 
-  @Get(':id')
+  @Get(":id")
   @Middleware(customJwtManager.middleware)
   private async getSingleTask(req: ISecureRequest, res: Response) {
     Logger.Info(req.params.id);
@@ -44,7 +45,7 @@ export class TaskController {
         userId: req.payload._id,
       });
       if (!task)
-        return res.status(404).json({ message: 'Task could not be found' });
+        return res.status(404).json({ message: "Task could not be found" });
 
       return res.status(200).json(task);
     } catch (error) {
@@ -52,11 +53,37 @@ export class TaskController {
     }
   }
 
-  @Post('')
+  @Post("")
   @Middleware(customJwtManager.middleware)
+  @Middleware([
+    body("name").not().isEmpty().withMessage("Task name is missing"),
+    body("projectNumber")
+      .not()
+      .isEmpty()
+      .withMessage("Project number is missing"),
+    body("hoursAvailableToWork")
+      .not()
+      .isEmpty()
+      .withMessage("Please enter available hours"),
+    body("numberOfReviews")
+      .not()
+      .isEmpty()
+      .withMessage("Number of reviews is missing"),
+    body("reviewHours").not().isEmpty().withMessage("Review hours is missing"),
+    body("hoursRequiredByBim")
+      .not()
+      .isEmpty()
+      .withMessage("Hours required by BIM is missing"),
+  ])
   private async add(req: ISecureRequest, res: Response) {
     Logger.Info(req.body, true);
     try {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ message: errors.array()[0].msg });
+      }
+
       const {
         name,
         projectNumber,
@@ -70,7 +97,7 @@ export class TaskController {
 
       const user = await User.findOne({ email: req.payload.email });
       if (!user)
-        return res.status(404).json({ message: 'User could not be found' });
+        return res.status(404).json({ message: "User could not be found" });
 
       const hoursRemaining = +hoursAvailableToWork - +hoursWorked;
 
@@ -95,13 +122,13 @@ export class TaskController {
 
       await user.save();
       await task.save();
-      res.status(201).json({ message: 'Task Created!' });
+      res.status(201).json({ message: "Task Created!" });
     } catch (error) {
       this.serverError(res);
     }
   }
 
-  @Put(':id')
+  @Put(":id")
   @Middleware(customJwtManager.middleware)
   private async update(req: ISecureRequest, res: Response) {
     Logger.Info(req.body);
@@ -143,7 +170,7 @@ export class TaskController {
             completedTasks: user.tasks.completedTasks,
           },
         });
-        return res.status(200).json({ message: 'Task Complete!' });
+        return res.status(200).json({ message: "Task Complete!" });
       }
 
       const hoursRemaining = +hoursAvailableToWork - +hoursWorked;
@@ -168,13 +195,13 @@ export class TaskController {
         { projectNumber: +req.params.id, userId: req.payload._id },
         updatedTask
       );
-      res.status(200).json({ message: 'Task Updated!' });
+      res.status(200).json({ message: "Task Updated!" });
     } catch (error) {
       this.serverError(res);
     }
   }
 
-  @Delete(':id')
+  @Delete(":id")
   @Middleware(customJwtManager.middleware)
   private async deleteTask(req: ISecureRequest, res: Response) {
     try {
@@ -186,7 +213,7 @@ export class TaskController {
       const user = await User.findById({ _id: req.payload._id });
       const completedUserTasks = user?.tasks.completedTasks;
       if (!task)
-        return res.status(404).json({ message: 'Task could not be found' });
+        return res.status(404).json({ message: "Task could not be found" });
 
       const filterTasks = user!.tasks.currentTasks.filter(
         (userTask) =>
@@ -202,7 +229,7 @@ export class TaskController {
       });
 
       await task.remove();
-      res.status(200).json({ message: 'Task Deleted!' });
+      res.status(200).json({ message: "Task Deleted!" });
     } catch (error) {
       this.serverError(res);
     }
