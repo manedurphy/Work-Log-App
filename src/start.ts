@@ -3,10 +3,9 @@ import { connect } from "mongoose";
 
 const server = new MyServer();
 
-//const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@dmcloud.iohoj.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
-const shell = `mongodb+srv://manedurphy:${process.env.MONGO_PASSWORD}@dmcloud.iohoj.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.3epbj.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
 
-connect(shell, {
+connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
