@@ -80,9 +80,8 @@ export class TaskController {
     try {
       const errors = validationResult(req);
 
-      if (!errors.isEmpty()) {
+      if (!errors.isEmpty())
         return res.status(400).json({ message: errors.array()[0].msg });
-      }
 
       const {
         name,
@@ -130,6 +129,26 @@ export class TaskController {
 
   @Put(":id")
   @Middleware(customJwtManager.middleware)
+  @Middleware([
+    body("name").not().isEmpty().withMessage("Task name is missing"),
+    body("projectNumber")
+      .not()
+      .isEmpty()
+      .withMessage("Project number is missing"),
+    body("hoursAvailableToWork")
+      .not()
+      .isEmpty()
+      .withMessage("Please enter available hours"),
+    body("numberOfReviews")
+      .not()
+      .isEmpty()
+      .withMessage("Number of reviews is missing"),
+    body("reviewHours").not().isEmpty().withMessage("Review hours is missing"),
+    body("hoursRequiredByBim")
+      .not()
+      .isEmpty()
+      .withMessage("Hours required by BIM is missing"),
+  ])
   private async update(req: ISecureRequest, res: Response) {
     Logger.Info(req.body);
     try {
@@ -154,6 +173,10 @@ export class TaskController {
           },
           req.body
         );
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty() && !isComplete)
+          return res.status(400).json({ message: errors.array()[0].msg });
 
         const user = await User.findById({ _id: req.payload._id });
         user?.tasks.completedTasks.push(task!);

@@ -197,7 +197,7 @@ const CurrentTasks: React.FC = () => {
             </TableBody>
           </>
         ) : (
-          <div>No tasks to display</div>
+          <p>No tasks to display</p>
         )}
       </Table>
       <div className={classes.seeMore}>

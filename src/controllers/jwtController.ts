@@ -3,7 +3,7 @@ import { Get, Post, Controller, Middleware } from "@overnightjs/core";
 import { Request, Response } from "express";
 import User from "../models/user";
 import { IUserModel } from "../interfaces/user";
-
+import { body, validationResult } from "express-validator";
 const customJwtManager = new JwtManager(
   process.env.OVERNIGHT_JWT_SECRET as string,
   process.env.OVERNIGHT_JWT_EXP as string
@@ -34,8 +34,18 @@ export class JWTController {
   }
 
   @Post("register")
+  @Middleware([
+    body("firstName").not().isEmpty().withMessage("Must include first name"),
+    body("lastName").not().isEmpty().withMessage("Must include last name"),
+    body("email").isEmail().withMessage("Invalid email"),
+  ])
   private async register(req: Request, res: Response) {
     try {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty())
+        return res.status(400).json({ message: errors.array()[0].msg });
+
       const { firstName, lastName, email, password, password2 } = req.body;
 
       const existingUser = await User.findOne({ email });
