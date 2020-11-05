@@ -3,6 +3,7 @@ import Dashboard from './components/Dashboard';
 import GlobalState from './context/GlobalState';
 import Register from './components/Auth/Register';
 import Login from './components/Auth/Login';
+import Verify from './components/Auth/Verify';
 import { Route } from 'react-router-dom';
 
 const App: React.FC = () => {
@@ -10,6 +11,7 @@ const App: React.FC = () => {
     <GlobalState>
       <Route exact path={'/'} component={Dashboard} />
       <Route exact path={'/register'} component={Register} />
+      <Route exact path={'/verify'} component={Verify} />
       <Route exact path="/login" component={Login} />
     </GlobalState>
   );

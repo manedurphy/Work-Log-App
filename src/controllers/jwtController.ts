@@ -5,6 +5,7 @@ import User from '../models/user';
 import { IUserModel } from '../interfaces/user';
 import { body, validationResult } from 'express-validator';
 import { hash, compare } from 'bcrypt';
+import sgMail = require('@sendgrid/mail');
 
 const customJwtManager = new JwtManager(
   process.env.OVERNIGHT_JWT_SECRET as string,
@@ -32,6 +33,23 @@ export class JWTController {
       });
     } catch (error) {
       res.status(401).json({ isLoggedIn: false });
+    }
+  }
+
+  @Get('verify')
+  @Middleware(customJwtManager.middleware)
+  private async verifyAccount(req: ISecureRequest, res: Response) {
+    try {
+      const user = await User.findByIdAndUpdate(req.payload, {
+        ...this,
+        emailVerified: true,
+      });
+
+      if (!user) return res.json({ message: 'User could not be verified' });
+
+      res.json({ isVerified: true });
+    } catch (error) {
+      this.serverError(res);
     }
   }
 
@@ -73,8 +91,25 @@ export class JWTController {
 
       await user.save();
 
+      const jwtStr = customJwtManager.jwt({
+        _id: user._id,
+      });
+
+      sgMail.setApiKey(`${process.env.SENDGRID_API}`);
+
+      const msg = {
+        to: `${process.env.TEST_EMAIL}`,
+        from: `${process.env.ETHEREAL_EMAIL}`,
+        subject: 'Verify your account',
+        html:
+          '<p>Click the link to verify your account http://localhost:3000/verify</p>',
+      };
+
+      await sgMail.send(msg);
+
       return res.status(200).json({
         success: true,
+        jwt: jwtStr,
       });
     } catch (error) {
       this.serverError(res);
@@ -88,6 +123,9 @@ export class JWTController {
       const existingUser = await User.findOne({ email });
       if (!existingUser)
         return res.status(400).json({ message: 'Invalid Credentials' });
+
+      if (!existingUser.emailVerified)
+        return res.status(400).json({ message: 'Email has not been verified' });
 
       const existingPassword = existingUser.get('password');
       const passwordMatches = await compare(password, existingPassword);
