@@ -6,7 +6,7 @@ import React, {
   useEffect,
 } from 'react';
 import axios, { AxiosResponse } from 'axios';
-import { AlertType, ITaskForm, MessageType } from '../type';
+import { AlertType, ITaskForm, MessageType, ITask } from '../type';
 import { Paper } from '@material-ui/core';
 import { Tasks } from '../enums';
 import { getToken, GlobalContext } from '../context/GlobalState';
@@ -67,7 +67,7 @@ const JobForm: React.FC = () => {
 
   const getTasks = async (): Promise<void> => {
     const token = getToken();
-    const res = await axios.get('/api/task', {
+    const res: AxiosResponse<ITask[]> = await axios.get('/api/task', {
       headers: { Authorization: `Bearer ${token}` },
     });
     setFormData({

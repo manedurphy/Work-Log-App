@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { useEffect, useState } from 'react';
 import { getToken } from '../../context/GlobalState';
 import { Redirect } from 'react-router-dom';
@@ -12,13 +12,20 @@ const Verify = () => {
   useEffect(() => {
     !token && setPermission(false);
 
-    axios
-      .get('/api/auth/verify', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
+    (async () => {
+      try {
+        const res: AxiosResponse<{ isVerified: boolean }> = await axios.get(
+          '/api/auth/verify',
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
         setIsVerified(res.data.isVerified);
-      });
+      } catch (error) {
+        throw error;
+      }
+    })();
   });
   return (
     <div>

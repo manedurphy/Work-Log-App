@@ -39,6 +39,7 @@ const GlobalState: React.FC = ({ children }) => {
         const res: AxiosResponse<ITask[]> = await axios.get('/api/task', {
           headers: { Authorization: `Bearer ${token}` },
         });
+        console.log(res);
         dispatch({ type: Tasks.updateTasks, payload: res.data });
       } catch (error) {
         throw error;

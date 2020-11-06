@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent, useState, useContext } from 'react';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import {
   Avatar,
   Button,
@@ -18,6 +18,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { Redirect } from 'react-router-dom';
 import { Tasks, Users } from '../../enums';
 import { getToken, GlobalContext } from '../../context/GlobalState';
+import { LoginType, ITask } from '../../type';
 
 function Copyright() {
   return (
@@ -69,15 +70,18 @@ export default function SignIn() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      let res = await axios.post('api/auth/login', formData);
+      let res: AxiosResponse<LoginType> = await axios.post(
+        'api/auth/login',
+        formData
+      );
       localStorage.setItem('token', res.data.jwt);
       dispatch({ type: Users.setUser, payload: res.data.user });
 
       const token = getToken();
-      res = await axios.get('/api/task', {
+      const tasks: AxiosResponse<ITask[]> = await axios.get('/api/task', {
         headers: { Authorization: `Bearer ${token}` },
       });
-      dispatch({ type: Tasks.updateTasks, payload: res.data });
+      dispatch({ type: Tasks.updateTasks, payload: tasks.data });
 
       setIsLoggedIn(true);
     } catch (err) {

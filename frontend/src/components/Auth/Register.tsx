@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState, FormEvent } from 'react';
 import { Redirect } from 'react-router-dom';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import {
   Avatar,
   Button,
@@ -14,7 +14,7 @@ import {
   Container,
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { AlertType } from '../../type';
+import { AlertType, RegisterType } from '../../type';
 
 function Copyright() {
   return (
@@ -68,8 +68,10 @@ export default function SignUp() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await axios.post('api/auth/register', formData);
-
+      const res: AxiosResponse<RegisterType> = await axios.post(
+        'api/auth/register',
+        formData
+      );
       setSignUpSuccess(res.data.success);
       localStorage.setItem('token', res.data.jwt);
     } catch (err) {

@@ -69,15 +69,34 @@ export type MessageType = {
   message: string;
 };
 
+export type VerifyType = {
+  message: string;
+  user: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+};
+
+export type LoginType = {
+  jwt: string;
+  user: IUser;
+};
+
+export type RegisterType = {
+  success: boolean;
+  jwt: string;
+};
+
 /** GLOBALS */
-type GlobalStateType = {
+export type GlobalStateType = {
   tasks: TaskStateType;
   user: UserStateType;
 };
 
-type GlobalAction = TaskAction | UserAction;
+export type GlobalAction = TaskAction | UserAction;
 
-type GlobalReducer = (
+export type GlobalReducer = (
   state: GlobalStateType,
   action: GlobalAction
 ) => GlobalStateType;

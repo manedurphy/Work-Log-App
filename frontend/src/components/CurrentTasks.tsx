@@ -22,7 +22,7 @@ import moment from 'moment';
 import axios, { AxiosResponse } from 'axios';
 import { Tasks } from '../enums';
 import { getToken, GlobalContext } from '../context/GlobalState';
-import { AlertType, MessageType } from '../type';
+import { AlertType, ITask, MessageType } from '../type';
 
 function preventDefault(event: any) {
   event.preventDefault();
@@ -56,7 +56,7 @@ const CurrentTasks: React.FC = () => {
 
   const getTasks = async (): Promise<void> => {
     const token = getToken();
-    const res = await axios.get('/api/task', {
+    const res: AxiosResponse<ITask[]> = await axios.get('/api/task', {
       headers: { Authorization: `Bearer ${token}` },
     });
     dispatch({ type: Tasks.updateTasks, payload: res.data });
@@ -86,9 +86,12 @@ const CurrentTasks: React.FC = () => {
 
     try {
       if (command === 'success') {
-        const task = await axios.get(`api/task/${projectNumber}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const task: AxiosResponse<ITask> = await axios.get(
+          `api/task/${projectNumber}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         task.data.complete = true;
 
         res = await axios.put(
