@@ -33,14 +33,17 @@ const GlobalState: React.FC = ({ children }) => {
 
   useEffect(() => {
     const token = getToken();
-    axios
-      .get('/api/task', { headers: { Authorization: `Bearer ${token}` } })
-      .then((res: AxiosResponse<ITask[]>) => {
+
+    (async () => {
+      try {
+        const res: AxiosResponse<ITask[]> = await axios.get('/api/task', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         dispatch({ type: Tasks.updateTasks, payload: res.data });
-      })
-      .catch((err: Error) => {
-        throw err;
-      });
+      } catch (error) {
+        throw error;
+      }
+    })();
   }, []);
 
   return (

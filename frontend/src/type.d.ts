@@ -13,6 +13,7 @@ interface ITask {
   reviewHours: number;
   hoursRequiredByBim: number;
   complete: boolean;
+  UserId?: number;
   createdAt?: string;
   updatedAt?: string;
 }
