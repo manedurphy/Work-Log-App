@@ -10,6 +10,7 @@ import { AlertType, ITaskForm, MessageType } from '../type';
 import { Paper } from '@material-ui/core';
 import { Tasks } from '../enums';
 import { getToken, GlobalContext } from '../context/GlobalState';
+import { Alert } from '@material-ui/lab';
 
 const JobForm: React.FC = () => {
   const { state, dispatch } = useContext(GlobalContext);
@@ -139,24 +140,24 @@ const JobForm: React.FC = () => {
         }
       >
         {alerts.success && (
-          <div className="alert alert-success text-center" role="alert">
+          <Alert severity="success" role="alert">
             {alerts.success}
-          </div>
+          </Alert>
         )}
         {alerts.update && (
-          <div className="alert alert-primary text-center" role="alert">
+          <Alert severity="info" role="alert">
             {alerts.update}
-          </div>
+          </Alert>
         )}
         {alerts.delete && (
-          <div className="alert alert-warning text-center" role="alert">
+          <Alert severity="warning" role="alert">
             {alerts.delete}
-          </div>
+          </Alert>
         )}
         {alerts.error && (
-          <div className="alert alert-danger text-center" role="alert">
+          <Alert severity="error" role="alert">
             {alerts.error}
-          </div>
+          </Alert>
         )}
         <div className="form-row">
           <div className="form-group col-md-6">

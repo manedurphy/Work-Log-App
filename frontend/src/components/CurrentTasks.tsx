@@ -1,22 +1,28 @@
 import React, { useContext, useState, useEffect } from 'react';
-import Link from '@material-ui/core/Link';
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import {
+  Link,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  TableHead,
+  makeStyles,
+  IconButton,
+  Box,
+} from '@material-ui/core';
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  MoreVert as MoreVertIcon,
+  CheckCircleOutline as CheckCircleOutlineIcon,
+} from '@material-ui/icons';
+import { Alert } from '@material-ui/lab';
 import Title from './Title';
 import moment from 'moment';
 import axios, { AxiosResponse } from 'axios';
 import { Tasks } from '../enums';
 import { getToken, GlobalContext } from '../context/GlobalState';
 import { AlertType, MessageType } from '../type';
-import { IconButton } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
 function preventDefault(event: any) {
   event.preventDefault();
@@ -114,19 +120,19 @@ const CurrentTasks: React.FC = () => {
   return (
     <React.Fragment>
       {alerts.error && (
-        <div className="alert alert-danger text-center" role="alert">
+        <Alert severity="error" role="alert">
           {alerts.error}
-        </div>
+        </Alert>
       )}
       {alerts.success && (
-        <div className="alert alert-success text-center" role="alert">
+        <Alert severity="success" role="alert">
           {alerts.success}
-        </div>
+        </Alert>
       )}
       {alerts.delete && (
-        <div className="alert alert-warning text-center" role="alert">
+        <Alert severity="warning" role="alert">
           {alerts.delete}
-        </div>
+        </Alert>
       )}
 
       <Title>Current Tasks</Title>
@@ -197,7 +203,7 @@ const CurrentTasks: React.FC = () => {
             </TableBody>
           </>
         ) : (
-          <p>No tasks to display</p>
+          <Box>No tasks to display</Box>
         )}
       </Table>
       <div className={classes.seeMore}>
