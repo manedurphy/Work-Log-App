@@ -21,7 +21,13 @@ export class JWTController {
   private async checkToken(req: ISecureRequest, res: Response) {
     try {
       const user = await User.findOne({ where: { email: req.payload.email } });
-      return res.status(200).json({
+
+      if (!user?.emailVerified)
+        return res
+          .status(400)
+          .json({ message: 'This account has not been verified' });
+
+      res.status(200).json({
         message: 'Currently logged in',
         user: {
           firstName: user?.firstName,
