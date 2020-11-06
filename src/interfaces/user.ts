@@ -1,14 +1,16 @@
-import { Document } from 'mongoose';
-import { ITaskModel } from './task';
+import { Optional } from 'sequelize';
 
-export interface IUserModel extends Document {
+export interface UserAttributes {
+  id?: number;
   firstName: string;
   lastName: string;
   email: string;
   emailVerified: boolean;
   password: string;
-  tasks: {
-    currentTasks: ITaskModel[];
-    completedTasks: ITaskModel[];
-  };
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date | null;
 }
+
+export interface UserCreationAttributes
+  extends Optional<UserAttributes, 'id'> {}

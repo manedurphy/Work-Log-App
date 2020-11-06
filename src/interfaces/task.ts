@@ -1,19 +1,19 @@
-import { Document, Types } from 'mongoose';
+import { Optional } from 'sequelize';
 
-export interface ITaskModel extends Document {
+export interface TaskAttributes {
+  id: number;
   name: string;
   projectNumber: number;
-  hours: {
-    hoursAvailableToWork: number;
-    hoursWorked: number;
-    hoursRemaining: number;
-  };
-  description: string;
-  reviews: {
-    numberOfReviews: number;
-    reviewHours: number;
-    hoursRequiredByBim: number;
-  };
+  hoursAvailableToWork: number;
+  hoursWorked: number;
+  hoursRemaining: number;
+  notes: string | null;
+  numberOfReviews: number;
+  reviewHours: number;
+  hoursRequiredByBim: number;
   complete: boolean;
-  userId: Types.ObjectId;
+  UserId: number;
 }
+
+export interface TaskCreationAttributes
+  extends Optional<TaskAttributes, 'id'> {}
