@@ -3,21 +3,16 @@ import { TaskAction, TaskStateType } from '../type';
 
 export const initialTaskState: TaskStateType = {
   currentTask: {
-    _id: '',
-    __v: 0,
+    id: 0,
     name: '',
     projectNumber: 0,
-    hours: {
-      hoursAvailableToWork: 0,
-      hoursWorked: 0,
-      hoursRemaining: 0,
-    },
-    description: '',
-    reviews: {
-      numberOfReviews: 0,
-      reviewHours: 0,
-      hoursRequiredByBim: 0,
-    },
+    hoursAvailableToWork: 0,
+    hoursWorked: 0,
+    hoursRemaining: 0,
+    notes: '',
+    numberOfReviews: 0,
+    reviewHours: 0,
+    hoursRequiredByBim: 0,
     complete: false,
     createdAt: '',
     updatedAt: '',

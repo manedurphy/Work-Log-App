@@ -1,5 +1,5 @@
-import { Response } from "express";
-import { ISecureRequest } from "@overnightjs/jwt";
+import { Response } from 'express';
+import { ISecureRequest } from '@overnightjs/jwt';
 import {
   Controller,
   Middleware,
@@ -7,27 +7,25 @@ import {
   Put,
   Post,
   Delete,
-} from "@overnightjs/core";
-import { body, validationResult } from "express-validator";
-import { Logger } from "@overnightjs/logger";
-import customJwtManager from "./jwtController";
-import Task from "../models/task";
-import User from "../models/user";
-import { ITaskModel } from "src/interfaces/task";
-import { Types } from "mongoose";
+} from '@overnightjs/core';
+import { body, validationResult } from 'express-validator';
+import { Logger } from '@overnightjs/logger';
+import customJwtManager from './jwtController';
+import { Task, User } from '../models/models';
 
-@Controller("api/task")
+@Controller('api/task')
 export class TaskController {
   private serverError = (res: Response) =>
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: 'Internal Server Error' });
 
-  @Get("")
+  @Get('')
   @Middleware(customJwtManager.middleware)
   private async getAllTasks(req: ISecureRequest, res: Response) {
+    Logger.Info(req.body, true);
     try {
-      Logger.Info(req.body, true);
-      let tasks: ITaskModel[] = await Task.find({ userId: req.payload._id });
-      tasks = tasks.filter((task) => !task.complete);
+      const tasks = await Task.findAll({
+        where: { UserId: req.payload.id, complete: false },
+      });
 
       res.status(200).json(tasks);
     } catch (error) {
@@ -35,17 +33,20 @@ export class TaskController {
     }
   }
 
-  @Get(":id")
+  @Get(':id')
   @Middleware(customJwtManager.middleware)
   private async getSingleTask(req: ISecureRequest, res: Response) {
     Logger.Info(req.params.id);
     try {
       const task = await Task.findOne({
-        projectNumber: +req.params.id,
-        userId: req.payload._id,
+        where: {
+          projectNumber: +req.params.id,
+          UserId: req.payload.id,
+        },
       });
+
       if (!task)
-        return res.status(404).json({ message: "Task could not be found" });
+        return res.status(404).json({ message: 'Task could not be found' });
 
       return res.status(200).json(task);
     } catch (error) {
@@ -53,27 +54,27 @@ export class TaskController {
     }
   }
 
-  @Post("")
+  @Post('')
   @Middleware(customJwtManager.middleware)
   @Middleware([
-    body("name").not().isEmpty().withMessage("Task name is missing"),
-    body("projectNumber")
+    body('name').not().isEmpty().withMessage('Task name is missing'),
+    body('projectNumber')
       .not()
       .isEmpty()
-      .withMessage("Project number is missing"),
-    body("hoursAvailableToWork")
+      .withMessage('Project number is missing'),
+    body('hoursAvailableToWork')
       .not()
       .isEmpty()
-      .withMessage("Please enter available hours"),
-    body("numberOfReviews")
+      .withMessage('Please enter available hours'),
+    body('numberOfReviews')
       .not()
       .isEmpty()
-      .withMessage("Number of reviews is missing"),
-    body("reviewHours").not().isEmpty().withMessage("Review hours is missing"),
-    body("hoursRequiredByBim")
+      .withMessage('Number of reviews is missing'),
+    body('reviewHours').not().isEmpty().withMessage('Review hours is missing'),
+    body('hoursRequiredByBim')
       .not()
       .isEmpty()
-      .withMessage("Hours required by BIM is missing"),
+      .withMessage('Hours required by BIM is missing'),
   ])
   private async add(req: ISecureRequest, res: Response) {
     Logger.Info(req.body, true);
@@ -88,66 +89,59 @@ export class TaskController {
         projectNumber,
         hoursAvailableToWork,
         hoursWorked,
-        description,
+        notes,
         numberOfReviews,
         reviewHours,
         hoursRequiredByBim,
       } = req.body;
 
-      const user = await User.findOne({ email: req.payload.email });
+      const user = await User.findOne({ where: { email: req.payload.email } });
       if (!user)
-        return res.status(404).json({ message: "User could not be found" });
+        return res.status(404).json({ message: 'User could not be found' });
 
       const hoursRemaining = +hoursAvailableToWork - +hoursWorked;
 
-      const task: ITaskModel = new Task({
-        name: name.trim(),
+      await Task.create({
+        name,
         projectNumber: +projectNumber,
-        hours: {
-          hoursAvailableToWork: +hoursAvailableToWork,
-          hoursWorked: +hoursWorked,
-          hoursRemaining,
-        },
-        reviews: {
-          numberOfReviews: +numberOfReviews,
-          reviewHours: +reviewHours,
-          hoursRequiredByBim: +hoursRequiredByBim,
-        },
-        description: description.trim(),
-        userId: user?._id,
+        hoursAvailableToWork: +hoursAvailableToWork,
+        hoursWorked: +hoursWorked,
+        notes,
+        hoursRemaining,
+        numberOfReviews: +numberOfReviews,
+        reviewHours: +reviewHours,
+        hoursRequiredByBim: +hoursRequiredByBim,
+        complete: false,
+        UserId: user.id,
       });
 
-      user.tasks.currentTasks.push(task);
-
-      await user.save();
-      await task.save();
-      res.status(201).json({ message: "Task Created!" });
+      res.status(201).json({ message: 'Task Created!' });
     } catch (error) {
       this.serverError(res);
     }
   }
 
-  @Put(":id")
+  @Put(':id')
   @Middleware(customJwtManager.middleware)
   @Middleware([
-    body("name").not().isEmpty().withMessage("Task name is missing"),
-    body("projectNumber")
+    body('name').not().isEmpty().withMessage('Task name is missing'),
+    body('projectNumber')
       .not()
       .isEmpty()
-      .withMessage("Project number is missing"),
-    body("hoursAvailableToWork")
+      .withMessage('Project number is missing'),
+    body('hoursAvailableToWork')
       .not()
       .isEmpty()
-      .withMessage("Please enter available hours"),
-    body("numberOfReviews")
+      .withMessage('Please enter available hours'),
+    body('numberOfReviews')
       .not()
       .isEmpty()
-      .withMessage("Number of reviews is missing"),
-    body("reviewHours").not().isEmpty().withMessage("Review hours is missing"),
-    body("hoursRequiredByBim")
+      .withMessage('Number of reviews is missing'),
+    body('reviewHours').not().isEmpty().withMessage('Review hours is missing'),
+    body('hoursRequiredByBim')
       .not()
       .isEmpty()
-      .withMessage("Hours required by BIM is missing"),
+      .withMessage('Hours required by BIM is missing'),
   ])
   private async update(req: ISecureRequest, res: Response) {
     Logger.Info(req.body);
@@ -157,102 +151,61 @@ export class TaskController {
         projectNumber,
         hoursAvailableToWork,
         hoursWorked,
-        description,
+        notes,
         numberOfReviews,
         reviewHours,
         hoursRequiredByBim,
         complete,
       } = req.body;
 
-      let isComplete = !!complete;
-      if (isComplete) {
-        const task = await Task.findOneAndUpdate(
-          {
-            projectNumber: +req.params.id,
-            userId: req.payload._id,
-          },
-          req.body
-        );
+      const task = await Task.findOne({
+        where: {
+          projectNumber: +req.params.id,
+          UserId: req.payload.id,
+        },
+      });
 
-        const errors = validationResult(req);
-        if (!errors.isEmpty() && !isComplete)
-          return res.status(400).json({ message: errors.array()[0].msg });
-
-        const user = await User.findById({ _id: req.payload._id });
-        user?.tasks.completedTasks.push(task!);
-
-        const filterTasks = user!.tasks.currentTasks.filter(
-          (userTask) =>
-            Types.ObjectId(userTask._id).toHexString() !==
-            Types.ObjectId(task!._id).toHexString()
-        );
-
-        await user?.updateOne({
-          tasks: {
-            currentTasks: filterTasks,
-            completedTasks: user.tasks.completedTasks,
-          },
-        });
-        return res.status(200).json({ message: "Task Complete!" });
+      if (complete) {
+        task?.update({ complete });
+        return res.status(200).json({ message: 'Task Complete!' });
       }
 
       const hoursRemaining = +hoursAvailableToWork - +hoursWorked;
 
-      const updatedTask = {
+      await task?.update({
         name,
         projectNumber: +projectNumber,
-        hours: {
-          hoursAvailableToWork: +hoursAvailableToWork,
-          hoursWorked: +hoursWorked,
-          hoursRemaining,
-        },
-        reviews: {
-          numberOfReviews: +numberOfReviews,
-          reviewHours: +reviewHours,
-          hoursRequiredByBim: +hoursRequiredByBim,
-        },
-        description,
-      };
+        hoursAvailableToWork: +hoursAvailableToWork,
+        hoursWorked: +hoursWorked,
+        notes,
+        hoursRemaining,
+        numberOfReviews: +numberOfReviews,
+        reviewHours: +reviewHours,
+        hoursRequiredByBim: +hoursRequiredByBim,
+      });
 
-      await Task.findOneAndUpdate(
-        { projectNumber: +req.params.id, userId: req.payload._id },
-        updatedTask
-      );
-      res.status(200).json({ message: "Task Updated!" });
+      res.status(200).json({ message: 'Task Updated!' });
     } catch (error) {
       this.serverError(res);
     }
   }
 
-  @Delete(":id")
+  @Delete(':id')
   @Middleware(customJwtManager.middleware)
   private async deleteTask(req: ISecureRequest, res: Response) {
     try {
       const task = await Task.findOne({
-        projectNumber: +req.params.id,
-        userId: req.payload._id,
-      });
-
-      const user = await User.findById({ _id: req.payload._id });
-      const completedUserTasks = user?.tasks.completedTasks;
-      if (!task)
-        return res.status(404).json({ message: "Task could not be found" });
-
-      const filterTasks = user!.tasks.currentTasks.filter(
-        (userTask) =>
-          Types.ObjectId(userTask._id).toHexString() !==
-          Types.ObjectId(task._id).toHexString()
-      );
-
-      await user!.updateOne({
-        tasks: {
-          currentTasks: filterTasks,
-          completedTasks: completedUserTasks,
+        where: {
+          projectNumber: +req.params.id,
+          UserId: req.payload.id,
         },
       });
 
-      await task.remove();
-      res.status(200).json({ message: "Task Deleted!" });
+      if (!task)
+        return res.status(404).json({ message: 'Task could not be found' });
+
+      await task.destroy();
+      res.status(200).json({ message: 'Task Deleted!' });
     } catch (error) {
       this.serverError(res);
     }

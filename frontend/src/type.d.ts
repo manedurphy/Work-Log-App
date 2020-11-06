@@ -2,21 +2,16 @@ import { Tasks, Users } from './enums';
 
 /** TASKS  */
 interface ITask {
-  _id: string;
-  __v?: number;
+  id: number;
   name: string;
   projectNumber: number;
-  hours: {
-    hoursAvailableToWork: number;
-    hoursWorked: number;
-    hoursRemaining: number;
-  };
-  description: string;
-  reviews: {
-    numberOfReviews: number;
-    reviewHours: number;
-    hoursRequiredByBim: number;
-  };
+  hoursAvailableToWork: number;
+  hoursWorked: number;
+  hoursRemaining: number;
+  notes: string | null;
+  numberOfReviews: number;
+  reviewHours: number;
+  hoursRequiredByBim: number;
   complete: boolean;
   createdAt?: string;
   updatedAt?: string;
@@ -27,7 +22,7 @@ export interface ITaskForm {
   projectNumber: string;
   hoursAvailableToWork: string;
   hoursWorked: string;
-  description: string;
+  notes: string;
   numberOfReviews: string;
   reviewHours: string;
   hoursRequiredByBim: string;

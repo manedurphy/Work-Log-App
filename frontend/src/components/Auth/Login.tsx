@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent, useState, useContext } from 'react';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -15,8 +15,7 @@ import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import { Redirect } from 'react-router-dom';
 import { Tasks, Users } from '../../enums';
-import { GlobalContext } from '../../context/GlobalState';
-import { ITask } from '../../type';
+import { getToken, GlobalContext } from '../../context/GlobalState';
 
 function Copyright() {
   return (
@@ -65,28 +64,26 @@ export default function SignIn() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    axios
-      .post('api/auth/login', formData)
-      .then((res) => {
-        localStorage.setItem('token', res.data.jwt);
-        dispatch({ type: Users.setUser, payload: res.data.user });
-      })
-      .then(() => {
-        const token = localStorage.getItem('token');
-        axios
-          .get('/api/task', { headers: { Authorization: `Bearer ${token}` } })
-          .then((res: AxiosResponse<ITask[]>) => {
-            dispatch({ type: Tasks.updateTasks, payload: res.data });
-          });
-      })
-      .then(() => {
-        setIsLoggedIn(true);
-      })
-      .catch((err) => {
-        setAlert(err.response.data.message);
+    try {
+      let res = await axios.post('api/auth/login', formData);
+      localStorage.setItem('token', res.data.jwt);
+      dispatch({ type: Users.setUser, payload: res.data.user });
+
+      const token = getToken();
+      res = await axios.get('/api/task', {
+        headers: { Authorization: `Bearer ${token}` },
       });
+      dispatch({ type: Tasks.updateTasks, payload: res.data });
+
+      setIsLoggedIn(true);
+    } catch (err) {
+      setAlert(err.response.data.message);
+      setTimeout(() => {
+        setAlert(null);
+      }, 3000);
+    }
   };
 
   return (

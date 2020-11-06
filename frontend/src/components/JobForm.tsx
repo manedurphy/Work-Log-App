@@ -4,12 +4,12 @@ import React, {
   ChangeEvent,
   FormEvent,
   useEffect,
-} from "react";
-import axios, { AxiosResponse } from "axios";
-import { AlertType, ITaskForm, MessageType } from "../type";
-import { Paper } from "@material-ui/core";
-import { Tasks } from "../enums";
-import { getToken, GlobalContext } from "../context/GlobalState";
+} from 'react';
+import axios, { AxiosResponse } from 'axios';
+import { AlertType, ITaskForm, MessageType } from '../type';
+import { Paper } from '@material-ui/core';
+import { Tasks } from '../enums';
+import { getToken, GlobalContext } from '../context/GlobalState';
 
 const JobForm: React.FC = () => {
   const { state, dispatch } = useContext(GlobalContext);
@@ -28,14 +28,14 @@ const JobForm: React.FC = () => {
   });
 
   const [formData, setFormData] = useState<ITaskForm>({
-    name: "",
-    projectNumber: "",
-    hoursAvailableToWork: "",
-    hoursWorked: "",
-    description: "",
-    numberOfReviews: "",
-    reviewHours: "",
-    hoursRequiredByBim: "",
+    name: '',
+    projectNumber: '',
+    hoursAvailableToWork: '',
+    hoursWorked: '',
+    notes: '',
+    numberOfReviews: '',
+    reviewHours: '',
+    hoursRequiredByBim: '',
   });
 
   useEffect((): void => {
@@ -43,41 +43,41 @@ const JobForm: React.FC = () => {
       setFormData({
         name: currentTask.name,
         projectNumber: currentTask.projectNumber.toString(),
-        hoursAvailableToWork: currentTask.hours.hoursAvailableToWork.toString(),
-        hoursWorked: currentTask.hours.hoursWorked.toString(),
-        description: currentTask.description,
-        numberOfReviews: currentTask.reviews.numberOfReviews.toString(),
-        reviewHours: currentTask.reviews.reviewHours.toString(),
-        hoursRequiredByBim: currentTask.reviews.hoursRequiredByBim.toString(),
+        hoursAvailableToWork: currentTask.hoursAvailableToWork.toString(),
+        hoursWorked: currentTask.hoursWorked.toString(),
+        notes: currentTask.notes || '',
+        numberOfReviews: currentTask.numberOfReviews.toString(),
+        reviewHours: currentTask.reviewHours.toString(),
+        hoursRequiredByBim: currentTask.hoursRequiredByBim.toString(),
       });
 
     !edit &&
       setFormData({
-        name: "",
-        projectNumber: "",
-        hoursAvailableToWork: "",
-        hoursWorked: "",
-        description: "",
-        numberOfReviews: "",
-        reviewHours: "",
-        hoursRequiredByBim: "",
+        name: '',
+        projectNumber: '',
+        hoursAvailableToWork: '',
+        hoursWorked: '',
+        notes: '',
+        numberOfReviews: '',
+        reviewHours: '',
+        hoursRequiredByBim: '',
       });
   }, [edit]);
 
   const getTasks = async (): Promise<void> => {
     const token = getToken();
-    const res = await axios.get("/api/task", {
+    const res = await axios.get('/api/task', {
       headers: { Authorization: `Bearer ${token}` },
     });
     setFormData({
-      name: "",
-      projectNumber: "",
-      hoursAvailableToWork: "",
-      hoursWorked: "",
-      description: "",
-      numberOfReviews: "",
-      reviewHours: "",
-      hoursRequiredByBim: "",
+      name: '',
+      projectNumber: '',
+      hoursAvailableToWork: '',
+      hoursWorked: '',
+      notes: '',
+      numberOfReviews: '',
+      reviewHours: '',
+      hoursRequiredByBim: '',
     });
     dispatch({ type: Tasks.updateTasks, payload: res.data });
   };
@@ -107,11 +107,11 @@ const JobForm: React.FC = () => {
     const token = getToken();
 
     try {
-      if (command === "success") {
-        res = await axios.post("api/task", formData, {
+      if (command === 'success') {
+        res = await axios.post('api/task', formData, {
           headers: { Authorization: `Bearer ${token}` },
         });
-      } else if (command === "update") {
+      } else if (command === 'update') {
         res = await axios.put(`api/task/${formData.projectNumber}`, formData, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -122,7 +122,7 @@ const JobForm: React.FC = () => {
       }
       setAlertsAndGetTasks(command, res.data.message);
     } catch (err) {
-      setAlertsAndGetTasks("error", err.response.data.message, err);
+      setAlertsAndGetTasks('error', err.response.data.message, err);
     }
   };
 
@@ -132,10 +132,10 @@ const JobForm: React.FC = () => {
         className="job-form"
         onSubmit={
           edit && deleteMode
-            ? (e) => handleForm(e, "delete")
+            ? (e) => handleForm(e, 'delete')
             : edit
-            ? (e) => handleForm(e, "update")
-            : (e) => handleForm(e, "success")
+            ? (e) => handleForm(e, 'update')
+            : (e) => handleForm(e, 'success')
         }
       >
         {alerts.success && (
@@ -225,7 +225,7 @@ const JobForm: React.FC = () => {
           </div>
           <div className="form-group col-md-4">
             <label htmlFor="hoursRequiredByBim">
-              {" "}
+              {' '}
               Enter Hours Required By Bim
             </label>
             <input
@@ -243,13 +243,13 @@ const JobForm: React.FC = () => {
               Enter a short description of the job
             </label>
             <textarea
-              name="description"
-              id="description"
+              name="notes"
+              id="notes"
               cols={10}
               rows={5}
               className="form-control"
               onChange={handleChange}
-              value={formData.description}
+              value={formData.notes}
             ></textarea>
           </div>
         </div>

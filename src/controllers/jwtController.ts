@@ -89,10 +89,10 @@ export class JWTController {
         email: user.email,
       });
 
-      sgMail.setApiKey(`${process.env.SENDGRID_API}`);
+      sgMail.setApiKey(process.env.SENDGRID_API as string);
 
       const msg = {
-        to: `${process.env.TEST_EMAIL}`,
+        to: process.env.TEST_EMAIL,
         from: `${process.env.ETHEREAL_EMAIL}`,
         subject: 'Verify your account',
         html:
@@ -121,7 +121,6 @@ export class JWTController {
         return res.status(400).json({ message: 'Email has not been verified' });
 
       const existingPassword = existingUser.get('password');
-
       const passwordMatches = await compare(password, existingPassword);
 
       if (!passwordMatches)
