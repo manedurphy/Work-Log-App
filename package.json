@@ -20,7 +20,9 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-validator": "^6.6.1",
-    "mongoose": "^5.10.9"
+    "mongoose": "^5.10.9",
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.3.5"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
@@ -30,6 +32,7 @@
     "@types/jsonwebtoken": "^8.5.0",
     "@types/mongoose": "^5.7.36",
     "@types/node": "^14.11.10",
+    "@types/sequelize": "^4.28.9",
     "concurrently": "^5.3.0",
     "nodemon": "^2.0.6",
     "ts-node": "^9.0.0",

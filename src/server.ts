@@ -36,4 +36,5 @@ class MyServer extends Server {
   }
 }
 
-export default MyServer;
+const server = new MyServer();
+server.start(5000);
