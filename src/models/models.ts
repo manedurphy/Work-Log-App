@@ -12,10 +12,15 @@ import {
 import { UserAttributes, UserCreationAttributes } from '../interfaces/user';
 import { TaskAttributes, TaskCreationAttributes } from '../interfaces/task';
 
-const sequelize = new Sequelize('workLogger', 'root', 'dane1234', {
-  host: 'localhost',
-  dialect: 'mysql',
-});
+const sequelize = new Sequelize(
+  'workLogger',
+  process.env.MySQL_USERNAME as string,
+  process.env.MySQL_PASSWORD as string,
+  {
+    host: 'localhost',
+    dialect: 'mysql',
+  }
+);
 
 export class User
   extends Model<UserAttributes, UserCreationAttributes>
