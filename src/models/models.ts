@@ -11,6 +11,10 @@ import {
 } from 'sequelize';
 import { UserAttributes, UserCreationAttributes } from '../interfaces/user';
 import { TaskAttributes, TaskCreationAttributes } from '../interfaces/task';
+import {
+  ActivationPasswordAttributes,
+  ActivationPasswordCreationAttributes,
+} from '../interfaces/activationPassword';
 
 const sequelize = new Sequelize(
   'workLogger',
@@ -29,7 +33,7 @@ export class User
   public firstName!: string;
   public lastName!: string;
   public email!: string;
-  public emailVerified!: boolean;
+  public active!: boolean;
   public password!: string;
 
   public readonly createdAt!: Date;
@@ -70,7 +74,7 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    emailVerified: {
+    active: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
@@ -169,10 +173,48 @@ Task.init(
   }
 );
 
+export class ActivationPassword
+  extends Model<
+    ActivationPasswordAttributes,
+    ActivationPasswordCreationAttributes
+  >
+  implements ActivationPasswordAttributes {
+  public id!: number;
+  public password!: string;
+  public UserId!: number;
+}
+
+ActivationPassword.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    UserId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+  },
+  {
+    sequelize,
+    timestamps: false,
+  }
+);
+
 User.hasMany(Task);
+User.hasOne(ActivationPassword);
+ActivationPassword.belongsTo(User);
 Task.belongsTo(User);
 
 (async () => {
   await User.sync();
+  await ActivationPassword.sync();
   await Task.sync();
 })();

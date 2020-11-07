@@ -5,7 +5,7 @@ export interface UserAttributes {
   firstName: string;
   lastName: string;
   email: string;
-  emailVerified: boolean;
+  active: boolean;
   password: string;
   createdAt?: Date;
   updatedAt?: Date;

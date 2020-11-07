@@ -1,3 +1,4 @@
+import * as H from 'history';
 import { Tasks, Users } from './enums';
 
 /** TASKS  */
@@ -85,7 +86,29 @@ export type LoginType = {
 
 export type RegisterType = {
   success: boolean;
-  jwt: string;
+};
+
+/** MATCH OBJECT */
+export interface IMatchParams {
+  hash: string;
+}
+
+export interface IMatch<P> {
+  params: P;
+  isExact: boolean;
+  path: string;
+  url: string;
+}
+
+export interface IParams {
+  hash: string;
+}
+
+export type VerifyProps = {
+  match: IMatch<IParams>;
+  location: H.Location;
+  history: H.History;
+  staticContext?: any;
 };
 
 /** GLOBALS */

@@ -1,7 +1,7 @@
 import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
 import { Get, Post, Controller, Middleware } from '@overnightjs/core';
 import { Request, Response } from 'express';
-import { User } from '../models/models';
+import { User, ActivationPassword } from '../models/models';
 import { body, validationResult } from 'express-validator';
 import { hash, compare } from 'bcrypt';
 import sgMail = require('@sendgrid/mail');
@@ -22,7 +22,7 @@ export class JWTController {
     try {
       const user = await User.findOne({ where: { email: req.payload.email } });
 
-      if (!user?.emailVerified)
+      if (!user?.active)
         return res
           .status(400)
           .json({ message: 'This account has not been verified' });
@@ -40,16 +40,22 @@ export class JWTController {
     }
   }
 
-  @Get('verify')
-  @Middleware(customJwtManager.middleware)
-  private async verifyAccount(req: ISecureRequest, res: Response) {
+  @Get('verify/:hash')
+  private async verifyAccount(req: Request, res: Response) {
     try {
-      const user = await User.findOne({ where: { email: req.payload.email } });
-      if (!user) return res.json({ message: 'User could not be verified' });
-
-      await user.update({
-        emailVerified: true,
+      const activationPassword = await ActivationPassword.findOne({
+        where: { password: req.params.hash },
       });
+
+      if (!activationPassword)
+        return res.json({ message: 'User could not be verified' });
+
+      const user = await User.findByPk(activationPassword.UserId);
+      await user?.update({
+        active: true,
+      });
+
+      activationPassword.destroy();
 
       res.json({ isVerified: true });
     } catch (error) {
@@ -88,26 +94,26 @@ export class JWTController {
         firstName,
         lastName,
         email,
-        emailVerified: false,
+        active: false,
         password: hashPassword,
-      });
-      const jwtStr = customJwtManager.jwt({
-        email: user.email,
       });
 
       sgMail.setApiKey(process.env.SENDGRID_API as string);
 
+      await ActivationPassword.create({
+        password: require('crypto').randomBytes(80).toString('hex'),
+        UserId: user.id,
+      });
+
       const msg = {
         to: process.env.TEST_EMAIL,
-        from: `${process.env.ETHEREAL_EMAIL}`,
+        from: process.env.ETHEREAL_EMAIL as string,
         subject: 'Verify your account',
-        html:
-          '<p>Click the link to verify your account http://localhost:3000/verify</p>',
+        html: `<p>Click the link to verify your account http://localhost:3000/${hashPassword}</p>`,
       };
       await sgMail.send(msg);
       res.status(200).json({
         success: true,
-        jwt: jwtStr,
       });
     } catch (error) {
       this.serverError(res);
@@ -123,7 +129,7 @@ export class JWTController {
       if (!existingUser)
         return res.status(400).json({ message: 'Invalid Credentials' });
 
-      if (!existingUser.emailVerified)
+      if (!existingUser.active)
         return res.status(400).json({ message: 'Email has not been verified' });
 
       const existingPassword = existingUser.get('password');

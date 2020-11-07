@@ -73,7 +73,6 @@ export default function SignUp() {
         formData
       );
       setSignUpSuccess(res.data.success);
-      localStorage.setItem('token', res.data.jwt);
     } catch (err) {
       setAlert(err.response.data.message);
       setTimeout(() => {
