@@ -100,16 +100,20 @@ export class JWTController {
 
       sgMail.setApiKey(process.env.SENDGRID_API as string);
 
+      const activationPassword = require('crypto')
+        .randomBytes(80)
+        .toString('hex');
+
       await ActivationPassword.create({
-        password: require('crypto').randomBytes(80).toString('hex'),
+        password: activationPassword,
         UserId: user.id,
       });
 
       const msg = {
-        to: process.env.TEST_EMAIL,
+        to: process.env.TEST_EMAIL as string,
         from: process.env.ETHEREAL_EMAIL as string,
         subject: 'Verify your account',
-        html: `<p>Click the link to verify your account http://localhost:3000/${hashPassword}</p>`,
+        html: `<p>Click the link to verify your account http://localhost:3000/verify/${activationPassword}</p>`,
       };
       await sgMail.send(msg);
       res.status(200).json({
