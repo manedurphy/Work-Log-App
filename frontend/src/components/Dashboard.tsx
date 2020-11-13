@@ -32,7 +32,8 @@ import { VerifyType } from '../type';
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import DataUsageIcon from '@material-ui/icons/DataUsage';
-
+import { Tasks } from '../enums';
+import { ITask } from '../type';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -151,7 +152,21 @@ const Dashboard: React.FC = (): JSX.Element => {
         setIsLoggedIn(false);
       }
     })();
-  }, []);
+
+    getTasks();
+  }, [showCompleted]);
+
+  const getTasks = async (): Promise<void> => {
+    const token = getToken();
+    const res: AxiosResponse<ITask[]> = await axios.get(
+      showCompleted ? '/api/archive' : '/api/task',
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    dispatch({ type: Tasks.updateTasks, payload: res.data });
+  };
 
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
@@ -257,7 +272,10 @@ const Dashboard: React.FC = (): JSX.Element => {
             </Grid>
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <CurrentTasks showCompleted={showCompleted} />
+                <CurrentTasks
+                  getTasks={getTasks}
+                  showCompleted={showCompleted}
+                />
               </Paper>
             </Grid>
           </Grid>

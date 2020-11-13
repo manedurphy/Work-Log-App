@@ -34,9 +34,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CurrentTasks: React.FC<{ showCompleted: boolean }> = (
-  props
-): JSX.Element => {
+const CurrentTasks: React.FC<{
+  getTasks: () => void;
+  showCompleted: boolean;
+}> = (props): JSX.Element => {
   const classes = useStyles();
   const [alerts, setAlerts] = useState<{
     success: AlertType;
@@ -56,25 +57,12 @@ const CurrentTasks: React.FC<{ showCompleted: boolean }> = (
     currentTasks.length ? setShowBody(true) : setShowBody(false);
   }, [currentTasks]);
 
-  const getTasks = async (): Promise<void> => {
-    const token = getToken();
-
-    const res: AxiosResponse<ITask[]> = await axios.get(
-      props.showCompleted ? '/api/archive' : '/api/task',
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-
-    dispatch({ type: Tasks.updateTasks, payload: res.data });
-  };
-
   const setAlertsAndGetTasks = (
     command: string,
     message: string,
     err: Error | null = null
   ) => {
-    if (!err) getTasks();
+    if (!err) props.getTasks();
 
     setAlerts({ ...alerts, [command]: message });
     setTimeout(() => {
@@ -145,7 +133,7 @@ const CurrentTasks: React.FC<{ showCompleted: boolean }> = (
         </Alert>
       )}
 
-      <Title>Current Tasks</Title>
+      <Title>{props.showCompleted ? 'Archive' : 'Current Tasks'}</Title>
       <Table size="small">
         {showBody ? (
           <>
