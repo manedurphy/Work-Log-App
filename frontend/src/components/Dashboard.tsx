@@ -29,6 +29,9 @@ import { Redirect } from 'react-router-dom';
 import { getToken, GlobalContext } from '../context/GlobalState';
 import { Users } from '../enums';
 import { VerifyType } from '../type';
+import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import DataUsageIcon from '@material-ui/icons/DataUsage';
 
 function Copyright() {
   return (
@@ -127,6 +130,7 @@ const useStyles = makeStyles((theme) => ({
 const Dashboard: React.FC = (): JSX.Element => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [showCompleted, setShowCompleted] = useState(false);
   const { dispatch } = useContext(GlobalContext);
 
   useEffect(() => {
@@ -222,7 +226,20 @@ const Dashboard: React.FC = (): JSX.Element => {
           </IconButton>
         </div>
         <Divider />
-        <List>{mainListItems}</List>
+        <List>
+          <ListItem button onClick={() => setShowCompleted(false)}>
+            <ListItemIcon>
+              <AssignmentIcon />
+            </ListItemIcon>
+            <ListItemText primary="Current Tasks" />
+          </ListItem>
+          <ListItem button onClick={() => setShowCompleted(true)}>
+            <ListItemIcon>
+              <DataUsageIcon />
+            </ListItemIcon>
+            <ListItemText primary="Archive" />
+          </ListItem>
+        </List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
@@ -240,7 +257,7 @@ const Dashboard: React.FC = (): JSX.Element => {
             </Grid>
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <CurrentTasks />
+                <CurrentTasks showCompleted={showCompleted} />
               </Paper>
             </Grid>
           </Grid>

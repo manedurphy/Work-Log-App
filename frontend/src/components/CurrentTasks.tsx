@@ -34,7 +34,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CurrentTasks: React.FC = () => {
+const CurrentTasks: React.FC<{ showCompleted: boolean }> = (
+  props
+): JSX.Element => {
   const classes = useStyles();
   const [alerts, setAlerts] = useState<{
     success: AlertType;
@@ -56,9 +58,14 @@ const CurrentTasks: React.FC = () => {
 
   const getTasks = async (): Promise<void> => {
     const token = getToken();
-    const res: AxiosResponse<ITask[]> = await axios.get('/api/task', {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+
+    const res: AxiosResponse<ITask[]> = await axios.get(
+      props.showCompleted ? '/api/archive' : '/api/task',
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
     dispatch({ type: Tasks.updateTasks, payload: res.data });
   };
 
