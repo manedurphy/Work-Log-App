@@ -240,6 +240,15 @@ const JobForm: React.FC = () => {
         </div>
         <div className="form-row">
           <div className="form-group col-md-6">
+            <label htmlFor="">Is this project collaborative?</label>
+            <select name="" id="">
+              <option value="">No</option>
+              <option value="">Yes</option>
+            </select>
+          </div>
+        </div>
+        <div className="form-row">
+          <div className="form-group col-md-6">
             <label htmlFor="description">
               Enter a short description of the job
             </label>

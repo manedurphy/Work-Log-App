@@ -1,4 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
+import axios, { AxiosResponse } from 'axios';
+import Title from './Title';
+import moment from 'moment';
+import { Alert } from '@material-ui/lab';
+import { Tasks } from '../enums';
+import { getToken, GlobalContext } from '../context/GlobalState';
+import { AlertType, ITask, MessageType } from '../type';
 import {
   Link,
   Table,
@@ -16,13 +23,6 @@ import {
   MoreVert as MoreVertIcon,
   CheckCircleOutline as CheckCircleOutlineIcon,
 } from '@material-ui/icons';
-import { Alert } from '@material-ui/lab';
-import Title from './Title';
-import moment from 'moment';
-import axios, { AxiosResponse } from 'axios';
-import { Tasks } from '../enums';
-import { getToken, GlobalContext } from '../context/GlobalState';
-import { AlertType, ITask, MessageType } from '../type';
 
 function preventDefault(event: any) {
   event.preventDefault();
