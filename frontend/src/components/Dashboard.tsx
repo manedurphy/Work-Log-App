@@ -20,10 +20,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { mainListItems } from '../data/listItems';
 import Chart from './Chart';
 import Deposits from './CurrentWeek';
-import CurrentTasks from './CurrentTasks';
+import TasksComponent from './Tasks';
 import JobForm from './JobForm';
 import { Redirect } from 'react-router-dom';
 import { getToken, GlobalContext } from '../context/GlobalState';
@@ -272,7 +271,7 @@ const Dashboard: React.FC = (): JSX.Element => {
             </Grid>
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <CurrentTasks
+                <TasksComponent
                   getTasks={getTasks}
                   showCompleted={showCompleted}
                 />

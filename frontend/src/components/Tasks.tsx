@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CurrentTasks: React.FC<{
+const TasksComponent: React.FC<{
   getTasks: () => void;
   showCompleted: boolean;
 }> = (props): JSX.Element => {
@@ -215,4 +215,4 @@ const CurrentTasks: React.FC<{
   );
 };
 
-export default CurrentTasks;
+export default TasksComponent;
