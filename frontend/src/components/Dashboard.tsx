@@ -1,38 +1,41 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Drawer from '@material-ui/core/Drawer';
-import Box from '@material-ui/core/Box';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import DataUsageIcon from '@material-ui/icons/DataUsage';
 import Chart from './Chart';
 import Deposits from './CurrentWeek';
 import TasksComponent from './Tasks';
 import JobForm from './JobForm';
+import Spinner from './Spinner';
 import { Redirect } from 'react-router-dom';
 import { getToken, GlobalContext } from '../context/GlobalState';
-import { Users } from '../enums';
+import { Users, Tasks } from '../enums';
 import { VerifyType } from '../type';
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import AssignmentIcon from '@material-ui/icons/Assignment';
-import DataUsageIcon from '@material-ui/icons/DataUsage';
-import { Tasks } from '../enums';
 import { ITask } from '../type';
+import {
+  makeStyles,
+  CssBaseline,
+  Drawer,
+  Box,
+  AppBar,
+  Toolbar,
+  List,
+  Typography,
+  Divider,
+  IconButton,
+  Badge,
+  Container,
+  Grid,
+  Paper,
+  Link,
+} from '@material-ui/core';
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -130,6 +133,7 @@ const useStyles = makeStyles((theme) => ({
 const Dashboard: React.FC = (): JSX.Element => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [loadingTasks, setLoadingTasks] = useState(true);
   const [showCompleted, setShowCompleted] = useState(false);
   const { dispatch } = useContext(GlobalContext);
 
@@ -165,6 +169,7 @@ const Dashboard: React.FC = (): JSX.Element => {
     );
 
     dispatch({ type: Tasks.updateTasks, payload: res.data });
+    setLoadingTasks(false);
   };
 
   const classes = useStyles();
@@ -182,9 +187,7 @@ const Dashboard: React.FC = (): JSX.Element => {
     window.location.reload();
   };
 
-  return loading && isLoggedIn ? (
-    <div className="loader">Loading...</div>
-  ) : !isLoggedIn ? (
+  return !isLoggedIn ? (
     <Redirect to="/login" />
   ) : (
     <div className={classes.root}>
@@ -241,13 +244,29 @@ const Dashboard: React.FC = (): JSX.Element => {
         </div>
         <Divider />
         <List>
-          <ListItem button onClick={() => setShowCompleted(false)}>
+          <ListItem
+            button
+            onClick={() => {
+              if (showCompleted) {
+                setLoadingTasks(true);
+                setShowCompleted(false);
+              }
+            }}
+          >
             <ListItemIcon>
               <AssignmentIcon />
             </ListItemIcon>
             <ListItemText primary="Current Tasks" />
           </ListItem>
-          <ListItem button onClick={() => setShowCompleted(true)}>
+          <ListItem
+            button
+            onClick={() => {
+              if (!showCompleted) {
+                setLoadingTasks(true);
+                setShowCompleted(true);
+              }
+            }}
+          >
             <ListItemIcon>
               <DataUsageIcon />
             </ListItemIcon>
@@ -257,34 +276,38 @@ const Dashboard: React.FC = (): JSX.Element => {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={8} lg={7}>
-              <Paper className={fixedHeightPaper}>
-                <Chart />
-              </Paper>
+        {loadingTasks ? (
+          <Spinner />
+        ) : (
+          <Container maxWidth="lg" className={classes.container}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={8} lg={7}>
+                <Paper className={fixedHeightPaper}>
+                  <Chart />
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={4} lg={5}>
+                <Paper className={fixedHeightPaper}>
+                  <Deposits />
+                </Paper>
+              </Grid>
+              <Grid item xs={12}>
+                <Paper className={classes.paper}>
+                  <TasksComponent
+                    getTasks={getTasks}
+                    showCompleted={showCompleted}
+                  />
+                </Paper>
+              </Grid>
             </Grid>
-            <Grid item xs={12} md={4} lg={5}>
-              <Paper className={fixedHeightPaper}>
-                <Deposits />
-              </Paper>
-            </Grid>
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <TasksComponent
-                  getTasks={getTasks}
-                  showCompleted={showCompleted}
-                />
-              </Paper>
-            </Grid>
-          </Grid>
-          {!showCompleted && (
-            <Box pt={4}>
-              <JobForm />
-              <Copyright />
-            </Box>
-          )}
-        </Container>
+            {!showCompleted && (
+              <Box pt={4}>
+                <JobForm />
+                <Copyright />
+              </Box>
+            )}
+          </Container>
+        )}
       </main>
     </div>
   );
