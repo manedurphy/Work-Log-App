@@ -146,7 +146,7 @@ const CurrentTasks: React.FC<{
                 <TableCell>Hours Remaining</TableCell>
                 <TableCell>Reviews</TableCell>
                 <TableCell>Hours for BIM</TableCell>
-                <TableCell>Actions</TableCell>
+                {!props.showCompleted && <TableCell>Actions</TableCell>}
               </TableRow>
             </TableHead>
             <TableBody className="action-cell">
@@ -165,37 +165,39 @@ const CurrentTasks: React.FC<{
                   <TableCell>{row.hoursRemaining}</TableCell>
                   <TableCell>{row.numberOfReviews}</TableCell>
                   <TableCell>{row.hoursRequiredByBim}</TableCell>
-                  <TableCell>
-                    {!modify ? (
-                      <IconButton onClick={() => setModify(!modify)}>
-                        <MoreVertIcon />
-                      </IconButton>
-                    ) : (
-                      <>
-                        <IconButton
-                          onClick={(e) =>
-                            handleAction(e, row.projectNumber, 'edit')
-                          }
-                        >
-                          <EditIcon />
+                  {!props.showCompleted && (
+                    <TableCell>
+                      {!modify ? (
+                        <IconButton onClick={() => setModify(!modify)}>
+                          <MoreVertIcon />
                         </IconButton>
-                        <IconButton
-                          onClick={(e) =>
-                            handleAction(e, row.projectNumber, 'delete')
-                          }
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                        <IconButton
-                          onClick={(e) =>
-                            handleAction(e, row.projectNumber, 'success')
-                          }
-                        >
-                          <CheckCircleOutlineIcon />
-                        </IconButton>
-                      </>
-                    )}
-                  </TableCell>
+                      ) : (
+                        <>
+                          <IconButton
+                            onClick={(e) =>
+                              handleAction(e, row.projectNumber, 'edit')
+                            }
+                          >
+                            <EditIcon />
+                          </IconButton>
+                          <IconButton
+                            onClick={(e) =>
+                              handleAction(e, row.projectNumber, 'delete')
+                            }
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                          <IconButton
+                            onClick={(e) =>
+                              handleAction(e, row.projectNumber, 'success')
+                            }
+                          >
+                            <CheckCircleOutlineIcon />
+                          </IconButton>
+                        </>
+                      )}
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>

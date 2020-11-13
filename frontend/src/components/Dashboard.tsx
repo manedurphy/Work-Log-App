@@ -279,10 +279,12 @@ const Dashboard: React.FC = (): JSX.Element => {
               </Paper>
             </Grid>
           </Grid>
-          <Box pt={4}>
-            <JobForm />
-            <Copyright />
-          </Box>
+          {!showCompleted && (
+            <Box pt={4}>
+              <JobForm />
+              <Copyright />
+            </Box>
+          )}
         </Container>
       </main>
     </div>
