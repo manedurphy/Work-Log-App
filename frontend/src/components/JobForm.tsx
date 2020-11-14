@@ -7,12 +7,35 @@ import React, {
 } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { AlertType, ITaskForm, MessageType, ITask } from '../type';
-import { Paper } from '@material-ui/core';
+import {
+  Paper,
+  FormControl,
+  Input,
+  InputLabel,
+  FormHelperText,
+  Grid,
+  TextField,
+  TextareaAutosize,
+  makeStyles,
+  Select,
+  MenuItem,
+  Button,
+} from '@material-ui/core';
 import { Tasks } from '../enums';
 import { getToken, GlobalContext } from '../context/GlobalState';
 import { Alert } from '@material-ui/lab';
+import Title from './Title';
+
+const useStyles = makeStyles((theme) => ({
+  form: {
+    width: '97%', // Fix IE 11 issue.
+    marginTop: theme.spacing(3),
+    margin: 'auto',
+  },
+}));
 
 const JobForm: React.FC = () => {
+  const classes = useStyles();
   const { state, dispatch } = useContext(GlobalContext);
   const { edit, currentTask } = state.tasks;
   const [deleteMode, setDeleteMode] = useState(false);
@@ -130,7 +153,7 @@ const JobForm: React.FC = () => {
   return (
     <Paper>
       <form
-        className="job-form"
+        className={classes.form}
         onSubmit={
           edit && deleteMode
             ? (e) => handleForm(e, 'delete')
@@ -139,6 +162,7 @@ const JobForm: React.FC = () => {
             : (e) => handleForm(e, 'success')
         }
       >
+        <Title>Create a New Task</Title>
         {alerts.success && (
           <Alert severity="success" role="alert">
             {alerts.success}
@@ -159,132 +183,154 @@ const JobForm: React.FC = () => {
             {alerts.error}
           </Alert>
         )}
-        <div className="form-row">
-          <div className="form-group col-md-6">
-            <label htmlFor="name">Enter Task</label>
-            <input
-              type="text"
-              className="form-control"
+
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="name"
+              variant="outlined"
+              required
+              fullWidth
               id="name"
-              onChange={handleChange}
+              label="Task Name"
+              autoFocus
               value={formData.name}
+              onChange={handleChange}
             />
-          </div>
-          <div className="form-group col-md-6">
-            <label htmlFor="projectNumber">Enter Project Number</label>
-            <input
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
               type="number"
-              className="form-control"
               id="projectNumber"
+              label="Project Number"
+              name="projectNumber"
+              value={formData.projectNumber}
               onChange={handleChange}
-              value={edit ? currentTask.projectNumber : formData.projectNumber}
             />
-          </div>
-        </div>
-        <div className="form-row">
-          <div className="form-group col-md-6">
-            <label htmlFor="hoursAvailableToWork"> Enter Available Hours</label>
-            <input
+          </Grid>
+
+          <Grid item xs={12} sm={4}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
               type="number"
-              className="form-control"
               id="hoursAvailableToWork"
-              onChange={handleChange}
+              label="Hours Available to Work"
+              name="hoursAvailableToWork"
+              autoComplete="lname"
               value={formData.hoursAvailableToWork}
+              onChange={handleChange}
             />
-          </div>
-          <div className="form-group col-md-6">
-            <label htmlFor="hoursWorked"> Enter Hours Worked</label>
-            <input
+          </Grid>
+
+          <Grid item xs={12} sm={4}>
+            <TextField
+              variant="outlined"
+              fullWidth
               type="number"
-              className="form-control"
               id="hoursWorked"
-              onChange={handleChange}
+              label="Hours Worked"
+              name="hoursWorked"
               value={formData.hoursWorked}
-            />
-          </div>
-        </div>
-        <div className="form-row">
-          <div className="form-group col-md-4">
-            <label htmlFor="numberOfReviews"> Enter Number of Reviews</label>
-            <input
-              type="number"
-              className="form-control"
-              id="numberOfReviews"
               onChange={handleChange}
-              value={formData.numberOfReviews}
             />
-          </div>
-          <div className="form-group col-md-4">
-            <label htmlFor="reviewHours"> Enter Hours Spent on Review</label>
-            <input
+          </Grid>
+
+          <Grid item xs={12} sm={4}>
+            <TextField
+              variant="outlined"
+              fullWidth
               type="number"
-              className="form-control"
               id="reviewHours"
-              onChange={handleChange}
+              label="Hours Spent on Review"
+              name="reviewHours"
+              autoComplete="lname"
               value={formData.reviewHours}
+              onChange={handleChange}
             />
-          </div>
-          <div className="form-group col-md-4">
-            <label htmlFor="hoursRequiredByBim">
-              {' '}
-              Enter Hours Required By Bim
-            </label>
-            <input
+          </Grid>
+
+          <Grid item xs={12} sm={4}>
+            <TextField
+              variant="outlined"
+              fullWidth
               type="number"
-              className="form-control"
               id="hoursRequiredByBim"
-              onChange={handleChange}
+              label="Hours Required By BIM"
+              name="hoursRequiredByBim"
+              autoComplete="lname"
               value={formData.hoursRequiredByBim}
-            />
-          </div>
-        </div>
-        <div className="form-row">
-          <div className="form-group col-md-6">
-            <label htmlFor="">Is this project collaborative?</label>
-            <select name="" id="">
-              <option value="">No</option>
-              <option value="">Yes</option>
-            </select>
-          </div>
-        </div>
-        <div className="form-row">
-          <div className="form-group col-md-6">
-            <label htmlFor="description">
-              Enter a short description of the job
-            </label>
-            <textarea
-              name="notes"
-              id="notes"
-              cols={10}
-              rows={5}
-              className="form-control"
               onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              variant="outlined"
+              fullWidth
+              type="number"
+              id="numberOfReviews"
+              label="Number of Reviews"
+              name="numberOfReviews"
+              value={formData.numberOfReviews}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Select fullWidth>
+              <MenuItem value={'no'}>No</MenuItem>
+              <MenuItem value={'yes'}>Yes</MenuItem>
+            </Select>
+            <FormHelperText>Is this project collaborative?</FormHelperText>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              id="notes"
+              label="Notes or Comments"
+              name="notes"
               value={formData.notes}
-            ></textarea>
-          </div>
-        </div>
+              onChange={handleChange}
+            />
+          </Grid>
+        </Grid>
+
         <div className="submit">
           {edit ? (
             <>
-              <button
+              <Button
                 type="submit"
-                className="btn btn-primary mr-1"
+                variant="contained"
+                color="primary"
                 onClick={() => setDeleteMode(false)}
+                style={{ margin: '10px' }}
               >
                 Update
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
-                className="btn btn-danger ml-1"
+                variant="contained"
+                color="secondary"
                 onClick={() => setDeleteMode(true)}
+                style={{ margin: '10px' }}
               >
                 Delete
-              </button>
+              </Button>
             </>
           ) : (
-            <button type="submit" className="btn btn-primary">
+            <Button
+              className="job-form-button"
+              type="submit"
+              variant="contained"
+              color="primary"
+              style={{ margin: '10px' }}
+            >
               Submit
-            </button>
+            </Button>
           )}
         </div>
       </form>
