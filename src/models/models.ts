@@ -11,6 +11,7 @@ import {
 } from 'sequelize';
 import { UserAttributes, UserCreationAttributes } from '../interfaces/user';
 import { TaskAttributes, TaskCreationAttributes } from '../interfaces/task';
+import { LogAttributes, LogCreationAttributes } from '../interfaces/log';
 import {
   ActivationPasswordAttributes,
   ActivationPasswordCreationAttributes,
@@ -173,6 +174,87 @@ Task.init(
   }
 );
 
+export class Log
+  extends Model<LogAttributes, LogCreationAttributes>
+  implements LogAttributes {
+  public id!: number;
+  public name!: string;
+  public projectNumber!: number;
+  public hoursAvailableToWork!: number;
+  public hoursWorked!: number;
+  public hoursRemaining!: number;
+  public notes!: string | null;
+  public numberOfReviews!: number;
+  public reviewHours!: number;
+  public hoursRequiredByBim!: number;
+  public complete!: boolean;
+  public TaskId!: number;
+
+  public readonly createdAt!: Date;
+}
+
+Log.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    projectNumber: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    hoursAvailableToWork: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    hoursWorked: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    hoursRemaining: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    notes: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    numberOfReviews: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    reviewHours: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    hoursRequiredByBim: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    complete: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    TaskId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+  },
+  {
+    sequelize,
+    createdAt: true,
+    updatedAt: false,
+    modelName: 'Log',
+  }
+);
+
 export class ActivationPassword
   extends Model<
     ActivationPasswordAttributes,
@@ -211,10 +293,12 @@ ActivationPassword.init(
 User.hasMany(Task);
 User.hasOne(ActivationPassword);
 ActivationPassword.belongsTo(User);
+Task.hasMany(Log);
 Task.belongsTo(User);
 
 (async () => {
   await User.sync();
   await ActivationPassword.sync();
   await Task.sync();
+  await Log.sync();
 })();

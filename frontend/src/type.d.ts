@@ -2,7 +2,7 @@ import * as H from 'history';
 import { Tasks, Users } from './enums';
 
 /** TASKS  */
-interface ITask {
+export interface ITask {
   id: number;
   name: string;
   projectNumber: number;
@@ -17,6 +17,22 @@ interface ITask {
   UserId?: number;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface ILog {
+  id: number;
+  name: string;
+  projectNumber: number;
+  hoursAvailableToWork: number;
+  hoursWorked: number;
+  hoursRemaining: number;
+  notes: string | null;
+  numberOfReviews: number;
+  reviewHours: number;
+  hoursRequiredByBim: number;
+  complete: boolean;
+  TaskId?: number;
+  createdAt?: string;
 }
 
 export interface ITaskForm {

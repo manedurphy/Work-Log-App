@@ -231,6 +231,7 @@ const JobForm: React.FC = () => {
           <Grid item xs={12} sm={4}>
             <TextField
               variant="outlined"
+              required
               fullWidth
               type="number"
               id="hoursWorked"
@@ -244,6 +245,7 @@ const JobForm: React.FC = () => {
           <Grid item xs={12} sm={4}>
             <TextField
               variant="outlined"
+              required
               fullWidth
               type="number"
               id="reviewHours"
@@ -258,6 +260,7 @@ const JobForm: React.FC = () => {
           <Grid item xs={12} sm={4}>
             <TextField
               variant="outlined"
+              required
               fullWidth
               type="number"
               id="hoursRequiredByBim"
@@ -271,6 +274,7 @@ const JobForm: React.FC = () => {
           <Grid item xs={12} sm={4}>
             <TextField
               variant="outlined"
+              required
               fullWidth
               type="number"
               id="numberOfReviews"

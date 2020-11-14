@@ -131,8 +131,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Dashboard: React.FC = (): JSX.Element => {
+  const classes = useStyles();
+  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(true);
   const [loadingTasks, setLoadingTasks] = useState(true);
   const [showCompleted, setShowCompleted] = useState(false);
   const { dispatch } = useContext(GlobalContext);
@@ -150,7 +152,6 @@ const Dashboard: React.FC = (): JSX.Element => {
         );
 
         dispatch({ type: Users.setUser, payload: res.data.user });
-        setLoading(false);
       } catch (error) {
         setIsLoggedIn(false);
       }
@@ -172,15 +173,12 @@ const Dashboard: React.FC = (): JSX.Element => {
     setLoadingTasks(false);
   };
 
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   const handleLogOut = () => {
     localStorage.removeItem('token');

@@ -1,5 +1,9 @@
+import customJwtManager from './jwtController';
 import { Response } from 'express';
 import { ISecureRequest } from '@overnightjs/jwt';
+import { body, validationResult } from 'express-validator';
+import { Logger } from '@overnightjs/logger';
+import { Log, Task, User } from '../models/models';
 import {
   Controller,
   Middleware,
@@ -8,10 +12,6 @@ import {
   Post,
   Delete,
 } from '@overnightjs/core';
-import { body, validationResult } from 'express-validator';
-import { Logger } from '@overnightjs/logger';
-import customJwtManager from './jwtController';
-import { Task, User } from '../models/models';
 
 @Controller('api/task')
 export class TaskController {
@@ -49,6 +49,29 @@ export class TaskController {
         return res.status(404).json({ message: 'Task could not be found' });
 
       return res.status(200).json(task);
+    } catch (error) {
+      this.serverError(res);
+    }
+  }
+
+  @Get('log/:projectNumber')
+  @Middleware(customJwtManager.middleware)
+  private async getTaskLog(req: ISecureRequest, res: Response) {
+    try {
+      const task = await Task.findOne({
+        where: {
+          projectNumber: req.params.projectNumber,
+          UserId: req.payload.id,
+        },
+      });
+
+      if (task) {
+        const taskLog = await Log.findAll({
+          where: { projectNumber: req.params.projectNumber, TaskId: task.id },
+        });
+
+        res.status(200).json(taskLog);
+      }
     } catch (error) {
       this.serverError(res);
     }
@@ -99,9 +122,22 @@ export class TaskController {
       if (!user)
         return res.status(404).json({ message: 'User could not be found' });
 
-      const hoursRemaining = +hoursAvailableToWork - +hoursWorked;
+      const task = await Task.findOne({
+        where: { projectNumber, UserId: user.id },
+      });
+      if (task) {
+        return res
+          .status(400)
+          .json({ message: 'Task with that project number already exists' });
+      }
 
-      await Task.create({
+      const hoursRemaining =
+        +hoursAvailableToWork -
+        +hoursWorked -
+        +reviewHours -
+        +hoursRequiredByBim;
+
+      const newTask = await Task.create({
         name,
         projectNumber: +projectNumber,
         hoursAvailableToWork: +hoursAvailableToWork,
@@ -113,6 +149,20 @@ export class TaskController {
         hoursRequiredByBim: +hoursRequiredByBim,
         complete: false,
         UserId: user.id,
+      });
+
+      await Log.create({
+        name,
+        projectNumber: +projectNumber,
+        hoursAvailableToWork: +hoursAvailableToWork,
+        hoursWorked: +hoursWorked,
+        notes,
+        hoursRemaining,
+        numberOfReviews: +numberOfReviews,
+        reviewHours: +reviewHours,
+        hoursRequiredByBim: +hoursRequiredByBim,
+        complete: false,
+        TaskId: newTask.id,
       });
 
       res.status(201).json({ message: 'Task Created!' });
@@ -170,7 +220,11 @@ export class TaskController {
         return res.status(200).json({ message: 'Task Complete!' });
       }
 
-      const hoursRemaining = +hoursAvailableToWork - +hoursWorked;
+      const hoursRemaining =
+        +hoursAvailableToWork -
+        +hoursWorked -
+        +reviewHours -
+        +hoursRequiredByBim;
 
       await task?.update({
         name,
@@ -183,6 +237,22 @@ export class TaskController {
         reviewHours: +reviewHours,
         hoursRequiredByBim: +hoursRequiredByBim,
       });
+
+      if (task) {
+        await Log.create({
+          name,
+          projectNumber: +projectNumber,
+          hoursAvailableToWork: +hoursAvailableToWork,
+          hoursWorked: +hoursWorked,
+          notes,
+          hoursRemaining,
+          numberOfReviews: +numberOfReviews,
+          reviewHours: +reviewHours,
+          hoursRequiredByBim: +hoursRequiredByBim,
+          complete: false,
+          TaskId: task.id,
+        });
+      }
 
       res.status(200).json({ message: 'Task Updated!' });
     } catch (error) {

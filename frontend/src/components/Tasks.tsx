@@ -5,7 +5,7 @@ import moment from 'moment';
 import { Alert } from '@material-ui/lab';
 import { Tasks } from '../enums';
 import { getToken, GlobalContext } from '../context/GlobalState';
-import { AlertType, ITask, MessageType } from '../type';
+import { AlertType, ITask, MessageType, ILog } from '../type';
 import {
   Link,
   Table,
@@ -22,6 +22,7 @@ import {
   Delete as DeleteIcon,
   MoreVert as MoreVertIcon,
   CheckCircleOutline as CheckCircleOutlineIcon,
+  LibraryBooks,
 } from '@material-ui/icons';
 
 function preventDefault(event: any) {
@@ -103,6 +104,13 @@ const TasksComponent: React.FC<{
         });
 
         setAlertsAndGetTasks(command, res.data.message);
+      } else if (command === 'log') {
+        const log: AxiosResponse<ILog[]> = await axios.get(
+          `api/task/log/${projectNumber}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
       } else {
         const task = await axios.get(`api/task/${projectNumber}`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -141,6 +149,7 @@ const TasksComponent: React.FC<{
               <TableRow>
                 <TableCell>Date</TableCell>
                 <TableCell>Name</TableCell>
+                <TableCell>Project Number</TableCell>
                 <TableCell>Hours Permitted</TableCell>
                 <TableCell>Hours Worked</TableCell>
                 <TableCell>Hours Remaining</TableCell>
@@ -160,6 +169,7 @@ const TasksComponent: React.FC<{
                     {moment().format(row.createdAt).slice(0, 10)}
                   </TableCell>
                   <TableCell>{row.name}</TableCell>
+                  <TableCell>{row.projectNumber}</TableCell>
                   <TableCell>{row.hoursAvailableToWork}</TableCell>
                   <TableCell>{row.hoursWorked}</TableCell>
                   <TableCell>{row.hoursRemaining}</TableCell>
@@ -193,6 +203,13 @@ const TasksComponent: React.FC<{
                             }
                           >
                             <CheckCircleOutlineIcon />
+                          </IconButton>
+                          <IconButton
+                            onClick={(e) =>
+                              handleAction(e, row.projectNumber, 'log')
+                            }
+                          >
+                            <LibraryBooks />
                           </IconButton>
                         </>
                       )}
