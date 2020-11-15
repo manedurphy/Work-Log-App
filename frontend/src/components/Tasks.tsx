@@ -8,6 +8,7 @@ import { AlertType, ITask, MessageType, ILog } from '../type';
 import { Link, makeStyles } from '@material-ui/core';
 import CurrentTasks from './Tables/CurrentTasks';
 import TaskLog from './Tables/TaskLog';
+import Spinner from './Spinner';
 
 const useStyles = makeStyles((theme) => ({
   seeMore: {
@@ -34,6 +35,7 @@ const TasksComponent: React.FC<{
   const { currentLog } = state.log;
   const [showBody, setShowBody] = useState(false);
   const [showLog, setShowLog] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     currentTasks.length ? setShowBody(true) : setShowBody(false);
@@ -58,6 +60,7 @@ const TasksComponent: React.FC<{
     command: string
   ) => {
     e.preventDefault();
+    setLoading(true);
     let res: AxiosResponse<MessageType>;
     const token = getToken();
 
@@ -102,6 +105,7 @@ const TasksComponent: React.FC<{
 
         dispatch({ type: Tasks.updateTask, payload: task.data });
       }
+      setLoading(false);
     } catch (err) {
       setAlertsAndGetTasks('error', err.response.data.message, err);
     }
@@ -126,13 +130,17 @@ const TasksComponent: React.FC<{
       )}
 
       <Title>
-        {props.showCompleted
+        {loading
+          ? 'Loading'
+          : props.showCompleted
           ? 'Archive'
           : showLog
           ? 'Task Log'
           : 'Current Tasks'}
       </Title>
-      {showLog ? (
+      {loading ? (
+        <Spinner />
+      ) : showLog ? (
         <>
           <TaskLog
             showCompleted={props.showCompleted}
