@@ -3,14 +3,16 @@ import combineReducers from 'react-combine-reducers';
 import axios from 'axios';
 import { initialTaskState } from './task-context';
 import { ITask, GlobalStateType, GlobalAction, GlobalReducer } from '../type';
-import { taskReducer, userReducer } from './reducers';
+import { logReducer, taskReducer, userReducer } from './reducers';
 import { AxiosResponse } from 'axios';
 import { Tasks } from '../enums';
 import { initialUserState } from './user-context';
+import { initialLogState } from './log-context';
 
 const [globalReducer, initialGlobalState] = combineReducers<GlobalReducer>({
   tasks: [taskReducer, initialTaskState],
   user: [userReducer, initialUserState],
+  log: [logReducer, initialLogState],
 });
 
 export const GlobalContext = React.createContext<{
@@ -33,13 +35,12 @@ const GlobalState: React.FC = ({ children }) => {
 
   useEffect(() => {
     const token = getToken();
-
+    console.log('STATE: ', state);
     (async () => {
       try {
         const res: AxiosResponse<ITask[]> = await axios.get('/api/task', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        console.log(res);
         dispatch({ type: Tasks.updateTasks, payload: res.data });
       } catch (error) {
         throw error;

@@ -1,29 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import Title from './Title';
-import moment from 'moment';
 import { Alert } from '@material-ui/lab';
-import { Tasks } from '../enums';
+import { Tasks, Logs } from '../enums';
 import { getToken, GlobalContext } from '../context/GlobalState';
 import { AlertType, ITask, MessageType, ILog } from '../type';
-import {
-  Link,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  TableHead,
-  makeStyles,
-  IconButton,
-  Box,
-} from '@material-ui/core';
-import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  MoreVert as MoreVertIcon,
-  CheckCircleOutline as CheckCircleOutlineIcon,
-  LibraryBooks,
-} from '@material-ui/icons';
+import { Link, makeStyles } from '@material-ui/core';
 import CurrentTasks from './Tables/CurrentTasks';
 import TaskLog from './Tables/TaskLog';
 
@@ -53,9 +35,9 @@ const TasksComponent: React.FC<{
   });
   const { state, dispatch } = useContext(GlobalContext);
   const { currentTasks } = state.tasks;
+  const { currentLog } = state.log;
   const [showBody, setShowBody] = useState(false);
   const [showLog, setShowLog] = useState(false);
-  const [taskLog, setTaskLog]: [ILog[], Function] = useState([]);
 
   useEffect(() => {
     currentTasks.length ? setShowBody(true) : setShowBody(false);
@@ -116,7 +98,7 @@ const TasksComponent: React.FC<{
           }
         );
 
-        setTaskLog(log.data);
+        dispatch({ type: Logs.setLog, payload: log.data });
       } else {
         const task = await axios.get(`api/task/${projectNumber}`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -155,11 +137,18 @@ const TasksComponent: React.FC<{
           : 'Current Tasks'}
       </Title>
       {showLog ? (
-        <TaskLog
-          showCompleted={props.showCompleted}
-          taskLog={taskLog}
-          handleAction={handleAction}
-        />
+        <>
+          <TaskLog
+            showCompleted={props.showCompleted}
+            taskLog={currentLog}
+            handleAction={handleAction}
+          />
+          <div className={classes.seeMore}>
+            <Link color="primary" href="#" onClick={preventDefault}>
+              See more tasks
+            </Link>
+          </div>
+        </>
       ) : (
         <CurrentTasks
           showBody={showBody}
@@ -168,12 +157,6 @@ const TasksComponent: React.FC<{
           handleAction={handleAction}
         />
       )}
-
-      <div className={classes.seeMore}>
-        <Link color="primary" href="#" onClick={preventDefault}>
-          See more tasks
-        </Link>
-      </div>
     </React.Fragment>
   );
 };

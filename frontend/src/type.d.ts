@@ -1,5 +1,5 @@
 import * as H from 'history';
-import { Tasks, Users } from './enums';
+import { Tasks, Users, Logs } from './enums';
 
 /** TASKS  */
 export interface ITask {
@@ -17,22 +17,6 @@ export interface ITask {
   UserId?: number;
   createdAt?: string;
   updatedAt?: string;
-}
-
-export interface ILog {
-  id: number;
-  name: string;
-  projectNumber: number;
-  hoursAvailableToWork: number;
-  hoursWorked: number;
-  hoursRemaining: number;
-  notes: string | null;
-  numberOfReviews: number;
-  reviewHours: number;
-  hoursRequiredByBim: number;
-  complete: boolean;
-  TaskId?: number;
-  createdAt?: string;
 }
 
 export interface ITaskForm {
@@ -56,8 +40,31 @@ export type TaskAction =
   | { type: Tasks.updateTasks; payload: ITask[] }
   | { type: Tasks.updateTask; payload: ITask };
 
+/**LOGS */
+export interface ILog {
+  id: number;
+  name: string;
+  projectNumber: number;
+  hoursAvailableToWork: number;
+  hoursWorked: number;
+  hoursRemaining: number;
+  notes: string | null;
+  numberOfReviews: number;
+  reviewHours: number;
+  hoursRequiredByBim: number;
+  complete: boolean;
+  TaskId?: number;
+  createdAt?: string;
+}
+
+export type LogStateType = {
+  currentLog: ILog[];
+};
+
+export type LogAction = { type: Logs.setLog; payload: ILog[] };
+
 /** USERS */
-interface IUser {
+export interface IUser {
   firstName: string;
   lastName: string;
   email: string;
@@ -131,9 +138,10 @@ export type VerifyProps = {
 export type GlobalStateType = {
   tasks: TaskStateType;
   user: UserStateType;
+  log: LogStateType;
 };
 
-export type GlobalAction = TaskAction | UserAction;
+export type GlobalAction = TaskAction | UserAction | LogAction;
 
 export type GlobalReducer = (
   state: GlobalStateType,

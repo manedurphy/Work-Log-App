@@ -1,5 +1,5 @@
 import { TaskStateType, TaskAction } from '../type';
-import { Tasks, Users } from '../enums';
+import { Logs, Tasks, Users } from '../enums';
 
 export const taskReducer = (
   taskState: TaskStateType,
@@ -22,5 +22,14 @@ export const userReducer = (userState: any, action: any) => {
       return action.payload;
     default:
       return userState;
+  }
+};
+
+export const logReducer = (logState: any, action: any) => {
+  switch (action.type) {
+    case Logs.setLog:
+      return { ...logState, currentLog: action.payload };
+    default:
+      return logState;
   }
 };
