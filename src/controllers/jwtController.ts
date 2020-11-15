@@ -36,7 +36,7 @@ export class JWTController {
         },
       });
     } catch (error) {
-      res.status(401).json({ isLoggedIn: false });
+      this.serverError(res);
     }
   }
 
