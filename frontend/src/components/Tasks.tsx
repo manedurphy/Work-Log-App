@@ -24,6 +24,7 @@ import {
   CheckCircleOutline as CheckCircleOutlineIcon,
   LibraryBooks,
 } from '@material-ui/icons';
+import CurrentTasks from './Tables/CurrentTasks';
 
 function preventDefault(event: any) {
   event.preventDefault();
@@ -53,6 +54,8 @@ const TasksComponent: React.FC<{
   const { currentTasks } = state.tasks;
   const [modify, setModify] = useState(false);
   const [showBody, setShowBody] = useState(false);
+  const [showLog, setShowLog] = useState(false);
+  const [taskLog, setTaskLog]: [ILog[], Function] = useState([]);
 
   useEffect(() => {
     currentTasks.length ? setShowBody(true) : setShowBody(false);
@@ -105,12 +108,15 @@ const TasksComponent: React.FC<{
 
         setAlertsAndGetTasks(command, res.data.message);
       } else if (command === 'log') {
+        setShowLog(true);
         const log: AxiosResponse<ILog[]> = await axios.get(
           `api/task/log/${projectNumber}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+        console.log(log.data);
+        setTaskLog(log.data);
       } else {
         const task = await axios.get(`api/task/${projectNumber}`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -141,25 +147,31 @@ const TasksComponent: React.FC<{
         </Alert>
       )}
 
-      <Title>{props.showCompleted ? 'Archive' : 'Current Tasks'}</Title>
-      <Table size="small">
-        {showBody ? (
-          <>
-            <TableHead>
-              <TableRow>
-                <TableCell>Date</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Project Number</TableCell>
-                <TableCell>Hours Permitted</TableCell>
-                <TableCell>Hours Worked</TableCell>
-                <TableCell>Hours Remaining</TableCell>
-                <TableCell>Reviews</TableCell>
-                <TableCell>Hours for BIM</TableCell>
-                {!props.showCompleted && <TableCell>Actions</TableCell>}
-              </TableRow>
-            </TableHead>
-            <TableBody className="action-cell">
-              {currentTasks.map((row) => (
+      <Title>
+        {props.showCompleted
+          ? 'Archive'
+          : showLog
+          ? 'Task Log'
+          : 'Current Tasks'}
+      </Title>
+      {showLog ? (
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>Date</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Project Number</TableCell>
+              <TableCell>Hours Permitted</TableCell>
+              <TableCell>Hours Worked</TableCell>
+              <TableCell>Hours Remaining</TableCell>
+              <TableCell>Reviews</TableCell>
+              <TableCell>Hours for BIM</TableCell>
+              {!props.showCompleted && <TableCell>Actions</TableCell>}
+            </TableRow>
+          </TableHead>
+          <TableBody className="action-cell">
+            {taskLog &&
+              taskLog.map((row) => (
                 <TableRow
                   key={row.id}
                   style={{ cursor: 'pointer' }}
@@ -217,12 +229,98 @@ const TasksComponent: React.FC<{
                   )}
                 </TableRow>
               ))}
-            </TableBody>
-          </>
-        ) : (
-          <Box>No tasks to display</Box>
-        )}
-      </Table>
+          </TableBody>
+        </Table>
+      ) : (
+        <CurrentTasks
+          showBody={showBody}
+          showCompleted={props.showCompleted}
+          currentTasks={currentTasks}
+          handleAction={handleAction}
+        />
+        // <Table size="small">
+        //   {showBody ? (
+        //     <>
+        //       <TableHead>
+        //         <TableRow>
+        //           <TableCell>Date</TableCell>
+        //           <TableCell>Name</TableCell>
+        //           <TableCell>Project Number</TableCell>
+        //           <TableCell>Hours Permitted</TableCell>
+        //           <TableCell>Hours Worked</TableCell>
+        //           <TableCell>Hours Remaining</TableCell>
+        //           <TableCell>Reviews</TableCell>
+        //           <TableCell>Hours for BIM</TableCell>
+        //           {!props.showCompleted && <TableCell>Actions</TableCell>}
+        //         </TableRow>
+        //       </TableHead>
+        //       <TableBody className="action-cell">
+        //         {currentTasks.map((row) => (
+        //           <TableRow
+        //             key={row.id}
+        //             style={{ cursor: 'pointer' }}
+        //             id="tableId"
+        //           >
+        //             <TableCell>
+        //               {moment().format(row.createdAt).slice(0, 10)}
+        //             </TableCell>
+        //             <TableCell>{row.name}</TableCell>
+        //             <TableCell>{row.projectNumber}</TableCell>
+        //             <TableCell>{row.hoursAvailableToWork}</TableCell>
+        //             <TableCell>{row.hoursWorked}</TableCell>
+        //             <TableCell>{row.hoursRemaining}</TableCell>
+        //             <TableCell>{row.numberOfReviews}</TableCell>
+        //             <TableCell>{row.hoursRequiredByBim}</TableCell>
+        //             {!props.showCompleted && (
+        //               <TableCell>
+        //                 {!modify ? (
+        //                   <IconButton onClick={() => setModify(!modify)}>
+        //                     <MoreVertIcon />
+        //                   </IconButton>
+        //                 ) : (
+        //                   <>
+        //                     <IconButton
+        //                       onClick={(e) =>
+        //                         handleAction(e, row.projectNumber, 'edit')
+        //                       }
+        //                     >
+        //                       <EditIcon />
+        //                     </IconButton>
+        //                     <IconButton
+        //                       onClick={(e) =>
+        //                         handleAction(e, row.projectNumber, 'delete')
+        //                       }
+        //                     >
+        //                       <DeleteIcon />
+        //                     </IconButton>
+        //                     <IconButton
+        //                       onClick={(e) =>
+        //                         handleAction(e, row.projectNumber, 'success')
+        //                       }
+        //                     >
+        //                       <CheckCircleOutlineIcon />
+        //                     </IconButton>
+        //                     <IconButton
+        //                       onClick={(e) =>
+        //                         handleAction(e, row.projectNumber, 'log')
+        //                       }
+        //                     >
+        //                       <LibraryBooks />
+        //                     </IconButton>
+        //                   </>
+        //                 )}
+        //               </TableCell>
+        //             )}
+        //           </TableRow>
+        //         ))}
+        //       </TableBody>
+        //     </>
+        //   ) : (
+        //     <Box>No tasks to display</Box>
+        //   )}
+        // </Table>
+      )}
+
       <div className={classes.seeMore}>
         <Link color="primary" href="#" onClick={preventDefault}>
           See more tasks
@@ -233,3 +331,67 @@ const TasksComponent: React.FC<{
 };
 
 export default TasksComponent;
+
+/**
+ <TableBody className="action-cell">
+            {taskLog &&
+              taskLog.map((row) => (
+                <TableRow
+                  key={row.id}
+                  style={{ cursor: 'pointer' }}
+                  id="tableId"
+                >
+                  <TableCell>
+                    {moment().format(row.createdAt).slice(0, 10)}
+                  </TableCell>
+                  <TableCell>{row.name}</TableCell>
+                  <TableCell>{row.projectNumber}</TableCell>
+                  <TableCell>{row.hoursAvailableToWork}</TableCell>
+                  <TableCell>{row.hoursWorked}</TableCell>
+                  <TableCell>{row.hoursRemaining}</TableCell>
+                  <TableCell>{row.numberOfReviews}</TableCell>
+                  <TableCell>{row.hoursRequiredByBim}</TableCell>
+                  {!props.showCompleted && (
+                    <TableCell>
+                      {!modify ? (
+                        <IconButton onClick={() => setModify(!modify)}>
+                          <MoreVertIcon />
+                        </IconButton>
+                      ) : (
+                        <>
+                          <IconButton
+                            onClick={(e) =>
+                              handleAction(e, row.projectNumber, 'edit')
+                            }
+                          >
+                            <EditIcon />
+                          </IconButton>
+                          <IconButton
+                            onClick={(e) =>
+                              handleAction(e, row.projectNumber, 'delete')
+                            }
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                          <IconButton
+                            onClick={(e) =>
+                              handleAction(e, row.projectNumber, 'success')
+                            }
+                          >
+                            <CheckCircleOutlineIcon />
+                          </IconButton>
+                          <IconButton
+                            onClick={(e) =>
+                              handleAction(e, row.projectNumber, 'log')
+                            }
+                          >
+                            <LibraryBooks />
+                          </IconButton>
+                        </>
+                      )}
+                    </TableCell>
+                  )}
+                </TableRow>
+              ))}
+          </TableBody>
+ */
