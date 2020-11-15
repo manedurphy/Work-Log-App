@@ -9,10 +9,6 @@ import { Link, makeStyles } from '@material-ui/core';
 import CurrentTasks from './Tables/CurrentTasks';
 import TaskLog from './Tables/TaskLog';
 
-function preventDefault(event: any) {
-  event.preventDefault();
-}
-
 const useStyles = makeStyles((theme) => ({
   seeMore: {
     marginTop: theme.spacing(3),
@@ -112,7 +108,7 @@ const TasksComponent: React.FC<{
   };
 
   return (
-    <React.Fragment>
+    <>
       {alerts.error && (
         <Alert severity="error" role="alert">
           {alerts.error}
@@ -144,7 +140,7 @@ const TasksComponent: React.FC<{
             handleAction={handleAction}
           />
           <div className={classes.seeMore}>
-            <Link color="primary" href="#" onClick={preventDefault}>
+            <Link color="primary" href="#" onClick={() => setShowLog(false)}>
               See more tasks
             </Link>
           </div>
@@ -157,7 +153,7 @@ const TasksComponent: React.FC<{
           handleAction={handleAction}
         />
       )}
-    </React.Fragment>
+    </>
   );
 };
 

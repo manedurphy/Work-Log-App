@@ -68,6 +68,7 @@ export class TaskController {
       if (task) {
         const taskLog = await Log.findAll({
           where: { projectNumber: req.params.projectNumber, TaskId: task.id },
+          order: [['id', 'DESC']],
         });
 
         res.status(200).json(taskLog);
