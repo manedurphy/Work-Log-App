@@ -24,7 +24,7 @@
   "exclude": [
     "src/interfaces/*.ts",
     "node_modules",
-    ".vscode",
-    "./frontend"
+    "../.vscode",
+    "../frontend"
   ]
 }
