@@ -302,3 +302,5 @@ Task.belongsTo(User);
   await Task.sync();
   await Log.sync();
 })();
+
+export default sequelize;

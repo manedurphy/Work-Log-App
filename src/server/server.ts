@@ -1,5 +1,5 @@
 import * as express from 'express';
-import * as controllers from './controllers';
+import * as controllers from '../controllers';
 import * as cors from 'cors';
 import { Server } from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
@@ -37,4 +37,4 @@ class MyServer extends Server {
 }
 
 const server = new MyServer();
-server.start(5000);
+export default server;
