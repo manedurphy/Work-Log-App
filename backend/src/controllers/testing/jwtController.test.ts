@@ -19,6 +19,8 @@ describe('POST /register', () => {
     const response = await request(server.app)
       .post('/api/auth/register')
       .send(body);
+
+    console.log('RESPONSE: ', response.body);
     expect(response.status).toBe(200);
     expect(response.body).toMatchObject({ success: true });
     done();
