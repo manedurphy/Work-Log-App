@@ -1,8 +1,13 @@
 import { ISecureRequest } from '@overnightjs/jwt';
+import { NewTaskType } from './types';
 import { Task } from '../../models/models';
+import { TaskAttributes } from 'src/interfaces/task';
 
 export class TaskServices {
-  public static async getTask(projectNumber: number, userId: number) {
+  public static async getTask(
+    projectNumber: number,
+    userId: number
+  ): Promise<TaskAttributes | null> {
     return await Task.findOne({
       where: {
         projectNumber,
@@ -11,13 +16,16 @@ export class TaskServices {
     });
   }
 
-  public static async getTasks(userId: number, complete: boolean) {
+  public static async getTasks(
+    userId: number,
+    complete: boolean
+  ): Promise<TaskAttributes[]> {
     return await Task.findAll({
       where: { UserId: userId, complete },
     });
   }
 
-  public static createNewTask(req: ISecureRequest) {
+  public static createNewTask(req: ISecureRequest): NewTaskType {
     const {
       name,
       projectNumber,
@@ -59,7 +67,10 @@ export class TaskServices {
     }
   }
 
-  public static async saveNewTask(req: ISecureRequest, userId: number) {
+  public static async saveNewTask(
+    req: ISecureRequest,
+    userId: number
+  ): Promise<NewTaskType> {
     const task = this.createNewTask(req);
     return await Task.create({
       ...task,
@@ -67,7 +78,7 @@ export class TaskServices {
     });
   }
 
-  public static async deleteTask(task: any) {
+  public static async deleteTask(task: any): Promise<void> {
     await task.destroy();
   }
 }

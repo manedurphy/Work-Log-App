@@ -90,7 +90,7 @@ export class TaskController {
       }
 
       const newTask = await TaskServices.saveNewTask(req, user.id);
-      await TaskLogServices.createTaskLog(req, newTask.id);
+      await TaskLogServices.createTaskLog(req, newTask.id as number);
 
       HTTPResponses.created(res, TaskHttpResponses.TASK_CREATED);
     } catch (error) {
@@ -111,13 +111,15 @@ export class TaskController {
 
       if (req.body.complete) {
         await TaskServices.updateTask(req, task, true);
-        return HTTPResponses.OK(res, { message: 'Task Completed!' });
+        return HTTPResponses.OK(res, {
+          message: TaskHttpResponses.TASK_COMPLETED,
+        });
       }
 
       await TaskServices.updateTask(req, task, false);
       await TaskLogServices.createTaskLog(req, task.id);
 
-      HTTPResponses.OK(res, { message: 'Task Updated!' });
+      HTTPResponses.OK(res, { message: TaskHttpResponses.TASK_UPDATED });
     } catch (error) {
       HTTPResponses.serverError(res);
     }
