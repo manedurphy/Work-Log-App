@@ -6,6 +6,7 @@ import { Logger } from '@overnightjs/logger';
 import { TaskServices } from './taskServices';
 import { TaskLogServices } from './taskLogServices';
 import { TaskValidation } from './taskValidation';
+import { TaskHttpResponses, UserHttpResponses } from './httpEnums';
 import { CheckUserExistance } from './checkUserExistance';
 import { HTTPResponses } from './httpResponses';
 import {
@@ -37,7 +38,8 @@ export class TaskController {
     Logger.Info(req.params.id);
     try {
       const task = await TaskServices.getTask(+req.params.id, +req.payload.id);
-      if (!task) return HTTPResponses.notFound(res, 'Task could not be found');
+      if (!task)
+        return HTTPResponses.notFound(res, TaskHttpResponses.TASK_NOT_FOUND);
 
       HTTPResponses.OK(res, task);
     } catch (error) {
@@ -79,20 +81,18 @@ export class TaskController {
         return HTTPResponses.badRequest(res, errors.array()[0].msg);
 
       const user = await CheckUserExistance.findUser(req.payload.email);
-      if (!user) return HTTPResponses.notFound(res, 'User could not be found');
+      if (!user)
+        return HTTPResponses.notFound(res, UserHttpResponses.USER_NOT_FOUND);
 
       const task = await TaskServices.getTask(req.body.projectNumber, user.id);
       if (task) {
-        return HTTPResponses.badRequest(
-          res,
-          'Task with that project number already exists'
-        );
+        return HTTPResponses.badRequest(res, TaskHttpResponses.TASK_EXISTS);
       }
 
       const newTask = await TaskServices.saveNewTask(req, user.id);
       await TaskLogServices.createTaskLog(req, newTask.id);
 
-      HTTPResponses.created(res, 'Task Created!');
+      HTTPResponses.created(res, TaskHttpResponses.TASK_CREATED);
     } catch (error) {
       HTTPResponses.serverError(res);
     }
@@ -106,7 +106,8 @@ export class TaskController {
     try {
       const task = await TaskServices.getTask(+req.params.id, +req.payload.id);
 
-      if (!task) return HTTPResponses.notFound(res, 'Task could not be found');
+      if (!task)
+        return HTTPResponses.notFound(res, TaskHttpResponses.TASK_NOT_FOUND);
 
       if (req.body.complete) {
         await TaskServices.updateTask(req, task, true);
@@ -127,10 +128,11 @@ export class TaskController {
   private async deleteTask(req: ISecureRequest, res: Response) {
     try {
       const task = await TaskServices.getTask(+req.params.id, +req.payload.id);
-      if (!task) return HTTPResponses.notFound(res, 'Task could not be found');
+      if (!task)
+        return HTTPResponses.notFound(res, TaskHttpResponses.TASK_NOT_FOUND);
 
       await TaskServices.deleteTask(task);
-      HTTPResponses.OK(res, { message: 'Task Deleted!' });
+      HTTPResponses.OK(res, { message: TaskHttpResponses.TASK_DELETED });
     } catch (error) {
       HTTPResponses.serverError(res);
     }
