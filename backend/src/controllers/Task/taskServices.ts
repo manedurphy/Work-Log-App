@@ -66,4 +66,8 @@ export class TaskServices {
       UserId: userId,
     });
   }
+
+  public static async deleteTask(task: any) {
+    await task.destroy();
+  }
 }
