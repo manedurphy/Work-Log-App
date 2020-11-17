@@ -79,50 +79,30 @@ export class JWTController {
       if (!errors.isEmpty())
         return res.status(400).json({ message: errors.array()[0].msg });
 
-      const { firstName, lastName, email, password, password2 } = req.body;
-      const existingUser = await User.findOne({ where: { email } });
+      const existingUser = await CheckUserExistance.findUser(req.body.email);
 
       if (existingUser)
-        return res.status(400).json({ message: 'User already exists' });
+        return HTTPResponse.badRequest(
+          res,
+          UserHttpResponseMessages.USER_EXISTS
+        );
 
-      if (password !== password2)
-        return res.status(400).json({ message: 'Passwords did not match' });
+      if (!JWTServices.verifyPasswordsMatch(req.body))
+        return HTTPResponse.badRequest(
+          res,
+          UserHttpResponseMessages.PASSWORD_NOT_MATCH
+        );
 
-      const hashPassword = await hash(password, 12);
-      if (!hashPassword)
-        return res
-          .status(400)
-          .json({ message: 'Please try a different password' });
+      const user = await JWTServices.createNewUser(req.body, 12);
+      if (!user)
+        return HTTPResponse.badRequest(
+          res,
+          UserHttpResponseMessages.USER_NOT_CREATED
+        );
 
-      const user = await User.create({
-        firstName,
-        lastName,
-        email,
-        active: false,
-        password: hashPassword,
-      });
+      await JWTServices.createActivationPassword(user.id);
 
-      sgMail.setApiKey(process.env.SENDGRID_API as string);
-
-      const activationPassword = require('crypto')
-        .randomBytes(80)
-        .toString('hex');
-
-      await ActivationPassword.create({
-        password: activationPassword,
-        UserId: user.id,
-      });
-
-      const msg = {
-        to: process.env.TEST_EMAIL as string,
-        from: process.env.ETHEREAL_EMAIL as string,
-        subject: 'Verify your account',
-        html: `<p>Click the link to verify your account http://localhost:3000/verify/${activationPassword}</p>`,
-      };
-      await sgMail.send(msg);
-      res.status(200).json({
-        success: true,
-      });
+      HTTPResponse.OK(res, JWTServices.getRegisterUserSuccessResponse());
     } catch (error) {
       HTTPResponse.serverError(res);
     }

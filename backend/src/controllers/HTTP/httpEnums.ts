@@ -11,4 +11,8 @@ export enum UserHttpResponseMessages {
   USER_NOT_FOUND = 'User could not be found',
   USER_NOT_ACTIVE = 'Account has not been verified',
   ACTIVATION_PASSWORD_NOT_FOUND = 'User could not be verified',
+  USER_EXISTS = 'User already exists',
+  PASSWORD_NOT_MATCH = 'Passwords did not match',
+  BAD_PASSWORD = 'Please try a different password',
+  USER_NOT_CREATED = 'User could not be registerd. Please try again',
 }
