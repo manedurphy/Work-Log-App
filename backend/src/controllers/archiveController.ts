@@ -1,9 +1,8 @@
+import customJwtManager from './JWT/jwtController';
 import { Controller, Middleware, Get } from '@overnightjs/core';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { ISecureRequest } from '@overnightjs/jwt';
-import { Logger } from '@overnightjs/logger';
-import customJwtManager from './jwtController';
-import { User, Task } from '../models/models';
+import { Task } from '../models/models';
 
 @Controller('api/archive')
 export class Archive {

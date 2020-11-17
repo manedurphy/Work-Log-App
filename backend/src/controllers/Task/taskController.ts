@@ -1,4 +1,4 @@
-import customJwtManager from '../jwtController';
+import customJwtManager from '../JWT/jwtController';
 import { Response } from 'express';
 import { ISecureRequest } from '@overnightjs/jwt';
 import { validationResult } from 'express-validator';
@@ -6,9 +6,12 @@ import { Logger } from '@overnightjs/logger';
 import { TaskServices } from './taskServices';
 import { TaskLogServices } from './taskLogServices';
 import { TaskValidation } from './taskValidation';
-import { TaskHttpResponses, UserHttpResponses } from './httpEnums';
 import { CheckUserExistance } from './checkUserExistance';
 import { HTTPResponses } from './httpResponses';
+import {
+  TaskHttpResponseMessages,
+  UserHttpResponseMessages,
+} from './httpEnums';
 import {
   Controller,
   Middleware,
@@ -39,7 +42,10 @@ export class TaskController {
     try {
       const task = await TaskServices.getTask(+req.params.id, +req.payload.id);
       if (!task)
-        return HTTPResponses.notFound(res, TaskHttpResponses.TASK_NOT_FOUND);
+        return HTTPResponses.notFound(
+          res,
+          TaskHttpResponseMessages.TASK_NOT_FOUND
+        );
 
       HTTPResponses.OK(res, task);
     } catch (error) {
@@ -82,17 +88,23 @@ export class TaskController {
 
       const user = await CheckUserExistance.findUser(req.payload.email);
       if (!user)
-        return HTTPResponses.notFound(res, UserHttpResponses.USER_NOT_FOUND);
+        return HTTPResponses.notFound(
+          res,
+          UserHttpResponseMessages.USER_NOT_FOUND
+        );
 
       const task = await TaskServices.getTask(req.body.projectNumber, user.id);
       if (task) {
-        return HTTPResponses.badRequest(res, TaskHttpResponses.TASK_EXISTS);
+        return HTTPResponses.badRequest(
+          res,
+          TaskHttpResponseMessages.TASK_EXISTS
+        );
       }
 
       const newTask = await TaskServices.saveNewTask(req, user.id);
       await TaskLogServices.createTaskLog(req, newTask.id as number);
 
-      HTTPResponses.created(res, TaskHttpResponses.TASK_CREATED);
+      HTTPResponses.created(res, TaskHttpResponseMessages.TASK_CREATED);
     } catch (error) {
       HTTPResponses.serverError(res);
     }
@@ -107,19 +119,22 @@ export class TaskController {
       const task = await TaskServices.getTask(+req.params.id, +req.payload.id);
 
       if (!task)
-        return HTTPResponses.notFound(res, TaskHttpResponses.TASK_NOT_FOUND);
+        return HTTPResponses.notFound(
+          res,
+          TaskHttpResponseMessages.TASK_NOT_FOUND
+        );
 
       if (req.body.complete) {
         await TaskServices.updateTask(req, task, true);
         return HTTPResponses.OK(res, {
-          message: TaskHttpResponses.TASK_COMPLETED,
+          message: TaskHttpResponseMessages.TASK_COMPLETED,
         });
       }
 
       await TaskServices.updateTask(req, task, false);
       await TaskLogServices.createTaskLog(req, task.id);
 
-      HTTPResponses.OK(res, { message: TaskHttpResponses.TASK_UPDATED });
+      HTTPResponses.OK(res, { message: TaskHttpResponseMessages.TASK_UPDATED });
     } catch (error) {
       HTTPResponses.serverError(res);
     }
@@ -131,10 +146,13 @@ export class TaskController {
     try {
       const task = await TaskServices.getTask(+req.params.id, +req.payload.id);
       if (!task)
-        return HTTPResponses.notFound(res, TaskHttpResponses.TASK_NOT_FOUND);
+        return HTTPResponses.notFound(
+          res,
+          TaskHttpResponseMessages.TASK_NOT_FOUND
+        );
 
       await TaskServices.deleteTask(task);
-      HTTPResponses.OK(res, { message: TaskHttpResponses.TASK_DELETED });
+      HTTPResponses.OK(res, { message: TaskHttpResponseMessages.TASK_DELETED });
     } catch (error) {
       HTTPResponses.serverError(res);
     }

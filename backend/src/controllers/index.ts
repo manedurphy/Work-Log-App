@@ -1,3 +1,3 @@
 export * from './Task/taskController';
-export * from './jwtController';
+export * from './JWT/jwtController';
 export * from './archiveController';

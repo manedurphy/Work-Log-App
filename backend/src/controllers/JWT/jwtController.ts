@@ -1,10 +1,14 @@
 import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
 import { Get, Post, Controller, Middleware } from '@overnightjs/core';
 import { Request, Response } from 'express';
-import { User, ActivationPassword } from '../models/models';
+import { User, ActivationPassword } from '../../models/models';
 import { body, validationResult } from 'express-validator';
 import { hash, compare } from 'bcrypt';
 import sgMail = require('@sendgrid/mail');
+import { CheckUserExistance } from '../Task/checkUserExistance';
+import { HTTPResponses } from '../Task/httpResponses';
+import { UserHttpResponseMessages } from '../Task/httpEnums';
+import { JWTServices } from './jwtServices';
 
 const customJwtManager = new JwtManager(
   process.env.OVERNIGHT_JWT_SECRET as string,
@@ -13,53 +17,56 @@ const customJwtManager = new JwtManager(
 
 @Controller('api/auth')
 export class JWTController {
-  private serverError = (res: Response) =>
-    res.status(500).json('Internal Server Error');
-
   @Get('token')
   @Middleware(customJwtManager.middleware)
   private async checkToken(req: ISecureRequest, res: Response) {
     try {
-      const user = await User.findOne({ where: { email: req.payload.email } });
+      const user = await CheckUserExistance.findUser(req.payload.email);
 
-      if (!user?.active)
-        return res
-          .status(400)
-          .json({ message: 'This account has not been verified' });
+      if (!user)
+        return HTTPResponses.notFound(
+          res,
+          UserHttpResponseMessages.USER_NOT_FOUND
+        );
 
-      res.status(200).json({
-        message: 'Currently logged in',
-        user: {
-          firstName: user?.firstName,
-          lastName: user?.lastName,
-          email: user?.email,
-        },
-      });
+      if (!user.active)
+        return HTTPResponses.badRequest(
+          res,
+          UserHttpResponseMessages.USER_NOT_ACTIVE
+        );
+
+      HTTPResponses.OK(res, JWTServices.tokenSuccess(user));
     } catch (error) {
-      this.serverError(res);
+      HTTPResponses.serverError(res);
     }
   }
 
   @Get('verify/:hash')
   private async verifyAccount(req: Request, res: Response) {
     try {
-      const activationPassword = await ActivationPassword.findOne({
-        where: { password: req.params.hash },
-      });
+      const activationPassword = await JWTServices.getActivationPassword(req);
 
       if (!activationPassword)
-        return res.json({ message: 'User could not be verified' });
+        return HTTPResponses.badRequest(
+          res,
+          UserHttpResponseMessages.USER_NOT_ACTIVE
+        );
 
-      const user = await User.findByPk(activationPassword.UserId);
-      await user?.update({
-        active: true,
-      });
+      const user = await CheckUserExistance.findUserByPk(
+        activationPassword.UserId
+      );
 
-      activationPassword.destroy();
+      if (!user)
+        return HTTPResponses.notFound(
+          res,
+          UserHttpResponseMessages.USER_NOT_FOUND
+        );
 
-      res.json({ isVerified: true });
+      await JWTServices.activateUser(user, activationPassword);
+
+      HTTPResponses.OK(res, JWTServices.getAccountVerifiedResponse());
     } catch (error) {
-      this.serverError(res);
+      HTTPResponses.serverError(res);
     }
   }
 
@@ -120,7 +127,7 @@ export class JWTController {
         success: true,
       });
     } catch (error) {
-      this.serverError(res);
+      HTTPResponses.serverError(res);
     }
   }
 
@@ -156,7 +163,7 @@ export class JWTController {
         },
       });
     } catch (error) {
-      this.serverError(res);
+      HTTPResponses.serverError(res);
     }
   }
 }
