@@ -1,31 +1,30 @@
-import { ISecureRequest } from '@overnightjs/jwt';
-import { NewTaskType } from './types';
+import {
+  CreateNewTaskType,
+  DeleteTaskType,
+  GetTasksType,
+  GetTaskType,
+  SaveNewTaskType,
+  UpdateTaskType,
+} from './types';
 import { Task } from '../../models/models';
-import { TaskAttributes } from 'src/interfaces/task';
 
 export class TaskServices {
-  public static async getTask(
-    projectNumber: number,
-    userId: number
-  ): Promise<TaskAttributes | null> {
+  public static getTask: GetTaskType = async (projectNumber, userId) => {
     return await Task.findOne({
       where: {
         projectNumber,
         UserId: userId,
       },
     });
-  }
+  };
 
-  public static async getTasks(
-    userId: number,
-    complete: boolean
-  ): Promise<TaskAttributes[]> {
+  public static getTasks: GetTasksType = async (userId, complete) => {
     return await Task.findAll({
       where: { UserId: userId, complete },
     });
-  }
+  };
 
-  public static createNewTask(req: ISecureRequest): NewTaskType {
+  public static createNewTask: CreateNewTaskType = (req) => {
     const {
       name,
       projectNumber,
@@ -52,33 +51,26 @@ export class TaskServices {
       hoursRequiredByBim: +hoursRequiredByBim,
       complete: false,
     };
-  }
+  };
 
-  public static async updateTask(
-    req: ISecureRequest,
-    task: any,
-    complete: boolean
-  ): Promise<void> {
+  public static updateTask: UpdateTaskType = async (req, task, complete) => {
     if (complete) {
       await task.update({ complete: req.body.complete });
     } else {
-      const updatedTask = this.createNewTask(req);
+      const updatedTask = TaskServices.createNewTask(req);
       await task.update(updatedTask);
     }
-  }
+  };
 
-  public static async saveNewTask(
-    req: ISecureRequest,
-    userId: number
-  ): Promise<NewTaskType> {
-    const task = this.createNewTask(req);
+  public static saveNewTask: SaveNewTaskType = async (req, userId) => {
+    const task = TaskServices.createNewTask(req);
     return await Task.create({
       ...task,
       UserId: userId,
     });
-  }
+  };
 
-  public static async deleteTask(task: any): Promise<void> {
+  public static deleteTask: DeleteTaskType = async (task) => {
     await task.destroy();
-  }
+  };
 }

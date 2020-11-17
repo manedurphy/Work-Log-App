@@ -5,10 +5,11 @@ import { User, ActivationPassword } from '../../models/models';
 import { body, validationResult } from 'express-validator';
 import { hash, compare } from 'bcrypt';
 import sgMail = require('@sendgrid/mail');
-import { CheckUserExistance } from '../Task/checkUserExistance';
-import { HTTPResponses } from '../Task/httpResponses';
-import { UserHttpResponseMessages } from '../Task/httpEnums';
+import { CheckUserExistance } from './checkUserExistance';
+import { HTTPResponse } from '../HTTP/httpResponses';
+import { UserHttpResponseMessages } from '../HTTP/httpEnums';
 import { JWTServices } from './jwtServices';
+import { Uservalidation } from './userValidation';
 
 const customJwtManager = new JwtManager(
   process.env.OVERNIGHT_JWT_SECRET as string,
@@ -24,20 +25,20 @@ export class JWTController {
       const user = await CheckUserExistance.findUser(req.payload.email);
 
       if (!user)
-        return HTTPResponses.notFound(
+        return HTTPResponse.notFound(
           res,
           UserHttpResponseMessages.USER_NOT_FOUND
         );
 
       if (!user.active)
-        return HTTPResponses.badRequest(
+        return HTTPResponse.badRequest(
           res,
           UserHttpResponseMessages.USER_NOT_ACTIVE
         );
 
-      HTTPResponses.OK(res, JWTServices.tokenSuccess(user));
+      HTTPResponse.OK(res, JWTServices.tokenSuccess(user));
     } catch (error) {
-      HTTPResponses.serverError(res);
+      HTTPResponse.serverError(res);
     }
   }
 
@@ -47,7 +48,7 @@ export class JWTController {
       const activationPassword = await JWTServices.getActivationPassword(req);
 
       if (!activationPassword)
-        return HTTPResponses.badRequest(
+        return HTTPResponse.badRequest(
           res,
           UserHttpResponseMessages.USER_NOT_ACTIVE
         );
@@ -57,25 +58,21 @@ export class JWTController {
       );
 
       if (!user)
-        return HTTPResponses.notFound(
+        return HTTPResponse.notFound(
           res,
           UserHttpResponseMessages.USER_NOT_FOUND
         );
 
       await JWTServices.activateUser(user, activationPassword);
 
-      HTTPResponses.OK(res, JWTServices.getAccountVerifiedResponse());
+      HTTPResponse.OK(res, JWTServices.getAccountVerifiedResponse());
     } catch (error) {
-      HTTPResponses.serverError(res);
+      HTTPResponse.serverError(res);
     }
   }
 
   @Post('register')
-  @Middleware([
-    body('firstName').not().isEmpty().withMessage('Must include first name'),
-    body('lastName').not().isEmpty().withMessage('Must include last name'),
-    body('email').isEmail().withMessage('Invalid email'),
-  ])
+  @Middleware(Uservalidation.saveUserValidation)
   private async register(req: Request, res: Response) {
     try {
       const errors = validationResult(req);
@@ -127,7 +124,7 @@ export class JWTController {
         success: true,
       });
     } catch (error) {
-      HTTPResponses.serverError(res);
+      HTTPResponse.serverError(res);
     }
   }
 
@@ -163,7 +160,7 @@ export class JWTController {
         },
       });
     } catch (error) {
-      HTTPResponses.serverError(res);
+      HTTPResponse.serverError(res);
     }
   }
 }

@@ -11,11 +11,18 @@ export class TaskValidation {
       .not()
       .isEmpty()
       .withMessage('Please enter available hours'),
+    body('hoursWorked')
+      .not()
+      .isEmpty()
+      .withMessage('Please enter the numbers of hours worked'),
+    body('reviewHours')
+      .not()
+      .isEmpty()
+      .withMessage('Please enter the number of review hours'),
     body('numberOfReviews')
       .not()
       .isEmpty()
       .withMessage('Number of reviews is missing'),
-    body('reviewHours').not().isEmpty().withMessage('Review hours is missing'),
     body('hoursRequiredByBim')
       .not()
       .isEmpty()
