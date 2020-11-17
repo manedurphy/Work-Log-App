@@ -1,6 +1,7 @@
 import { body } from 'express-validator';
+import { Validation } from '../Validation/Validation';
 
-export class TaskValidation {
+export class TaskValidation extends Validation {
   public static saveTaskValidation = [
     body('name').not().isEmpty().withMessage('Task name is missing'),
     body('projectNumber')

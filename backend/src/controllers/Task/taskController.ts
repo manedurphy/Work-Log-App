@@ -81,10 +81,10 @@ export class TaskController {
   private async add(req: ISecureRequest, res: Response) {
     Logger.Info(req.body, true);
     try {
-      const errors = validationResult(req);
+      const taskValidator = new TaskValidation();
 
-      if (!errors.isEmpty())
-        return HTTPResponse.badRequest(res, errors.array()[0].msg);
+      if (!taskValidator.validateInput(req))
+        return HTTPResponse.badRequest(res, taskValidator.errorMessage);
 
       const user = await CheckUserExistance.findUser(req.payload.email);
       if (!user)
@@ -116,6 +116,11 @@ export class TaskController {
   private async update(req: ISecureRequest, res: Response) {
     Logger.Info(req.body);
     try {
+      const taskValidator = new TaskValidation();
+
+      if (!taskValidator.validateInput(req))
+        return HTTPResponse.badRequest(res, taskValidator.errorMessage);
+
       const task = await TaskServices.getTask(+req.params.id, +req.payload.id);
 
       if (!task)
