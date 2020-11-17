@@ -66,3 +66,5 @@ export type LoginSuccessType = (
     email: string;
   };
 };
+
+export type ValidateInputType = (req: Request) => boolean;

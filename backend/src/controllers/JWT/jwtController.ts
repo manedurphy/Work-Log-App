@@ -1,14 +1,12 @@
 import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
 import { Get, Post, Controller, Middleware } from '@overnightjs/core';
 import { Request, Response } from 'express';
-import { User } from '../../models/models';
 import { validationResult } from 'express-validator';
-import { hash, compare } from 'bcrypt';
 import { CheckUserExistance } from './checkUserExistance';
 import { HTTPResponse } from '../HTTP/httpResponses';
 import { UserHttpResponseMessages } from '../HTTP/httpEnums';
 import { JWTServices } from './jwtServices';
-import { Uservalidation } from './userValidation';
+import { UserValidation } from './userValidation';
 
 const customJwtManager = new JwtManager(
   process.env.OVERNIGHT_JWT_SECRET as string,
@@ -71,15 +69,15 @@ export class JWTController {
   }
 
   @Post('register')
-  @Middleware(Uservalidation.saveUserValidation)
+  @Middleware(UserValidation.saveUserValidation)
   private async register(req: Request, res: Response) {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty())
-        return res.status(400).json({ message: errors.array()[0].msg });
+      const userValidator = new UserValidation();
+
+      if (!userValidator.validateInput(req))
+        return HTTPResponse.badRequest(res, userValidator.errorMessage);
 
       const existingUser = await CheckUserExistance.findUser(req.body.email);
-
       if (existingUser)
         return HTTPResponse.badRequest(
           res,
@@ -110,8 +108,6 @@ export class JWTController {
   @Post('login')
   private async login(req: Request, res: Response) {
     try {
-      const { email, password } = req.body;
-
       const existingUser = await CheckUserExistance.findUser(req.body.email);
 
       if (!existingUser)
