@@ -1,10 +1,9 @@
 import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
 import { Get, Post, Controller, Middleware } from '@overnightjs/core';
 import { Request, Response } from 'express';
-import { User, ActivationPassword } from '../../models/models';
-import { body, validationResult } from 'express-validator';
+import { User } from '../../models/models';
+import { validationResult } from 'express-validator';
 import { hash, compare } from 'bcrypt';
-import sgMail = require('@sendgrid/mail');
 import { CheckUserExistance } from './checkUserExistance';
 import { HTTPResponse } from '../HTTP/httpResponses';
 import { UserHttpResponseMessages } from '../HTTP/httpEnums';
@@ -30,7 +29,7 @@ export class JWTController {
           UserHttpResponseMessages.USER_NOT_FOUND
         );
 
-      if (!user.active)
+      if (!JWTServices.verifyAccountIsActive(user))
         return HTTPResponse.badRequest(
           res,
           UserHttpResponseMessages.USER_NOT_ACTIVE
@@ -112,33 +111,32 @@ export class JWTController {
   private async login(req: Request, res: Response) {
     try {
       const { email, password } = req.body;
-      const existingUser = await User.findOne({ where: { email } });
+
+      const existingUser = await CheckUserExistance.findUser(req.body.email);
 
       if (!existingUser)
-        return res.status(400).json({ message: 'Invalid Credentials' });
+        return HTTPResponse.badRequest(
+          res,
+          UserHttpResponseMessages.INVALID_CREDENTIALS
+        );
 
-      if (!existingUser.active)
-        return res.status(400).json({ message: 'Email has not been verified' });
+      if (!JWTServices.verifyAccountIsActive(existingUser))
+        return HTTPResponse.badRequest(
+          res,
+          UserHttpResponseMessages.USER_NOT_ACTIVE
+        );
 
-      const existingPassword = existingUser.get('password');
-      const passwordMatches = await compare(password, existingPassword);
+      const passwordVerified = await JWTServices.verifyLoginPassword(
+        req.body.password,
+        existingUser.password
+      );
+      if (!passwordVerified)
+        return HTTPResponse.badRequest(
+          res,
+          UserHttpResponseMessages.INVALID_CREDENTIALS
+        );
 
-      if (!passwordMatches)
-        return res.status(400).json({ message: 'Invalid Credentials' });
-
-      const jwtStr = customJwtManager.jwt({
-        email,
-        id: existingUser.id,
-      });
-
-      return res.status(200).json({
-        jwt: jwtStr,
-        user: {
-          firstName: existingUser.firstName,
-          lastName: existingUser.lastName,
-          email: existingUser.email,
-        },
-      });
+      HTTPResponse.OK(res, JWTServices.loginSuccess(existingUser));
     } catch (error) {
       HTTPResponse.serverError(res);
     }

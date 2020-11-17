@@ -20,7 +20,6 @@ describe('POST /register', () => {
       .post('/api/auth/register')
       .send(body);
 
-    console.log('RESPONSE: ', response.body);
     expect(response.status).toBe(200);
     expect(response.body).toMatchObject({ success: true });
     done();
@@ -79,12 +78,13 @@ describe('POST /login and GET /token', () => {
       .send(body);
     expect(response.status).toBe(400);
     expect(response.body).toMatchObject({
-      message: 'Email has not been verified',
+      message: 'Account has not been verified',
     });
 
     await db.query(
       'UPDATE users SET active = true WHERE email = "newuser@mail.com"'
     );
+
     done();
   });
 

@@ -48,3 +48,21 @@ export type CreateActivationPasswordType = (userId: number) => Promise<void>;
 export type SendVerificationEmailType = (
   activationPassword: string
 ) => Promise<void>;
+
+export type VerifyAccountIsActiveType = (user: User) => boolean;
+
+export type VerifyLoginPasswordType = (
+  passwordInput: string,
+  existingPassword: string
+) => Promise<boolean>;
+
+export type LoginSuccessType = (
+  user: User
+) => {
+  jwt: string;
+  user: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+};

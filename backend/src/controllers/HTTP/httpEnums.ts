@@ -15,4 +15,5 @@ export enum UserHttpResponseMessages {
   PASSWORD_NOT_MATCH = 'Passwords did not match',
   BAD_PASSWORD = 'Please try a different password',
   USER_NOT_CREATED = 'User could not be registerd. Please try again',
+  INVALID_CREDENTIALS = 'Invalid Credentials',
 }

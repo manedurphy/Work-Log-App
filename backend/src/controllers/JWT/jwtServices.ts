@@ -1,6 +1,7 @@
 import sgMail = require('@sendgrid/mail');
-import { hash } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 import { ActivationPassword, User } from '../../models/models';
+import customJwtManager from './jwtController';
 import {
   TokenSuccessType,
   VerifyAccountResponseGetterType,
@@ -10,6 +11,9 @@ import {
   CreateActivationPasswordType,
   SendVerificationEmailType,
   VerifyPasswordsMatchType,
+  VerifyAccountIsActiveType,
+  VerifyLoginPasswordType,
+  LoginSuccessType,
 } from './types';
 
 export class JWTServices {
@@ -85,5 +89,27 @@ export class JWTServices {
 
   public static getRegisterUserSuccessResponse = () => {
     return { success: true };
+  };
+
+  public static verifyAccountIsActive: VerifyAccountIsActiveType = (user) => {
+    return user.active;
+  };
+
+  public static verifyLoginPassword: VerifyLoginPasswordType = async (
+    passwordInput,
+    existingPassword
+  ) => {
+    return await compare(passwordInput, existingPassword);
+  };
+
+  public static loginSuccess: LoginSuccessType = (user) => {
+    return {
+      jwt: customJwtManager.jwt({ email: user.email, id: user.id }),
+      user: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+      },
+    };
   };
 }
