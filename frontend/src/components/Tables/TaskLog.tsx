@@ -36,9 +36,9 @@ const TaskLog: React.FC<{
           <TableCell>Project Number</TableCell>
           <TableCell>Hours Permitted</TableCell>
           <TableCell>Hours Worked</TableCell>
-          <TableCell>Hours Remaining</TableCell>
-          <TableCell>Reviews</TableCell>
+          <TableCell>Review Hours</TableCell>
           <TableCell>Hours for BIM</TableCell>
+          <TableCell>Hours Remaining</TableCell>
           {!props.showCompleted && <TableCell>Actions</TableCell>}
         </TableRow>
       </TableHead>
@@ -53,9 +53,9 @@ const TaskLog: React.FC<{
               <TableCell>{row.projectNumber}</TableCell>
               <TableCell>{row.hoursAvailableToWork}</TableCell>
               <TableCell>{row.hoursWorked}</TableCell>
-              <TableCell>{row.hoursRemaining}</TableCell>
               <TableCell>{row.numberOfReviews}</TableCell>
               <TableCell>{row.hoursRequiredByBim}</TableCell>
+              <TableCell>{row.hoursRemaining}</TableCell>
               {!props.showCompleted && (
                 <TableCell>
                   {!modify ? (

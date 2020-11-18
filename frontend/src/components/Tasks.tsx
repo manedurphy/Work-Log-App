@@ -74,13 +74,9 @@ const TasksComponent: React.FC<{
         );
         task.data.complete = true;
 
-        res = await axios.put(
-          `api/task/${task.data.projectNumber}`,
-          task.data,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        res = await axios.put(`api/task/${projectNumber}`, task.data, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setAlertsAndGetTasks(command, res.data.message);
       } else if (command === 'delete') {
         res = await axios.delete(`api/task/${projectNumber}`, {
