@@ -84,6 +84,32 @@ const Row = (props: any) => {
             )}
           </TableCell>
         )}
+        {props.showCompleted && (
+          <TableCell>
+            {!modify ? (
+              <IconButton onClick={() => setModify(!modify)}>
+                <MoreVertIcon />
+              </IconButton>
+            ) : (
+              <>
+                <IconButton
+                  onClick={(e) =>
+                    props.handleAction(e, props.row.projectNumber, 'delete')
+                  }
+                >
+                  <DeleteIcon />
+                </IconButton>
+                <IconButton
+                  onClick={(e) =>
+                    props.handleAction(e, props.row.projectNumber, 'log')
+                  }
+                >
+                  <LibraryBooks />
+                </IconButton>
+              </>
+            )}
+          </TableCell>
+        )}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>

@@ -33,7 +33,7 @@ const CurrentTasks: React.FC<{
               <TableCell>Hours Permitted</TableCell>
               <TableCell>Hours Worked</TableCell>
               <TableCell>No. Reviews</TableCell>
-              {!props.showCompleted && <TableCell>Actions</TableCell>}
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody className="action-cell">
