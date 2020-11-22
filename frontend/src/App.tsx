@@ -9,15 +9,13 @@ import { Route } from 'react-router-dom';
 
 const App: React.FC = () => {
   return (
-    <>
-      <GlobalState>
-        <Route exact path={'/'} component={Dashboard} />
-        <Route exact path={'/register'} component={Register} />
-        <Route path={'/verify/:hash'} component={Verify} />
-        <Route path={'/verified-account'} component={Verified} />
-        <Route exact path={'/login'} component={Login} />
-      </GlobalState>
-    </>
+    <GlobalState>
+      <Route exact path={'/'} component={Dashboard} />
+      <Route exact path={'/register'} component={Register} />
+      <Route path={'/verify/:hash'} component={Verify} />
+      <Route path={'/verified-account'} component={Verified} />
+      <Route exact path={'/login'} component={Login} />
+    </GlobalState>
   );
 };
 

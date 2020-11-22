@@ -4,6 +4,8 @@ import IncompleteTaskActions from '../Actions/IncompleteTasks';
 import CompletedTaskActions from '../Actions/CompletedTasks';
 import MoreVert from '../Actions/MoreVert';
 import moment from 'moment';
+import LogActions from '../Actions/Log';
+import { HandleActionType, ITask } from '../../type';
 import {
   KeyboardArrowUp as KeyboardArrowUpIcon,
   KeyboardArrowDown as KeyboardArrowDownIcon,
@@ -18,11 +20,17 @@ import {
   Box,
   Collapse,
 } from '@material-ui/core';
-import LogActions from '../Actions/Log';
+import { useContext } from 'react';
+import { GlobalContext } from '../../context/GlobalState';
 
-const Row = (props: any) => {
+const Row: React.FC<{
+  key: number;
+  row: ITask;
+  handleAction: HandleActionType;
+}> = (props) => {
   const [open, setOpen] = useState(false);
   const [modify, setModify] = useState(false);
+  const { log, tasks } = useContext(GlobalContext).state;
 
   return (
     <>
@@ -44,7 +52,7 @@ const Row = (props: any) => {
         <TableCell>{props.row.hoursAvailableToWork}</TableCell>
         <TableCell>{props.row.hoursWorked}</TableCell>
         <TableCell>{props.row.numberOfReviews}</TableCell>
-        {props.showLog ? (
+        {log.showLog ? (
           <TableCell>
             {!modify ? (
               <MoreVert modify={modify} setModify={setModify} />
@@ -52,7 +60,7 @@ const Row = (props: any) => {
               <LogActions props={props} />
             )}
           </TableCell>
-        ) : !props.showCompleted && !props.showLog ? (
+        ) : !tasks.showCompleted && !log.showLog ? (
           <TableCell>
             {!modify ? (
               <MoreVert modify={modify} setModify={setModify} />

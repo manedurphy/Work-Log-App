@@ -8,7 +8,6 @@ import {
 import { IconButton } from '@material-ui/core';
 
 const IncompleteTasks = ({ props }: any) => {
-  console.log(props);
   return (
     <>
       <IconButton

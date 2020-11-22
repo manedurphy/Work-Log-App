@@ -20,6 +20,7 @@ export const initialTaskState: TaskStateType = {
   },
   currentTasks: [],
   edit: false,
+  showCompleted: false,
 };
 
 export const TaskContext = React.createContext<{

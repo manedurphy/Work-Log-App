@@ -1,6 +1,7 @@
 export enum Tasks {
   updateTask = 'UPDATE_TASK',
   updateTasks = 'UPDATE_TASKS',
+  setShowCompleted = 'SET_SHOW_COMPLETED',
 }
 
 export enum Users {
@@ -10,4 +11,5 @@ export enum Users {
 
 export enum Logs {
   setLog = 'SET_LOG',
+  setShowLog = 'SET_SHOW_LOG',
 }

@@ -3,6 +3,7 @@ import { LogStateType, LogAction } from '../type';
 
 export const initialLogState: LogStateType = {
   currentLog: [],
+  showLog: false,
 };
 
 export const LogContext = React.createContext<{

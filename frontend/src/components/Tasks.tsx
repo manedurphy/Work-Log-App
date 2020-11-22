@@ -7,7 +7,7 @@ import Spinner from './Spinner';
 import { Alert } from '@material-ui/lab';
 import { Tasks, Logs } from '../enums';
 import { getToken, GlobalContext } from '../context/GlobalState';
-import { AlertType, ITask, MessageType, ILog } from '../type';
+import { AlertType, ITask, MessageType, ILog, HandleActionType } from '../type';
 import { Link, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -31,10 +31,10 @@ const TasksComponent: React.FC<{
     error: null,
   });
   const { state, dispatch } = useContext(GlobalContext);
+  const { showLog } = state.log;
   const { currentTasks } = state.tasks;
   const { currentLog } = state.log;
   const [showBody, setShowBody] = useState(false);
-  const [showLog, setShowLog] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -54,11 +54,7 @@ const TasksComponent: React.FC<{
     }, 3000);
   };
 
-  const handleAction = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    projectNumber: number,
-    command: string
-  ) => {
+  const handleAction: HandleActionType = async (e, projectNumber, command) => {
     e.preventDefault();
     setLoading(true);
     let res: AxiosResponse<MessageType>;
@@ -85,7 +81,7 @@ const TasksComponent: React.FC<{
 
         setAlertsAndGetTasks(command, res.data.message);
       } else if (command === 'log') {
-        setShowLog(true);
+        dispatch({ type: Logs.setShowLog, payload: true });
         const log: AxiosResponse<ILog[]> = await axios.get(
           `api/task/log/${projectNumber}`,
           {
@@ -140,14 +136,15 @@ const TasksComponent: React.FC<{
         <Spinner />
       ) : showLog ? (
         <>
-          <TaskLog
-            showCompleted={props.showCompleted}
-            taskLog={currentLog}
-            handleAction={handleAction}
-            showLog={showLog}
-          />
+          <TaskLog taskLog={currentLog} handleAction={handleAction} />
           <div className={classes.seeMore}>
-            <Link color="primary" href="#" onClick={() => setShowLog(false)}>
+            <Link
+              color="primary"
+              href="#"
+              onClick={() =>
+                dispatch({ type: Logs.setShowLog, payload: false })
+              }
+            >
               See more tasks
             </Link>
           </div>
@@ -155,10 +152,8 @@ const TasksComponent: React.FC<{
       ) : (
         <CurrentTasks
           showBody={showBody}
-          showCompleted={props.showCompleted}
           currentTasks={currentTasks}
           handleAction={handleAction}
-          showLog={showLog}
         />
       )}
     </>

@@ -1,6 +1,6 @@
 import React from 'react';
 import Row from './Row';
-import { ILog } from '../../type';
+import { HandleActionType, ILog } from '../../type';
 import {
   Table,
   TableRow,
@@ -10,14 +10,8 @@ import {
 } from '@material-ui/core';
 
 const TaskLog: React.FC<{
-  showCompleted: boolean;
   taskLog: ILog[];
-  showLog: boolean;
-  handleAction: (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    projectNumber: number,
-    command: string
-  ) => void;
+  handleAction: HandleActionType;
 }> = (props) => {
   return (
     <Table size="small">
@@ -36,13 +30,7 @@ const TaskLog: React.FC<{
       <TableBody className="action-cell">
         {props.taskLog &&
           props.taskLog.map((row) => (
-            <Row
-              key={row.id}
-              row={row}
-              showComplete={props.showCompleted}
-              handleAction={props.handleAction}
-              showLog={props.showLog}
-            />
+            <Row key={row.id} row={row} handleAction={props.handleAction} />
           ))}
       </TableBody>
     </Table>

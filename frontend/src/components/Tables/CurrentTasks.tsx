@@ -1,6 +1,6 @@
 import React from 'react';
 import Row from './Row';
-import { ITask } from '../../type';
+import { HandleActionType, ITask } from '../../type';
 import {
   Table,
   TableRow,
@@ -12,14 +12,8 @@ import {
 
 const CurrentTasks: React.FC<{
   showBody: boolean;
-  showCompleted: boolean;
   currentTasks: ITask[];
-  showLog: boolean;
-  handleAction: (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    projectNumber: number,
-    command: string
-  ) => void;
+  handleAction: HandleActionType;
 }> = (props) => {
   return (
     <Table size="small">
@@ -39,13 +33,7 @@ const CurrentTasks: React.FC<{
           </TableHead>
           <TableBody className="action-cell">
             {props.currentTasks.map((row) => (
-              <Row
-                key={row.id}
-                row={row}
-                showCompleted={props.showCompleted}
-                handleAction={props.handleAction}
-                showLog={props.showLog}
-              />
+              <Row key={row.id} row={row} handleAction={props.handleAction} />
             ))}
           </TableBody>
         </>

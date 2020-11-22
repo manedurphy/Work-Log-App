@@ -34,11 +34,13 @@ export type TaskStateType = {
   currentTask: ITask;
   currentTasks: ITask[];
   edit: boolean;
+  showCompleted: boolean;
 };
 
 export type TaskAction =
   | { type: Tasks.updateTasks; payload: ITask[] }
-  | { type: Tasks.updateTask; payload: ITask };
+  | { type: Tasks.updateTask; payload: ITask }
+  | { type: Tasks.setShowCompleted; payload: boolean };
 
 /**LOGS */
 export interface ILog {
@@ -59,9 +61,12 @@ export interface ILog {
 
 export type LogStateType = {
   currentLog: ILog[];
+  showLog: boolean;
 };
 
-export type LogAction = { type: Logs.setLog; payload: ILog[] };
+export type LogAction =
+  | { type: Logs.setLog; payload: ILog[] }
+  | { type: Logs.setShowLog; payload: boolean };
 
 /** USERS */
 export interface IUser {
@@ -147,3 +152,9 @@ export type GlobalReducer = (
   state: GlobalStateType,
   action: GlobalAction
 ) => GlobalStateType;
+
+export type HandleActionType = (
+  e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  projectNumber: number,
+  command: string
+) => void;

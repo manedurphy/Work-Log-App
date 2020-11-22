@@ -14,7 +14,7 @@ import JobForm from './JobForm';
 import Spinner from './Spinner';
 import { Redirect } from 'react-router-dom';
 import { getToken, GlobalContext } from '../context/GlobalState';
-import { Users, Tasks } from '../enums';
+import { Users, Tasks, Logs } from '../enums';
 import { VerifyType } from '../type';
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { ITask } from '../type';
@@ -136,8 +136,8 @@ const Dashboard: React.FC = (): JSX.Element => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [open, setOpen] = useState(true);
   const [loadingTasks, setLoadingTasks] = useState(true);
-  const [showCompleted, setShowCompleted] = useState(false);
-  const { dispatch } = useContext(GlobalContext);
+  const { state, dispatch } = useContext(GlobalContext);
+  const { showCompleted } = state.tasks;
 
   useEffect(() => {
     const token = getToken();
@@ -169,6 +169,7 @@ const Dashboard: React.FC = (): JSX.Element => {
       }
     );
 
+    dispatch({ type: Logs.setShowLog, payload: false });
     dispatch({ type: Tasks.updateTasks, payload: res.data });
     setLoadingTasks(false);
   };
@@ -247,7 +248,8 @@ const Dashboard: React.FC = (): JSX.Element => {
             onClick={() => {
               if (showCompleted) {
                 setLoadingTasks(true);
-                setShowCompleted(false);
+
+                dispatch({ type: Tasks.setShowCompleted, payload: false });
               }
             }}
           >
@@ -261,7 +263,7 @@ const Dashboard: React.FC = (): JSX.Element => {
             onClick={() => {
               if (!showCompleted) {
                 setLoadingTasks(true);
-                setShowCompleted(true);
+                dispatch({ type: Tasks.setShowCompleted, payload: true });
               }
             }}
           >
