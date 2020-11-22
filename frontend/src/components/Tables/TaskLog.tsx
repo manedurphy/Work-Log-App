@@ -11,7 +11,9 @@ import {
 
 const TaskLog: React.FC<{
   taskLog: ILog[];
-  handleAction: HandleActionType;
+  // handleAction: HandleActionType;
+  setLoading: any;
+  setAlertsAndGetTasks: any;
 }> = (props) => {
   return (
     <Table size="small">
@@ -30,7 +32,13 @@ const TaskLog: React.FC<{
       <TableBody className="action-cell">
         {props.taskLog &&
           props.taskLog.map((row) => (
-            <Row key={row.id} row={row} handleAction={props.handleAction} />
+            <Row
+              key={row.id}
+              row={row}
+              // handleAction={props.handleAction}
+              setLoading={props.setLoading}
+              setAlertsAndGetTasks={props.setAlertsAndGetTasks}
+            />
           ))}
       </TableBody>
     </Table>

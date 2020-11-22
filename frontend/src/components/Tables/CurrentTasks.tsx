@@ -13,7 +13,9 @@ import {
 const CurrentTasks: React.FC<{
   showBody: boolean;
   currentTasks: ITask[];
-  handleAction: HandleActionType;
+  // handleAction: HandleActionType;
+  setLoading: any;
+  setAlertsAndGetTasks: any;
 }> = (props) => {
   return (
     <Table size="small">
@@ -33,7 +35,13 @@ const CurrentTasks: React.FC<{
           </TableHead>
           <TableBody className="action-cell">
             {props.currentTasks.map((row) => (
-              <Row key={row.id} row={row} handleAction={props.handleAction} />
+              <Row
+                key={row.id}
+                row={row}
+                // handleAction={props.handleAction}
+                setLoading={props.setLoading}
+                setAlertsAndGetTasks={props.setAlertsAndGetTasks}
+              />
             ))}
           </TableBody>
         </>

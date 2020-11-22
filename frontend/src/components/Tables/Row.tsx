@@ -26,7 +26,9 @@ import { GlobalContext } from '../../context/GlobalState';
 const Row: React.FC<{
   key: number;
   row: ITask;
-  handleAction: HandleActionType;
+  // handleAction: HandleActionType;
+  setLoading: any;
+  setAlertsAndGetTasks: any;
 }> = (props) => {
   const [open, setOpen] = useState(false);
   const [modify, setModify] = useState(false);

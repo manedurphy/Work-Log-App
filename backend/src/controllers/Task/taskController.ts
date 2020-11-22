@@ -75,6 +75,23 @@ export class TaskController {
     }
   }
 
+  // @Get('log/:id')
+  // @Middleware(customJwtManager.middleware)
+  // private async getLogItem(req: ISecureRequest, res: Response) {
+  //   try {
+  //     console.log('HIT');
+  //     const taskLogItem = await TaskLogServices.getTaskLogItem(+req.params.id);
+  //     if (!taskLogItem)
+  //       return HTTPResponse.notFound(
+  //         res,
+  //         TaskHttpResponseMessages.TASK_NOT_FOUND
+  //       );
+  //     HTTPResponse.OK(res, taskLogItem);
+  //   } catch (error) {
+  //     HTTPResponse.serverError(res);
+  //   }
+  // }
+
   @Post('')
   @Middleware(customJwtManager.middleware)
   @Middleware(TaskValidation.saveTaskValidation)
@@ -158,6 +175,26 @@ export class TaskController {
 
       await TaskServices.deleteTask(task);
       HTTPResponse.OK(res, { message: TaskHttpResponseMessages.TASK_DELETED });
+    } catch (error) {
+      HTTPResponse.serverError(res);
+    }
+  }
+
+  @Delete('log/:id')
+  @Middleware(customJwtManager.middleware)
+  private async deleteTaskLog(req: ISecureRequest, res: Response) {
+    try {
+      const taskLogItem = await TaskLogServices.getTaskLogItem(+req.params.id);
+      if (!taskLogItem)
+        return HTTPResponse.notFound(
+          res,
+          TaskHttpResponseMessages.TASK_NOT_FOUND
+        );
+
+      await TaskLogServices.deleteTaskLogItem(taskLogItem);
+      HTTPResponse.OK(res, {
+        message: TaskHttpResponseMessages.TASK_LOG_ITEM_DELETED,
+      });
     } catch (error) {
       HTTPResponse.serverError(res);
     }

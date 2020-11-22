@@ -6,6 +6,10 @@ import React, {
   useEffect,
 } from 'react';
 import axios, { AxiosResponse } from 'axios';
+import Title from './Title';
+import { Tasks } from '../enums';
+import { getToken, GlobalContext } from '../context/GlobalState';
+import { Alert } from '@material-ui/lab';
 import { AlertType, ITaskForm, MessageType, ITask } from '../type';
 import {
   Paper,
@@ -17,10 +21,6 @@ import {
   MenuItem,
   Button,
 } from '@material-ui/core';
-import { Tasks } from '../enums';
-import { getToken, GlobalContext } from '../context/GlobalState';
-import { Alert } from '@material-ui/lab';
-import Title from './Title';
 
 const useStyles = makeStyles((theme) => ({
   form: {

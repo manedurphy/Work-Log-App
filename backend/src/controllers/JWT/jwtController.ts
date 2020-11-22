@@ -1,7 +1,6 @@
 import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
 import { Get, Post, Controller, Middleware } from '@overnightjs/core';
 import { Request, Response } from 'express';
-import { validationResult } from 'express-validator';
 import { CheckUserExistance } from './checkUserExistance';
 import { HTTPResponse } from '../HTTP/httpResponses';
 import { UserHttpResponseMessages } from '../HTTP/httpEnums';

@@ -5,6 +5,7 @@ export enum TaskHttpResponseMessages {
   TASK_DELETED = 'Task Deleted!',
   TASK_COMPLETED = 'Task Completed!',
   TASK_UPDATED = 'Task Updated!',
+  TASK_LOG_ITEM_DELETED = 'Log Deleted!',
 }
 
 export enum UserHttpResponseMessages {

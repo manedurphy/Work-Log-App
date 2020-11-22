@@ -54,54 +54,54 @@ const TasksComponent: React.FC<{
     }, 3000);
   };
 
-  const handleAction: HandleActionType = async (e, projectNumber, command) => {
-    e.preventDefault();
-    setLoading(true);
-    let res: AxiosResponse<MessageType>;
-    const token = getToken();
+  // const handleAction: HandleActionType = async (e, projectNumber, command) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+  //   let res: AxiosResponse<MessageType>;
+  //   const token = getToken();
 
-    try {
-      if (command === 'success') {
-        const task: AxiosResponse<ITask> = await axios.get(
-          `api/task/${projectNumber}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        task.data.complete = true;
+  //   try {
+  //     if (command === 'success') {
+  //       const task: AxiosResponse<ITask> = await axios.get(
+  //         `api/task/${projectNumber}`,
+  //         {
+  //           headers: { Authorization: `Bearer ${token}` },
+  //         }
+  //       );
+  //       task.data.complete = true;
 
-        res = await axios.put(`api/task/${projectNumber}`, task.data, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setAlertsAndGetTasks(command, res.data.message);
-      } else if (command === 'delete') {
-        res = await axios.delete(`api/task/${projectNumber}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+  //       res = await axios.put(`api/task/${projectNumber}`, task.data, {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       });
+  //       setAlertsAndGetTasks(command, res.data.message);
+  //     } else if (command === 'delete' && !showLog) {
+  //       res = await axios.delete(`api/task/${projectNumber}`, {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       });
 
-        setAlertsAndGetTasks(command, res.data.message);
-      } else if (command === 'log') {
-        dispatch({ type: Logs.setShowLog, payload: true });
-        const log: AxiosResponse<ILog[]> = await axios.get(
-          `api/task/log/${projectNumber}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+  //       setAlertsAndGetTasks(command, res.data.message);
+  //     } else if (command === 'log') {
+  //       dispatch({ type: Logs.setShowLog, payload: true });
+  //       const log: AxiosResponse<ILog[]> = await axios.get(
+  //         `api/task/log/${projectNumber}`,
+  //         {
+  //           headers: { Authorization: `Bearer ${token}` },
+  //         }
+  //       );
 
-        dispatch({ type: Logs.setLog, payload: log.data });
-      } else {
-        const task = await axios.get(`api/task/${projectNumber}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+  //       dispatch({ type: Logs.setLog, payload: log.data });
+  //     } else {
+  //       const task = await axios.get(`api/task/${projectNumber}`, {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       });
 
-        dispatch({ type: Tasks.updateTask, payload: task.data });
-      }
-      setLoading(false);
-    } catch (err) {
-      setAlertsAndGetTasks('error', err.response.data.message, err);
-    }
-  };
+  //       dispatch({ type: Tasks.updateTask, payload: task.data });
+  //     }
+  //     setLoading(false);
+  //   } catch (err) {
+  //     setAlertsAndGetTasks('error', err.response.data.message, err);
+  //   }
+  // };
 
   return (
     <>
@@ -136,7 +136,12 @@ const TasksComponent: React.FC<{
         <Spinner />
       ) : showLog ? (
         <>
-          <TaskLog taskLog={currentLog} handleAction={handleAction} />
+          <TaskLog
+            taskLog={currentLog}
+            // handleAction={handleAction}
+            setLoading={setLoading}
+            setAlertsAndGetTasks={setAlertsAndGetTasks}
+          />
           <div className={classes.seeMore}>
             <Link
               color="primary"
@@ -153,7 +158,9 @@ const TasksComponent: React.FC<{
         <CurrentTasks
           showBody={showBody}
           currentTasks={currentTasks}
-          handleAction={handleAction}
+          // handleAction={handleAction}
+          setLoading={setLoading}
+          setAlertsAndGetTasks={setAlertsAndGetTasks}
         />
       )}
     </>
