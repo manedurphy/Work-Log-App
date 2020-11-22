@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import Title from '../Title';
+import IncompleteTaskActions from '../Actions/IncompleteTasks';
+import CompletedTaskActions from '../Actions/CompletedTasks';
+import MoreVert from '../Actions/MoreVert';
 import moment from 'moment';
 import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  MoreVert as MoreVertIcon,
-  CheckCircleOutline as CheckCircleOutlineIcon,
-  LibraryBooks,
   KeyboardArrowUp as KeyboardArrowUpIcon,
   KeyboardArrowDown as KeyboardArrowDownIcon,
 } from '@material-ui/icons';
@@ -20,10 +18,12 @@ import {
   Box,
   Collapse,
 } from '@material-ui/core';
+import Log from '../Actions/Log';
 
 const Row = (props: any) => {
   const [open, setOpen] = useState(false);
   const [modify, setModify] = useState(false);
+
   return (
     <>
       <TableRow>
@@ -44,71 +44,32 @@ const Row = (props: any) => {
         <TableCell>{props.row.hoursAvailableToWork}</TableCell>
         <TableCell>{props.row.hoursWorked}</TableCell>
         <TableCell>{props.row.numberOfReviews}</TableCell>
-        {!props.showCompleted && (
+        {props.showLog ? (
           <TableCell>
             {!modify ? (
-              <IconButton onClick={() => setModify(!modify)}>
-                <MoreVertIcon />
-              </IconButton>
+              <MoreVert modify={modify} setModify={setModify} />
             ) : (
-              <>
-                <IconButton
-                  onClick={(e) =>
-                    props.handleAction(e, props.row.projectNumber, 'edit')
-                  }
-                >
-                  <EditIcon />
-                </IconButton>
-                <IconButton
-                  onClick={(e) =>
-                    props.handleAction(e, props.row.projectNumber, 'delete')
-                  }
-                >
-                  <DeleteIcon />
-                </IconButton>
-                <IconButton
-                  onClick={(e) =>
-                    props.handleAction(e, props.row.projectNumber, 'success')
-                  }
-                >
-                  <CheckCircleOutlineIcon />
-                </IconButton>
-                <IconButton
-                  onClick={(e) =>
-                    props.handleAction(e, props.row.projectNumber, 'log')
-                  }
-                >
-                  <LibraryBooks />
-                </IconButton>
-              </>
+              <Log props={props} />
             )}
           </TableCell>
-        )}
-        {props.showCompleted && (
+        ) : !props.showCompleted ? (
           <TableCell>
             {!modify ? (
-              <IconButton onClick={() => setModify(!modify)}>
-                <MoreVertIcon />
-              </IconButton>
+              <MoreVert modify={modify} setModify={setModify} />
             ) : (
-              <>
-                <IconButton
-                  onClick={(e) =>
-                    props.handleAction(e, props.row.projectNumber, 'delete')
-                  }
-                >
-                  <DeleteIcon />
-                </IconButton>
-                <IconButton
-                  onClick={(e) =>
-                    props.handleAction(e, props.row.projectNumber, 'log')
-                  }
-                >
-                  <LibraryBooks />
-                </IconButton>
-              </>
+              <IncompleteTaskActions props={props} />
             )}
           </TableCell>
+        ) : (
+          props.showCompleted && (
+            <TableCell>
+              {!modify ? (
+                <MoreVert modify={modify} setModify={setModify} />
+              ) : (
+                <CompletedTaskActions props={props} />
+              )}
+            </TableCell>
+          )
         )}
       </TableRow>
       <TableRow>

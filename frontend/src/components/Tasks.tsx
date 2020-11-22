@@ -1,14 +1,14 @@
 import React, { useContext, useState, useEffect } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import Title from './Title';
+import CurrentTasks from './Tables/CurrentTasks';
+import TaskLog from './Tables/TaskLog';
+import Spinner from './Spinner';
 import { Alert } from '@material-ui/lab';
 import { Tasks, Logs } from '../enums';
 import { getToken, GlobalContext } from '../context/GlobalState';
 import { AlertType, ITask, MessageType, ILog } from '../type';
 import { Link, makeStyles } from '@material-ui/core';
-import CurrentTasks from './Tables/CurrentTasks';
-import TaskLog from './Tables/TaskLog';
-import Spinner from './Spinner';
 
 const useStyles = makeStyles((theme) => ({
   seeMore: {
@@ -142,6 +142,7 @@ const TasksComponent: React.FC<{
             showCompleted={props.showCompleted}
             taskLog={currentLog}
             handleAction={handleAction}
+            showLog={showLog}
           />
           <div className={classes.seeMore}>
             <Link color="primary" href="#" onClick={() => setShowLog(false)}>
@@ -155,6 +156,7 @@ const TasksComponent: React.FC<{
           showCompleted={props.showCompleted}
           currentTasks={currentTasks}
           handleAction={handleAction}
+          showLog={showLog}
         />
       )}
     </>

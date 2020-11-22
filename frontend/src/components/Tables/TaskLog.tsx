@@ -12,6 +12,7 @@ import {
 const TaskLog: React.FC<{
   showCompleted: boolean;
   taskLog: ILog[];
+  showLog: boolean;
   handleAction: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     projectNumber: number,
@@ -40,6 +41,7 @@ const TaskLog: React.FC<{
               row={row}
               showComplete={props.showCompleted}
               handleAction={props.handleAction}
+              showLog={props.showLog}
             />
           ))}
       </TableBody>

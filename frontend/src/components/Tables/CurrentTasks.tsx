@@ -14,6 +14,7 @@ const CurrentTasks: React.FC<{
   showBody: boolean;
   showCompleted: boolean;
   currentTasks: ITask[];
+  showLog: boolean;
   handleAction: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     projectNumber: number,
@@ -43,6 +44,7 @@ const CurrentTasks: React.FC<{
                 row={row}
                 showCompleted={props.showCompleted}
                 handleAction={props.handleAction}
+                showLog={props.showLog}
               />
             ))}
           </TableBody>
