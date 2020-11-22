@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Row from './Row';
-import { HandleActionType, ITask } from '../../type';
+import { setAlertsAndGetTasksType } from '../../type';
 import {
   Table,
   TableRow,
@@ -9,17 +9,22 @@ import {
   TableHead,
   Box,
 } from '@material-ui/core';
+import { GlobalContext } from '../../context/GlobalState';
 
 const CurrentTasks: React.FC<{
-  showBody: boolean;
-  currentTasks: ITask[];
-  // handleAction: HandleActionType;
-  setLoading: any;
-  setAlertsAndGetTasks: any;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setAlertsAndGetTasks: setAlertsAndGetTasksType;
 }> = (props) => {
+  const [showTaskBody, setShowTaskBody] = useState(false);
+  const tasks = useContext(GlobalContext).state.tasks.currentTasks;
+
+  useEffect(() => {
+    tasks.length ? setShowTaskBody(true) : setShowTaskBody(false);
+  }, [tasks]);
+
   return (
     <Table size="small">
-      {props.showBody ? (
+      {showTaskBody ? (
         <>
           <TableHead>
             <TableRow>
@@ -34,11 +39,10 @@ const CurrentTasks: React.FC<{
             </TableRow>
           </TableHead>
           <TableBody className="action-cell">
-            {props.currentTasks.map((row) => (
+            {tasks.map((row) => (
               <Row
                 key={row.id}
                 row={row}
-                // handleAction={props.handleAction}
                 setLoading={props.setLoading}
                 setAlertsAndGetTasks={props.setAlertsAndGetTasks}
               />

@@ -5,7 +5,7 @@ import CompletedTaskActions from '../Actions/CompletedTasks';
 import MoreVert from '../Actions/MoreVert';
 import moment from 'moment';
 import LogActions from '../Actions/Log';
-import { HandleActionType, ITask } from '../../type';
+import { ITask } from '../../type';
 import {
   KeyboardArrowUp as KeyboardArrowUpIcon,
   KeyboardArrowDown as KeyboardArrowDownIcon,
@@ -26,7 +26,6 @@ import { GlobalContext } from '../../context/GlobalState';
 const Row: React.FC<{
   key: number;
   row: ITask;
-  // handleAction: HandleActionType;
   setLoading: any;
   setAlertsAndGetTasks: any;
 }> = (props) => {

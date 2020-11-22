@@ -1,13 +1,12 @@
-import React, { useContext, useState, useEffect } from 'react';
-import axios, { AxiosResponse } from 'axios';
+import React, { useContext, useState } from 'react';
 import Title from './Title';
 import CurrentTasks from './Tables/CurrentTasks';
 import TaskLog from './Tables/TaskLog';
 import Spinner from './Spinner';
 import { Alert } from '@material-ui/lab';
-import { Tasks, Logs } from '../enums';
-import { getToken, GlobalContext } from '../context/GlobalState';
-import { AlertType, ITask, MessageType, ILog, HandleActionType } from '../type';
+import { Logs } from '../enums';
+import { GlobalContext } from '../context/GlobalState';
+import { AlertType, setAlertsAndGetTasksType } from '../type';
 import { Link, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -32,19 +31,12 @@ const TasksComponent: React.FC<{
   });
   const { state, dispatch } = useContext(GlobalContext);
   const { showLog } = state.log;
-  const { currentTasks } = state.tasks;
-  const { currentLog } = state.log;
-  const [showBody, setShowBody] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    currentTasks.length ? setShowBody(true) : setShowBody(false);
-  }, [currentTasks]);
-
-  const setAlertsAndGetTasks = (
-    command: string,
-    message: string,
-    err: Error | null = null
+  const setAlertsAndGetTasks: setAlertsAndGetTasksType = (
+    command,
+    message,
+    err = null
   ) => {
     if (!err) props.getTasks();
 
@@ -53,55 +45,6 @@ const TasksComponent: React.FC<{
       setAlerts({ success: null, delete: null, error: null });
     }, 3000);
   };
-
-  // const handleAction: HandleActionType = async (e, projectNumber, command) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-  //   let res: AxiosResponse<MessageType>;
-  //   const token = getToken();
-
-  //   try {
-  //     if (command === 'success') {
-  //       const task: AxiosResponse<ITask> = await axios.get(
-  //         `api/task/${projectNumber}`,
-  //         {
-  //           headers: { Authorization: `Bearer ${token}` },
-  //         }
-  //       );
-  //       task.data.complete = true;
-
-  //       res = await axios.put(`api/task/${projectNumber}`, task.data, {
-  //         headers: { Authorization: `Bearer ${token}` },
-  //       });
-  //       setAlertsAndGetTasks(command, res.data.message);
-  //     } else if (command === 'delete' && !showLog) {
-  //       res = await axios.delete(`api/task/${projectNumber}`, {
-  //         headers: { Authorization: `Bearer ${token}` },
-  //       });
-
-  //       setAlertsAndGetTasks(command, res.data.message);
-  //     } else if (command === 'log') {
-  //       dispatch({ type: Logs.setShowLog, payload: true });
-  //       const log: AxiosResponse<ILog[]> = await axios.get(
-  //         `api/task/log/${projectNumber}`,
-  //         {
-  //           headers: { Authorization: `Bearer ${token}` },
-  //         }
-  //       );
-
-  //       dispatch({ type: Logs.setLog, payload: log.data });
-  //     } else {
-  //       const task = await axios.get(`api/task/${projectNumber}`, {
-  //         headers: { Authorization: `Bearer ${token}` },
-  //       });
-
-  //       dispatch({ type: Tasks.updateTask, payload: task.data });
-  //     }
-  //     setLoading(false);
-  //   } catch (err) {
-  //     setAlertsAndGetTasks('error', err.response.data.message, err);
-  //   }
-  // };
 
   return (
     <>
@@ -137,8 +80,6 @@ const TasksComponent: React.FC<{
       ) : showLog ? (
         <>
           <TaskLog
-            taskLog={currentLog}
-            // handleAction={handleAction}
             setLoading={setLoading}
             setAlertsAndGetTasks={setAlertsAndGetTasks}
           />
@@ -156,9 +97,6 @@ const TasksComponent: React.FC<{
         </>
       ) : (
         <CurrentTasks
-          showBody={showBody}
-          currentTasks={currentTasks}
-          // handleAction={handleAction}
           setLoading={setLoading}
           setAlertsAndGetTasks={setAlertsAndGetTasks}
         />

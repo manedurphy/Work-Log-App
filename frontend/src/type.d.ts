@@ -158,3 +158,9 @@ export type HandleActionType = (
   projectNumber: number,
   command: string
 ) => void;
+
+export type setAlertsAndGetTasksType = (
+  command: string,
+  message: string,
+  err: Error | null
+) => void;

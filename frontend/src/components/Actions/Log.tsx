@@ -6,11 +6,9 @@ import { getToken } from '../../context/GlobalState';
 
 const Log = ({ props }: any) => {
   const handleAction: any = async (e: any, logItemId: any) => {
-    console.log(logItemId);
     const res: any = await axios.delete(`api/task/log/${logItemId}`, {
       headers: { Authorization: `Bearer ${getToken()}` },
     });
-    console.log(res);
   };
   return (
     <>
