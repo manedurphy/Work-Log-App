@@ -128,9 +128,11 @@ const TasksComponent: React.FC<{
       <Title>
         {loading
           ? 'Loading'
-          : props.showCompleted
+          : props.showCompleted && !showLog
           ? 'Archive'
-          : showLog
+          : props.showCompleted && showLog
+          ? 'Completed Task Log'
+          : !props.showCompleted && showLog
           ? 'Task Log'
           : 'Current Tasks'}
       </Title>

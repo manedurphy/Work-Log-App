@@ -18,7 +18,7 @@ import {
   Box,
   Collapse,
 } from '@material-ui/core';
-import Log from '../Actions/Log';
+import LogActions from '../Actions/Log';
 
 const Row = (props: any) => {
   const [open, setOpen] = useState(false);
@@ -49,10 +49,10 @@ const Row = (props: any) => {
             {!modify ? (
               <MoreVert modify={modify} setModify={setModify} />
             ) : (
-              <Log props={props} />
+              <LogActions props={props} />
             )}
           </TableCell>
-        ) : !props.showCompleted ? (
+        ) : !props.showCompleted && !props.showLog ? (
           <TableCell>
             {!modify ? (
               <MoreVert modify={modify} setModify={setModify} />
@@ -61,15 +61,13 @@ const Row = (props: any) => {
             )}
           </TableCell>
         ) : (
-          props.showCompleted && (
-            <TableCell>
-              {!modify ? (
-                <MoreVert modify={modify} setModify={setModify} />
-              ) : (
-                <CompletedTaskActions props={props} />
-              )}
-            </TableCell>
-          )
+          <TableCell>
+            {!modify ? (
+              <MoreVert modify={modify} setModify={setModify} />
+            ) : (
+              <CompletedTaskActions props={props} />
+            )}
+          </TableCell>
         )}
       </TableRow>
       <TableRow>
