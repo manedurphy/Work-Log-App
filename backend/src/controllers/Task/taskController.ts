@@ -1,17 +1,16 @@
-import customJwtManager from '../JWT/jwtController';
-import { Response } from 'express';
-import { ISecureRequest } from '@overnightjs/jwt';
-import { validationResult } from 'express-validator';
-import { Logger } from '@overnightjs/logger';
-import { TaskServices } from './taskServices';
-import { TaskLogServices } from './taskLogServices';
-import { TaskValidation } from './taskValidation';
-import { CheckUserExistance } from '../JWT/checkUserExistance';
-import { HTTPResponse } from '../HTTP/httpResponses';
+import customJwtManager from "../JWT/jwtController";
+import { Response } from "express";
+import { ISecureRequest } from "@overnightjs/jwt";
+import { Logger } from "@overnightjs/logger";
+import { TaskServices } from "./taskServices";
+import { TaskLogServices } from "./taskLogServices";
+import { TaskValidation } from "./taskValidation";
+import { CheckUserExistance } from "../JWT/checkUserExistance";
+import { HTTPResponse } from "../HTTP/httpResponses";
 import {
   TaskHttpResponseMessages,
   UserHttpResponseMessages,
-} from '../HTTP/httpEnums';
+} from "../HTTP/httpEnums";
 import {
   Controller,
   Middleware,
@@ -19,11 +18,11 @@ import {
   Put,
   Post,
   Delete,
-} from '@overnightjs/core';
+} from "@overnightjs/core";
 
-@Controller('api/task')
+@Controller("api/task")
 export class TaskController {
-  @Get('')
+  @Get("")
   @Middleware(customJwtManager.middleware)
   private async getAllTasks(req: ISecureRequest, res: Response) {
     Logger.Info(req.body, true);
@@ -35,7 +34,7 @@ export class TaskController {
     }
   }
 
-  @Get(':id')
+  @Get(":id")
   @Middleware(customJwtManager.middleware)
   private async getSingleTask(req: ISecureRequest, res: Response) {
     Logger.Info(req.params.id);
@@ -53,7 +52,7 @@ export class TaskController {
     }
   }
 
-  @Get('log/:projectNumber')
+  @Get("log/:projectNumber")
   @Middleware(customJwtManager.middleware)
   private async getTaskLog(req: ISecureRequest, res: Response) {
     try {
@@ -75,7 +74,7 @@ export class TaskController {
     }
   }
 
-  @Post('')
+  @Post("")
   @Middleware(customJwtManager.middleware)
   @Middleware(TaskValidation.saveTaskValidation)
   private async add(req: ISecureRequest, res: Response) {
@@ -110,7 +109,7 @@ export class TaskController {
     }
   }
 
-  @Put(':id')
+  @Put(":id")
   @Middleware(customJwtManager.middleware)
   @Middleware(TaskValidation.saveTaskValidation)
   private async update(req: ISecureRequest, res: Response) {
@@ -145,7 +144,7 @@ export class TaskController {
     }
   }
 
-  @Delete(':id')
+  @Delete(":id")
   @Middleware(customJwtManager.middleware)
   private async deleteTask(req: ISecureRequest, res: Response) {
     try {
@@ -163,7 +162,7 @@ export class TaskController {
     }
   }
 
-  @Delete('log/:id')
+  @Delete("log/:id")
   @Middleware(customJwtManager.middleware)
   private async deleteTaskLog(req: ISecureRequest, res: Response) {
     try {

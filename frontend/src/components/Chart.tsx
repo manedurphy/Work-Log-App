@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   BarChart,
   CartesianGrid,
@@ -10,31 +10,21 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import Title from './Title';
-
-const data = [
-  {
-    name: 'Task 1',
-    completion: 40,
-  },
-  {
-    name: 'Task 2',
-    completion: 40,
-  },
-  {
-    name: 'Task 3',
-    completion: 42,
-  },
-  {
-    name: 'Task 4',
-    completion: 68,
-  },
-  {
-    name: 'Task 5',
-    completion: 10,
-  },
-];
+import { GlobalContext } from '../context/GlobalState';
 
 export default function Chart() {
+  const tasks = useContext(GlobalContext).state.tasks.currentTasks;
+  const data: any[] = [];
+
+  for (let i = 0; i < 5; i++) {
+    if (tasks[i]) {
+      data.push({
+        name: tasks[i].name,
+        completion:
+          (1 - tasks[i].hoursRemaining / tasks[i].hoursAvailableToWork) * 100,
+      });
+    }
+  }
   return (
     <React.Fragment>
       <Title>Task Completion</Title>
