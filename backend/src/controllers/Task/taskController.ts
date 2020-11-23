@@ -75,23 +75,6 @@ export class TaskController {
     }
   }
 
-  // @Get('log/:id')
-  // @Middleware(customJwtManager.middleware)
-  // private async getLogItem(req: ISecureRequest, res: Response) {
-  //   try {
-  //     console.log('HIT');
-  //     const taskLogItem = await TaskLogServices.getTaskLogItem(+req.params.id);
-  //     if (!taskLogItem)
-  //       return HTTPResponse.notFound(
-  //         res,
-  //         TaskHttpResponseMessages.TASK_NOT_FOUND
-  //       );
-  //     HTTPResponse.OK(res, taskLogItem);
-  //   } catch (error) {
-  //     HTTPResponse.serverError(res);
-  //   }
-  // }
-
   @Post('')
   @Middleware(customJwtManager.middleware)
   @Middleware(TaskValidation.saveTaskValidation)

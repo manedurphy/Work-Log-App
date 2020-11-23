@@ -1,4 +1,3 @@
-import { Request } from 'express';
 import { validationResult } from 'express-validator';
 import { ValidateInputType } from '../JWT/types';
 
