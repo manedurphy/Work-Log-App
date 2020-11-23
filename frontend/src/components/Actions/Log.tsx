@@ -1,7 +1,7 @@
 import React from 'react';
+import axios, { AxiosResponse } from 'axios';
 import { Delete as DeleteIcon } from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';
-import axios, { AxiosResponse } from 'axios';
 import { getToken } from '../../context/GlobalState';
 import {
   HandleLogActionType,

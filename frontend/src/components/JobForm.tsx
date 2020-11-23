@@ -24,7 +24,7 @@ import {
 
 const useStyles = makeStyles((theme) => ({
   form: {
-    width: '97%', // Fix IE 11 issue.
+    width: '97%',
     marginTop: theme.spacing(3),
     margin: 'auto',
   },

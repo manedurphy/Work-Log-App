@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Title from '../Title';
 import IncompleteTaskActions from '../Actions/IncompleteTasks';
 import CompletedTaskActions from '../Actions/CompletedTasks';
 import MoreVert from '../Actions/MoreVert';
 import moment from 'moment';
 import LogActions from '../Actions/Log';
+import { GlobalContext } from '../../context/GlobalState';
 import { ITask, SetAlertsAndHandleResponseType } from '../../type';
 import {
   KeyboardArrowUp as KeyboardArrowUpIcon,
@@ -20,8 +21,6 @@ import {
   Box,
   Collapse,
 } from '@material-ui/core';
-import { useContext } from 'react';
-import { GlobalContext } from '../../context/GlobalState';
 
 const Row: React.FC<{
   key: number;
