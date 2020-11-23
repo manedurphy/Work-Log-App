@@ -13,20 +13,26 @@ const useStyles = makeStyles((theme) =>
         marginTop: theme.spacing(2),
       },
     },
+    depositContext: {
+      flex: 1,
+      color: "grey",
+    },
   })
 );
 
 const Deposits = () => {
   const classes = useStyles();
-  const { user } = useContext(GlobalContext).state;
+  const { user, tasks } = useContext(GlobalContext).state;
   return (
-    <React.Fragment>
+    <>
       <Title>{user.firstName && `Good Morning ${user.firstName}`}</Title>
-      <Typography component="p" variant="h4">
-        Current Week
+      <Typography component="p" variant="h6">
+        Today
+        <Date />
       </Typography>
-      <Date />
-      <Typography>Top prioritity:</Typography>
+      <Typography className={classes.depositContext}>
+        Due: "{tasks.currentTasks[0].name}" (not complete)
+      </Typography>
       <div className={classes.root}>
         <Pagination
           count={5}
@@ -35,7 +41,7 @@ const Deposits = () => {
           siblingCount={0}
         />
       </div>
-    </React.Fragment>
+    </>
   );
 };
 

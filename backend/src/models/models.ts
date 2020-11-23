@@ -188,9 +188,8 @@ export class Log
   public reviewHours!: number;
   public hoursRequiredByBim!: number;
   public complete!: boolean;
+  public createdAt!: Date;
   public TaskId!: number;
-
-  public readonly createdAt!: Date;
 }
 
 Log.init(
