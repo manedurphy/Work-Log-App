@@ -1,4 +1,6 @@
 import React, { useContext } from 'react';
+import Title from './Title';
+import { GlobalContext } from '../context/GlobalState';
 import {
   BarChart,
   CartesianGrid,
@@ -9,12 +11,10 @@ import {
   YAxis,
   ResponsiveContainer,
 } from 'recharts';
-import Title from './Title';
-import { GlobalContext } from '../context/GlobalState';
 
-export default function Chart() {
+const Chart = () => {
   const tasks = useContext(GlobalContext).state.tasks.currentTasks;
-  const data: any[] = [];
+  const data: { name: string; completion: number }[] = [];
 
   for (let i = 0; i < 5; i++) {
     if (tasks[i]) {
@@ -40,4 +40,5 @@ export default function Chart() {
       </ResponsiveContainer>
     </React.Fragment>
   );
-}
+};
+export default Chart;
