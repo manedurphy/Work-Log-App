@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Row from './Row';
-import { setAlertsAndGetTasksType } from '../../type';
+import { SetAlertsAndHandleResponseType } from '../../type';
 import { GlobalContext } from '../../context/GlobalState';
 import {
   Table,
@@ -13,7 +13,7 @@ import {
 
 const TaskLog: React.FC<{
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setAlertsAndGetTasks: setAlertsAndGetTasksType;
+  setAlertsAndHandleResponse: SetAlertsAndHandleResponseType;
 }> = (props) => {
   const [showLogBody, setShowLogBody] = useState(true);
   const currentLog = useContext(GlobalContext).state.log.currentLog;
@@ -45,7 +45,7 @@ const TaskLog: React.FC<{
                   key={row.id}
                   row={row}
                   setLoading={props.setLoading}
-                  setAlertsAndGetTasks={props.setAlertsAndGetTasks}
+                  setAlertsAndHandleResponse={props.setAlertsAndHandleResponse}
                 />
               ))}
           </TableBody>

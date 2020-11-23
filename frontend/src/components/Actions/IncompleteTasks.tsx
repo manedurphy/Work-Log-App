@@ -1,18 +1,28 @@
 import React from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { IconButton } from '@material-ui/core';
+import { getToken, GlobalContext } from '../../context/GlobalState';
+import { useContext } from 'react';
+import { Logs, Tasks } from '../../enums';
+import {
+  HandleActionType,
+  ILog,
+  ITask,
+  MessageType,
+  SetAlertsAndHandleResponseType,
+} from '../../type';
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   CheckCircleOutline as CheckCircleOutlineIcon,
   LibraryBooks,
 } from '@material-ui/icons';
-import { HandleActionType, ILog, ITask, MessageType } from '../../type';
-import { getToken, GlobalContext } from '../../context/GlobalState';
-import { useContext } from 'react';
-import { Logs, Tasks } from '../../enums';
 
-const IncompleteTasks = ({ props }: any) => {
+const IncompleteTasks: React.FC<{
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setAlertsAndHandleResponse: SetAlertsAndHandleResponseType;
+  row: ITask;
+}> = (props) => {
   const { state, dispatch } = useContext(GlobalContext);
   const { showLog } = state.log;
 
@@ -35,13 +45,25 @@ const IncompleteTasks = ({ props }: any) => {
         res = await axios.put(`api/task/${projectNumber}`, task.data, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        props.setAlertsAndGetTasks(command, res.data.message);
+        props.setAlertsAndHandleResponse(
+          command,
+          res.data.message,
+          'tasks',
+          null,
+          null
+        );
       } else if (command === 'delete' && !showLog) {
         res = await axios.delete(`api/task/${projectNumber}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        props.setAlertsAndGetTasks(command, res.data.message);
+        props.setAlertsAndHandleResponse(
+          command,
+          res.data.message,
+          'tasks',
+          props.row.projectNumber,
+          null
+        );
       } else if (command === 'log') {
         dispatch({ type: Logs.setShowLog, payload: true });
         const log: AxiosResponse<ILog[]> = await axios.get(
@@ -61,7 +83,13 @@ const IncompleteTasks = ({ props }: any) => {
       }
       props.setLoading(false);
     } catch (err) {
-      props.setAlertsAndGetTasks('error', err.response.data.message, err);
+      props.setAlertsAndHandleResponse(
+        'error',
+        err.response.data.message,
+        null,
+        null,
+        err
+      );
     }
   };
 

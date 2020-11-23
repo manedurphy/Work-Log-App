@@ -6,7 +6,7 @@ import Spinner from './Spinner';
 import { Alert } from '@material-ui/lab';
 import { Logs } from '../enums';
 import { GlobalContext } from '../context/GlobalState';
-import { AlertType, setAlertsAndGetTasksType } from '../type';
+import { AlertType, SetAlertsAndHandleResponseType } from '../type';
 import { Link, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -16,10 +16,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TasksComponent: React.FC<{
-  getTasks: () => void;
+  getTasks: () => Promise<void>;
+  getLogs: (projectNumber: number) => Promise<void>;
   showCompleted: boolean;
 }> = (props): JSX.Element => {
   const classes = useStyles();
+  const { state, dispatch } = useContext(GlobalContext);
+  const { showLog } = state.log;
+  const [loading, setLoading] = useState(false);
   const [alerts, setAlerts] = useState<{
     success: AlertType;
     delete: AlertType;
@@ -29,16 +33,17 @@ const TasksComponent: React.FC<{
     delete: null,
     error: null,
   });
-  const { state, dispatch } = useContext(GlobalContext);
-  const { showLog } = state.log;
-  const [loading, setLoading] = useState(false);
 
-  const setAlertsAndGetTasks: setAlertsAndGetTasksType = (
+  const setAlertsAndHandleResponse: SetAlertsAndHandleResponseType = (
     command,
     message,
+    target,
+    projectNumber,
     err = null
   ) => {
-    if (!err) props.getTasks();
+    if (!err && target === 'tasks') props.getTasks();
+    if (!err && target === 'logs' && projectNumber)
+      props.getLogs(projectNumber);
 
     setAlerts({ ...alerts, [command]: message });
     setTimeout(() => {
@@ -81,7 +86,7 @@ const TasksComponent: React.FC<{
         <>
           <TaskLog
             setLoading={setLoading}
-            setAlertsAndGetTasks={setAlertsAndGetTasks}
+            setAlertsAndHandleResponse={setAlertsAndHandleResponse}
           />
           <div className={classes.seeMore}>
             <Link
@@ -98,7 +103,7 @@ const TasksComponent: React.FC<{
       ) : (
         <CurrentTasks
           setLoading={setLoading}
-          setAlertsAndGetTasks={setAlertsAndGetTasks}
+          setAlertsAndHandleResponse={setAlertsAndHandleResponse}
         />
       )}
     </>

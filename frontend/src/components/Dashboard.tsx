@@ -15,7 +15,7 @@ import Spinner from './Spinner';
 import { Redirect } from 'react-router-dom';
 import { getToken, GlobalContext } from '../context/GlobalState';
 import { Users, Tasks, Logs } from '../enums';
-import { VerifyType } from '../type';
+import { ILog, VerifyType } from '../type';
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { ITask } from '../type';
 import {
@@ -174,6 +174,19 @@ const Dashboard: React.FC = (): JSX.Element => {
     setLoadingTasks(false);
   };
 
+  const getLogs = async (projectNumber: number): Promise<void> => {
+    const token = getToken();
+    const res: AxiosResponse<ILog[]> = await axios.get(
+      `/api/task/log/${projectNumber}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    dispatch({ type: Logs.setLog, payload: res.data });
+  };
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -295,6 +308,7 @@ const Dashboard: React.FC = (): JSX.Element => {
                 <Paper className={classes.paper}>
                   <TasksComponent
                     getTasks={getTasks}
+                    getLogs={getLogs}
                     showCompleted={showCompleted}
                   />
                 </Paper>

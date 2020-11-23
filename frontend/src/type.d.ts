@@ -159,8 +159,15 @@ export type HandleActionType = (
   command: string
 ) => void;
 
-export type setAlertsAndGetTasksType = (
+export type HandleLogActionType = (
+  e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  logItemId: number
+) => void;
+
+export type SetAlertsAndHandleResponseType = (
   command: string,
   message: string,
+  target: string | null,
+  projectNumber: number | null,
   err: Error | null
 ) => void;

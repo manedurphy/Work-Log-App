@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Row from './Row';
-import { setAlertsAndGetTasksType } from '../../type';
+import { SetAlertsAndHandleResponseType } from '../../type';
+import { GlobalContext } from '../../context/GlobalState';
 import {
   Table,
   TableRow,
@@ -9,11 +10,10 @@ import {
   TableHead,
   Box,
 } from '@material-ui/core';
-import { GlobalContext } from '../../context/GlobalState';
 
 const CurrentTasks: React.FC<{
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setAlertsAndGetTasks: setAlertsAndGetTasksType;
+  setAlertsAndHandleResponse: SetAlertsAndHandleResponseType;
 }> = (props) => {
   const [showTaskBody, setShowTaskBody] = useState(false);
   const tasks = useContext(GlobalContext).state.tasks.currentTasks;
@@ -44,7 +44,7 @@ const CurrentTasks: React.FC<{
                 key={row.id}
                 row={row}
                 setLoading={props.setLoading}
-                setAlertsAndGetTasks={props.setAlertsAndGetTasks}
+                setAlertsAndHandleResponse={props.setAlertsAndHandleResponse}
               />
             ))}
           </TableBody>

@@ -5,7 +5,7 @@ import CompletedTaskActions from '../Actions/CompletedTasks';
 import MoreVert from '../Actions/MoreVert';
 import moment from 'moment';
 import LogActions from '../Actions/Log';
-import { ITask } from '../../type';
+import { ITask, SetAlertsAndHandleResponseType } from '../../type';
 import {
   KeyboardArrowUp as KeyboardArrowUpIcon,
   KeyboardArrowDown as KeyboardArrowDownIcon,
@@ -26,8 +26,8 @@ import { GlobalContext } from '../../context/GlobalState';
 const Row: React.FC<{
   key: number;
   row: ITask;
-  setLoading: any;
-  setAlertsAndGetTasks: any;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setAlertsAndHandleResponse: SetAlertsAndHandleResponseType;
 }> = (props) => {
   const [open, setOpen] = useState(false);
   const [modify, setModify] = useState(false);
@@ -58,7 +58,10 @@ const Row: React.FC<{
             {!modify ? (
               <MoreVert modify={modify} setModify={setModify} />
             ) : (
-              <LogActions props={props} />
+              <LogActions
+                setAlertsAndHandleResponse={props.setAlertsAndHandleResponse}
+                row={props.row}
+              />
             )}
           </TableCell>
         ) : !tasks.showCompleted && !log.showLog ? (
@@ -66,7 +69,11 @@ const Row: React.FC<{
             {!modify ? (
               <MoreVert modify={modify} setModify={setModify} />
             ) : (
-              <IncompleteTaskActions props={props} />
+              <IncompleteTaskActions
+                setLoading={props.setLoading}
+                setAlertsAndHandleResponse={props.setAlertsAndHandleResponse}
+                row={props.row}
+              />
             )}
           </TableCell>
         ) : (
@@ -74,7 +81,11 @@ const Row: React.FC<{
             {!modify ? (
               <MoreVert modify={modify} setModify={setModify} />
             ) : (
-              <CompletedTaskActions props={props} />
+              <CompletedTaskActions
+                setLoading={props.setLoading}
+                setAlertsAndHandleResponse={props.setAlertsAndHandleResponse}
+                row={props.row}
+              />
             )}
           </TableCell>
         )}

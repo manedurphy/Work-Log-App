@@ -2,12 +2,22 @@ import React from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { IconButton } from '@material-ui/core';
 import { Delete as DeleteIcon, LibraryBooks } from '@material-ui/icons';
-import { HandleActionType, ILog, ITask, MessageType } from '../../type';
+import {
+  HandleActionType,
+  ILog,
+  ITask,
+  MessageType,
+  SetAlertsAndHandleResponseType,
+} from '../../type';
 import { getToken, GlobalContext } from '../../context/GlobalState';
 import { useContext } from 'react';
 import { Logs } from '../../enums';
 
-const CompletedTasks = ({ props }: any) => {
+const CompletedTasks: React.FC<{
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setAlertsAndHandleResponse: SetAlertsAndHandleResponseType;
+  row: ITask;
+}> = (props) => {
   const { state, dispatch } = useContext(GlobalContext);
   const { showLog } = state.log;
 
@@ -23,7 +33,13 @@ const CompletedTasks = ({ props }: any) => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        props.setAlertsAndGetTasks(command, res.data.message);
+        props.setAlertsAndHandleResponse(
+          command,
+          res.data.message,
+          'tasks',
+          null,
+          null
+        );
       } else {
         dispatch({ type: Logs.setShowLog, payload: true });
         const log: AxiosResponse<ILog[]> = await axios.get(
@@ -37,7 +53,13 @@ const CompletedTasks = ({ props }: any) => {
       }
       props.setLoading(false);
     } catch (err) {
-      props.setAlertsAndGetTasks('error', err.response.data.message, err);
+      props.setAlertsAndHandleResponse(
+        'error',
+        err.response.data.message,
+        null,
+        null,
+        err
+      );
     }
   };
 
