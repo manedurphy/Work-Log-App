@@ -14,6 +14,8 @@ export const initialTaskState: TaskStateType = {
     reviewHours: 0,
     hoursRequiredByBim: 0,
     complete: false,
+    dateAssigned: new Date(),
+    dueDate: new Date(),
     UserId: -1,
     createdAt: '',
     updatedAt: '',

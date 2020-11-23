@@ -5,6 +5,7 @@ import { IconButton } from '@material-ui/core';
 import { getToken } from '../../context/GlobalState';
 import {
   HandleLogActionType,
+  ILog,
   ITask,
   MessageType,
   SetAlertsAndHandleResponseType,
@@ -12,7 +13,7 @@ import {
 
 const Log: React.FC<{
   setAlertsAndHandleResponse: SetAlertsAndHandleResponseType;
-  row: ITask;
+  row: ITask | ILog;
 }> = (props) => {
   const handleAction: HandleLogActionType = async (e, logItemId) => {
     try {

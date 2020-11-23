@@ -23,6 +23,7 @@ export class TaskLogServices {
     const log = TaskServices.createNewTask(req);
     await Log.create({
       ...log,
+      loggedAt: req.body.loggedAt,
       TaskId: taskId,
     });
   };

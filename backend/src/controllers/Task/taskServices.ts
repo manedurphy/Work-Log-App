@@ -66,6 +66,8 @@ export class TaskServices {
     const task = TaskServices.createNewTask(req);
     return await Task.create({
       ...task,
+      dateAssigned: req.body.dateAssigned,
+      dueDate: req.body.dueDate,
       UserId: userId,
     });
   };

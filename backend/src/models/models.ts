@@ -108,6 +108,8 @@ export class Task
   public hoursRequiredByBim!: number;
   public complete!: boolean;
   public UserId!: number;
+  public dateAssigned!: Date;
+  public dueDate!: Date;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -162,6 +164,14 @@ Task.init(
       allowNull: false,
       defaultValue: false,
     },
+    dateAssigned: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    dueDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
     UserId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -188,8 +198,10 @@ export class Log
   public reviewHours!: number;
   public hoursRequiredByBim!: number;
   public complete!: boolean;
-  public createdAt!: Date;
+  public loggedAt!: Date;
   public TaskId!: number;
+
+  public readonly createdAt!: Date;
 }
 
 Log.init(
@@ -240,6 +252,10 @@ Log.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
+    },
+    loggedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
     },
     TaskId: {
       type: DataTypes.INTEGER,

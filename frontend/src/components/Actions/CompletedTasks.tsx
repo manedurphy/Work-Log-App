@@ -16,7 +16,7 @@ import { Logs } from '../../enums';
 const CompletedTasks: React.FC<{
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setAlertsAndHandleResponse: SetAlertsAndHandleResponseType;
-  row: ITask;
+  row: ITask | ILog;
 }> = (props) => {
   const { state, dispatch } = useContext(GlobalContext);
   const { showLog } = state.log;

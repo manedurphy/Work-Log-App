@@ -5,15 +5,15 @@ import React, {
   FormEvent,
   useEffect,
   SetStateAction,
-} from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import axios, { AxiosResponse } from "axios";
-import Title from "./Title";
-import { Tasks } from "../enums";
-import { getToken, GlobalContext } from "../context/GlobalState";
-import { Alert } from "@material-ui/lab";
-import { AlertType, ITaskForm, MessageType, ITask } from "../type";
+} from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import axios, { AxiosResponse } from 'axios';
+import Title from './Title';
+import { Tasks } from '../enums';
+import { getToken, GlobalContext } from '../context/GlobalState';
+import { Alert } from '@material-ui/lab';
+import { AlertType, ITaskForm, MessageType, ITask } from '../type';
 import {
   Paper,
   FormHelperText,
@@ -23,13 +23,13 @@ import {
   Select,
   MenuItem,
   Button,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   form: {
-    width: "97%",
+    width: '97%',
     marginTop: theme.spacing(3),
-    margin: "auto",
+    margin: 'auto',
   },
 }));
 
@@ -52,14 +52,16 @@ const JobForm: React.FC = () => {
   });
 
   const [formData, setFormData] = useState<ITaskForm>({
-    name: "",
-    projectNumber: "",
-    hoursAvailableToWork: "",
-    hoursWorked: "",
-    notes: "",
-    numberOfReviews: "",
-    reviewHours: "",
-    hoursRequiredByBim: "",
+    name: '',
+    projectNumber: '',
+    hoursAvailableToWork: '',
+    hoursWorked: '',
+    notes: '',
+    numberOfReviews: '',
+    reviewHours: '',
+    hoursRequiredByBim: '',
+    dateAssigned: new Date(),
+    dueDate: null,
   });
 
   useEffect((): void => {
@@ -69,39 +71,45 @@ const JobForm: React.FC = () => {
         projectNumber: currentTask.projectNumber.toString(),
         hoursAvailableToWork: currentTask.hoursAvailableToWork.toString(),
         hoursWorked: currentTask.hoursWorked.toString(),
-        notes: currentTask.notes || "",
+        notes: currentTask.notes || '',
         numberOfReviews: currentTask.numberOfReviews.toString(),
         reviewHours: currentTask.reviewHours.toString(),
         hoursRequiredByBim: currentTask.hoursRequiredByBim.toString(),
+        dateAssigned: currentTask.dateAssigned.toString(),
+        dueDate: currentTask.dueDate.toString(),
       });
 
     !edit &&
       setFormData({
-        name: "",
-        projectNumber: "",
-        hoursAvailableToWork: "",
-        hoursWorked: "",
-        notes: "",
-        numberOfReviews: "",
-        reviewHours: "",
-        hoursRequiredByBim: "",
+        name: '',
+        projectNumber: '',
+        hoursAvailableToWork: '',
+        hoursWorked: '',
+        notes: '',
+        numberOfReviews: '',
+        reviewHours: '',
+        hoursRequiredByBim: '',
+        dateAssigned: new Date(),
+        dueDate: new Date(),
       });
   }, [edit]);
 
   const getTasks = async (): Promise<void> => {
     const token = getToken();
-    const res: AxiosResponse<ITask[]> = await axios.get("/api/task", {
+    const res: AxiosResponse<ITask[]> = await axios.get('/api/task', {
       headers: { Authorization: `Bearer ${token}` },
     });
     setFormData({
-      name: "",
-      projectNumber: "",
-      hoursAvailableToWork: "",
-      hoursWorked: "",
-      notes: "",
-      numberOfReviews: "",
-      reviewHours: "",
-      hoursRequiredByBim: "",
+      name: '',
+      projectNumber: '',
+      hoursAvailableToWork: '',
+      hoursWorked: '',
+      notes: '',
+      numberOfReviews: '',
+      reviewHours: '',
+      hoursRequiredByBim: '',
+      dateAssigned: new Date(),
+      dueDate: new Date(),
     });
     dispatch({ type: Tasks.updateTasks, payload: res.data });
   };
@@ -131,11 +139,11 @@ const JobForm: React.FC = () => {
     const token = getToken();
 
     try {
-      if (command === "success") {
-        res = await axios.post("api/task", formData, {
+      if (command === 'success') {
+        res = await axios.post('api/task', formData, {
           headers: { Authorization: `Bearer ${token}` },
         });
-      } else if (command === "update") {
+      } else if (command === 'update') {
         res = await axios.put(`api/task/${formData.projectNumber}`, formData, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -146,7 +154,7 @@ const JobForm: React.FC = () => {
       }
       setAlertsAndGetTasks(command, res.data.message);
     } catch (err) {
-      setAlertsAndGetTasks("error", err.response.data.message, err);
+      setAlertsAndGetTasks('error', err.response.data.message, err);
     }
   };
 
@@ -156,10 +164,10 @@ const JobForm: React.FC = () => {
         className={classes.form}
         onSubmit={
           edit && deleteMode
-            ? (e) => handleForm(e, "delete")
+            ? (e) => handleForm(e, 'delete')
             : edit
-            ? (e) => handleForm(e, "update")
-            : (e) => handleForm(e, "success")
+            ? (e) => handleForm(e, 'update')
+            : (e) => handleForm(e, 'success')
         }
       >
         <Title>Create a New Task</Title>
@@ -287,32 +295,6 @@ const JobForm: React.FC = () => {
           <Grid item xs={12} sm={4}>
             <TextField
               variant="outlined"
-              required
-              fullWidth
-              type="number"
-              id="numberOfReviews"
-              label="Number of Reviews"
-              name="numberOfReviews"
-              value={formData.numberOfReviews}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <DatePicker
-              selected={startDate}
-              onChange={(date) => setStartDate(date)}
-            />
-            <FormHelperText>Date of assignment</FormHelperText>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <DatePicker
-              selected={startDate}
-              onChange={(date) => setStartDate(date)}
-            />
-            <FormHelperText>When is this due?</FormHelperText>
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
               fullWidth
               id="notes"
               label="Notes or Comments"
@@ -320,6 +302,20 @@ const JobForm: React.FC = () => {
               value={formData.notes}
               onChange={handleChange}
             />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <DatePicker
+              selected={startDate}
+              onChange={(date) =>
+                setFormData({ ...formData, dateAssigned: date })
+              }
+            />
+            <FormHelperText>Date assigned</FormHelperText>
+            <DatePicker
+              selected={startDate}
+              onChange={(date) => setFormData({ ...formData, dueDate: date })}
+            />
+            <FormHelperText>Due date</FormHelperText>
           </Grid>
         </Grid>
 
@@ -331,7 +327,7 @@ const JobForm: React.FC = () => {
                 variant="contained"
                 color="primary"
                 onClick={() => setDeleteMode(false)}
-                style={{ margin: "10px" }}
+                style={{ margin: '10px' }}
               >
                 Update
               </Button>
@@ -340,7 +336,7 @@ const JobForm: React.FC = () => {
                 variant="contained"
                 color="secondary"
                 onClick={() => setDeleteMode(true)}
-                style={{ margin: "10px" }}
+                style={{ margin: '10px' }}
               >
                 Delete
               </Button>
@@ -351,7 +347,7 @@ const JobForm: React.FC = () => {
               type="submit"
               variant="contained"
               color="primary"
-              style={{ margin: "10px" }}
+              style={{ margin: '10px' }}
             >
               Submit
             </Button>
