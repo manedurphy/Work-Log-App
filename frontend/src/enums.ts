@@ -11,5 +11,6 @@ export enum Users {
 
 export enum Logs {
   setLog = 'SET_LOG',
+  setLogs = 'SET_LOGS',
   setShowLog = 'SET_SHOW_LOG',
 }

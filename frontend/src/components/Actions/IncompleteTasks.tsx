@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { IconButton } from '@material-ui/core';
 import { getToken, GlobalContext } from '../../context/GlobalState';
-import { useContext } from 'react';
 import { Logs, Tasks } from '../../enums';
 import {
   HandleActionType,
@@ -73,7 +72,7 @@ const IncompleteTasks: React.FC<{
           }
         );
 
-        dispatch({ type: Logs.setLog, payload: log.data });
+        dispatch({ type: Logs.setLogs, payload: log.data });
       } else {
         const task = await axios.get(`api/task/${projectNumber}`, {
           headers: { Authorization: `Bearer ${token}` },

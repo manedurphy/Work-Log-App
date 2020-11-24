@@ -184,7 +184,7 @@ const Dashboard: React.FC = (): JSX.Element => {
         },
       }
     );
-    dispatch({ type: Logs.setLog, payload: res.data });
+    dispatch({ type: Logs.setLogs, payload: res.data });
   };
 
   const handleDrawerOpen = () => {

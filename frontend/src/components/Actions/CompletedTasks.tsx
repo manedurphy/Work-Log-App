@@ -49,7 +49,7 @@ const CompletedTasks: React.FC<{
           }
         );
 
-        dispatch({ type: Logs.setLog, payload: log.data });
+        dispatch({ type: Logs.setLogs, payload: log.data });
       }
       props.setLoading(false);
     } catch (err) {

@@ -65,12 +65,14 @@ export interface ILog {
 }
 
 export type LogStateType = {
-  currentLog: ILog[];
+  currentLogs: ILog[];
+  currentLog: ILog;
   showLog: boolean;
 };
 
 export type LogAction =
-  | { type: Logs.setLog; payload: ILog[] }
+  | { type: Logs.setLogs; payload: ILog[] }
+  | { type: Logs.setLog; payload: ILog }
   | { type: Logs.setShowLog; payload: boolean };
 
 /** USERS */
@@ -166,7 +168,8 @@ export type HandleActionType = (
 
 export type HandleLogActionType = (
   e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  logItemId: number
+  logItemId: number,
+  command: string
 ) => void;
 
 export type SetAlertsAndHandleResponseType = (

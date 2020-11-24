@@ -16,11 +16,11 @@ const TaskLog: React.FC<{
   setAlertsAndHandleResponse: SetAlertsAndHandleResponseType;
 }> = (props) => {
   const [showLogBody, setShowLogBody] = useState(true);
-  const currentLog = useContext(GlobalContext).state.log.currentLog;
+  const currentLogs = useContext(GlobalContext).state.log.currentLogs;
 
   useEffect(() => {
-    currentLog.length ? setShowLogBody(true) : setShowLogBody(false);
-  }, [currentLog]);
+    currentLogs.length ? setShowLogBody(true) : setShowLogBody(false);
+  }, [currentLogs]);
 
   return (
     <Table size="small">
@@ -39,15 +39,14 @@ const TaskLog: React.FC<{
             </TableRow>
           </TableHead>
           <TableBody className="action-cell">
-            {currentLog &&
-              currentLog.map((row) => (
-                <Row
-                  key={row.id}
-                  row={row}
-                  setLoading={props.setLoading}
-                  setAlertsAndHandleResponse={props.setAlertsAndHandleResponse}
-                />
-              ))}
+            {currentLogs.map((row) => (
+              <Row
+                key={row.id}
+                row={row}
+                setLoading={props.setLoading}
+                setAlertsAndHandleResponse={props.setAlertsAndHandleResponse}
+              />
+            ))}
           </TableBody>
         </>
       ) : (

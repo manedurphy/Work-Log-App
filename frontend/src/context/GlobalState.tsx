@@ -33,9 +33,10 @@ const GlobalState: React.FC = ({ children }) => {
     initialGlobalState
   );
 
+  useEffect(() => console.log('STATE: ', state), [state]);
+
   useEffect(() => {
     const token = getToken();
-    console.log('STATE: ', state);
     (async () => {
       try {
         const res: AxiosResponse<ITask[]> = await axios.get('/api/task', {

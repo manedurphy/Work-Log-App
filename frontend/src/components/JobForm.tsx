@@ -4,7 +4,6 @@ import React, {
   ChangeEvent,
   FormEvent,
   useEffect,
-  SetStateAction,
 } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -20,8 +19,6 @@ import {
   Grid,
   TextField,
   makeStyles,
-  Select,
-  MenuItem,
   Button,
 } from '@material-ui/core';
 
@@ -38,7 +35,6 @@ const JobForm: React.FC = () => {
   const { state, dispatch } = useContext(GlobalContext);
   const { edit, currentTask } = state.tasks;
   const [deleteMode, setDeleteMode] = useState(false);
-  const [startDate, setStartDate]: [any, any] = useState(new Date());
   const [alerts, setAlerts] = useState<{
     success: AlertType;
     update: AlertType;
@@ -60,7 +56,7 @@ const JobForm: React.FC = () => {
     numberOfReviews: '',
     reviewHours: '',
     hoursRequiredByBim: '',
-    dateAssigned: new Date(),
+    dateAssigned: null,
     dueDate: null,
   });
 
@@ -75,8 +71,8 @@ const JobForm: React.FC = () => {
         numberOfReviews: currentTask.numberOfReviews.toString(),
         reviewHours: currentTask.reviewHours.toString(),
         hoursRequiredByBim: currentTask.hoursRequiredByBim.toString(),
-        dateAssigned: currentTask.dateAssigned.toString(),
-        dueDate: currentTask.dueDate.toString(),
+        dateAssigned: new Date(currentTask.dateAssigned),
+        dueDate: new Date(currentTask.dueDate),
       });
 
     !edit &&
@@ -305,14 +301,14 @@ const JobForm: React.FC = () => {
           </Grid>
           <Grid item xs={12} sm={4}>
             <DatePicker
-              selected={startDate}
+              selected={formData.dateAssigned}
               onChange={(date) =>
                 setFormData({ ...formData, dateAssigned: date })
               }
             />
             <FormHelperText>Date assigned</FormHelperText>
             <DatePicker
-              selected={startDate}
+              selected={formData.dueDate}
               onChange={(date) => setFormData({ ...formData, dueDate: date })}
             />
             <FormHelperText>Due date</FormHelperText>

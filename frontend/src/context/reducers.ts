@@ -34,6 +34,8 @@ export const userReducer = (userState: any, action: any) => {
 
 export const logReducer = (logState: any, action: any) => {
   switch (action.type) {
+    case Logs.setLogs:
+      return { ...logState, currentLogs: action.payload };
     case Logs.setLog:
       return { ...logState, currentLog: action.payload };
     case Logs.setShowLog:
