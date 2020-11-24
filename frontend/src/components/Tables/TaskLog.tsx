@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import Row from './Row';
+import LogRow from './LogRow';
 import { SetAlertsAndHandleResponseType } from '../../type';
 import { GlobalContext } from '../../context/GlobalState';
 import {
@@ -40,7 +40,7 @@ const TaskLog: React.FC<{
           </TableHead>
           <TableBody className="action-cell">
             {currentLogs.map((row) => (
-              <Row
+              <LogRow
                 key={row.id}
                 row={row}
                 setLoading={props.setLoading}

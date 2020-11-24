@@ -59,7 +59,7 @@ export interface ILog {
   reviewHours: number;
   hoursRequiredByBim: number;
   complete: boolean;
-  loggedAt: Date;
+  loggedAt: any;
   TaskId?: number;
   createdAt?: string;
 }

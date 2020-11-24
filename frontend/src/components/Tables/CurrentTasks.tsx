@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import Row from './Row';
+import TaskRow from './TaskRow';
 import { SetAlertsAndHandleResponseType } from '../../type';
 import { GlobalContext } from '../../context/GlobalState';
 import {
@@ -29,7 +29,7 @@ const CurrentTasks: React.FC<{
           <TableHead>
             <TableRow>
               <TableCell />
-              <TableCell>Date</TableCell>
+              <TableCell>Assigned On</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Project Number</TableCell>
               <TableCell>Hours Permitted</TableCell>
@@ -40,7 +40,7 @@ const CurrentTasks: React.FC<{
           </TableHead>
           <TableBody className="action-cell">
             {tasks.map((row) => (
-              <Row
+              <TaskRow
                 key={row.id}
                 row={row}
                 setLoading={props.setLoading}

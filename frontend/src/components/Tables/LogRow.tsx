@@ -1,30 +1,21 @@
 import React, { useState, useContext } from 'react';
-import Title from '../Title';
+import DropDown from './DropDown';
 import IncompleteTaskActions from '../Actions/IncompleteTasks';
 import CompletedTaskActions from '../Actions/CompletedTasks';
 import MoreVert from '../Actions/MoreVert';
 import moment from 'moment';
 import LogActions from '../Actions/Log';
 import { GlobalContext } from '../../context/GlobalState';
-import { ILog, ITask, SetAlertsAndHandleResponseType } from '../../type';
+import { ILog, SetAlertsAndHandleResponseType } from '../../type';
+import { TableRow, TableCell, IconButton } from '@material-ui/core';
 import {
   KeyboardArrowUp as KeyboardArrowUpIcon,
   KeyboardArrowDown as KeyboardArrowDownIcon,
 } from '@material-ui/icons';
-import {
-  Table,
-  TableRow,
-  TableCell,
-  TableBody,
-  TableHead,
-  IconButton,
-  Box,
-  Collapse,
-} from '@material-ui/core';
 
 const Row: React.FC<{
   key: number;
-  row: ITask | ILog;
+  row: ILog;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setAlertsAndHandleResponse: SetAlertsAndHandleResponseType;
 }> = (props) => {
@@ -45,7 +36,7 @@ const Row: React.FC<{
           </IconButton>
         </TableCell>
         <TableCell>
-          {moment().format(props.row.createdAt).slice(0, 10)}
+          {moment().format(props.row.loggedAt).slice(0, 10)}
         </TableCell>
         <TableCell>{props.row.name}</TableCell>
         <TableCell>{props.row.projectNumber}</TableCell>
@@ -89,33 +80,7 @@ const Row: React.FC<{
           </TableCell>
         )}
       </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box>
-              <Title>More Information</Title>
-              <Table size="small" aria-label="more-information">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Hours for BIM</TableCell>
-                    <TableCell>Review Hours</TableCell>
-                    <TableCell>Hours Remaining</TableCell>
-                    <TableCell>Notes</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell>{props.row.hoursRequiredByBim}</TableCell>
-                    <TableCell>{props.row.reviewHours}</TableCell>
-                    <TableCell>{props.row.hoursRemaining}</TableCell>
-                    <TableCell>{props.row.notes}</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
+      <DropDown row={props.row} open={open} />
     </>
   );
 };
