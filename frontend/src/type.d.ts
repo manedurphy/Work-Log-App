@@ -68,6 +68,7 @@ export type LogStateType = {
   currentLogs: ILog[];
   currentLog: ILog;
   showLog: boolean;
+  edit: boolean;
 };
 
 export type LogAction =

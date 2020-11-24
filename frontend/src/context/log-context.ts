@@ -19,6 +19,7 @@ export const initialLogState: LogStateType = {
     TaskId: -1,
   },
   showLog: false,
+  edit: false,
 };
 
 export const LogContext = React.createContext<{

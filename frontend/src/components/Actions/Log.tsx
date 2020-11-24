@@ -22,7 +22,7 @@ const Log: React.FC<{
     try {
       if (command === 'delete') {
         const res: AxiosResponse<MessageType> = await axios.delete(
-          `api/task/log/${logItemId}`,
+          `api/log/${logItemId}`,
           {
             headers: { Authorization: `Bearer ${getToken()}` },
           }
@@ -36,7 +36,7 @@ const Log: React.FC<{
         );
       } else {
         const res: AxiosResponse<ILog> = await axios.get(
-          `/api/task/singleLog/${props.row.id}`,
+          `/api/log/${props.row.id}`,
           {
             headers: { Authorization: `Bearer ${getToken()}` },
           }
@@ -45,6 +45,7 @@ const Log: React.FC<{
         dispatch({ type: Logs.setLog, payload: res.data });
       }
     } catch (err) {
+      //TEST THIS ERROR LATER
       props.setAlertsAndHandleResponse(
         'error',
         err.response.data.message,

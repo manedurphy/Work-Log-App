@@ -15,7 +15,7 @@ import {
 
 const Row: React.FC<{
   key: number;
-  row: ITask | ILog;
+  row: ITask;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setAlertsAndHandleResponse: SetAlertsAndHandleResponseType;
 }> = (props) => {
@@ -36,7 +36,7 @@ const Row: React.FC<{
           </IconButton>
         </TableCell>
         <TableCell>
-          {moment().format(props.row.createdAt).slice(0, 10)}
+          {moment().format(props.row.dateAssigned).slice(0, 10)}
         </TableCell>
         <TableCell>{props.row.name}</TableCell>
         <TableCell>{props.row.projectNumber}</TableCell>

@@ -10,7 +10,8 @@ import DataUsageIcon from '@material-ui/icons/DataUsage';
 import Chart from './Chart';
 import Deposits from './CurrentWeek';
 import TasksComponent from './Tasks';
-import JobForm from './JobForm';
+import JobForm from './Forms/JobForm';
+import LogForm from './Forms/LogForm';
 import Spinner from './Spinner';
 import { Redirect } from 'react-router-dom';
 import { getToken, GlobalContext } from '../context/GlobalState';
@@ -138,6 +139,7 @@ const Dashboard: React.FC = (): JSX.Element => {
   const [loadingTasks, setLoadingTasks] = useState(true);
   const { state, dispatch } = useContext(GlobalContext);
   const { showCompleted } = state.tasks;
+  const { showLog } = state.log;
 
   useEffect(() => {
     const token = getToken();
@@ -177,7 +179,7 @@ const Dashboard: React.FC = (): JSX.Element => {
   const getLogs = async (projectNumber: number): Promise<void> => {
     const token = getToken();
     const res: AxiosResponse<ILog[]> = await axios.get(
-      `/api/task/log/${projectNumber}`,
+      `/api/log/task/${projectNumber}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -314,12 +316,8 @@ const Dashboard: React.FC = (): JSX.Element => {
                 </Paper>
               </Grid>
             </Grid>
-            {!showCompleted && (
-              <Box pt={4}>
-                <JobForm />
-                <Copyright />
-              </Box>
-            )}
+            {showLog && state.log.edit && <LogForm />}
+            {!showLog && !showCompleted && <JobForm />}
           </Container>
         )}
       </main>

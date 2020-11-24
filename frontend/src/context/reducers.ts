@@ -37,7 +37,7 @@ export const logReducer = (logState: any, action: any) => {
     case Logs.setLogs:
       return { ...logState, currentLogs: action.payload };
     case Logs.setLog:
-      return { ...logState, currentLog: action.payload };
+      return { ...logState, currentLog: action.payload, edit: true };
     case Logs.setShowLog:
       return { ...logState, showLog: action.payload };
     default:

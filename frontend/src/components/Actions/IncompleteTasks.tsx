@@ -66,7 +66,7 @@ const IncompleteTasks: React.FC<{
       } else if (command === 'log') {
         dispatch({ type: Logs.setShowLog, payload: true });
         const log: AxiosResponse<ILog[]> = await axios.get(
-          `api/task/log/${projectNumber}`,
+          `api/log/task/${projectNumber}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -82,6 +82,7 @@ const IncompleteTasks: React.FC<{
       }
       props.setLoading(false);
     } catch (err) {
+      //TEST THIS ERR LATER
       props.setAlertsAndHandleResponse(
         'error',
         err.response.data.message,

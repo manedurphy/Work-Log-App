@@ -8,11 +8,11 @@ import React, {
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios, { AxiosResponse } from 'axios';
-import Title from './Title';
-import { Tasks } from '../enums';
-import { getToken, GlobalContext } from '../context/GlobalState';
+import Title from '../Title';
+import { Tasks } from '../../enums';
+import { getToken, GlobalContext } from '../../context/GlobalState';
 import { Alert } from '@material-ui/lab';
-import { AlertType, ITaskForm, MessageType, ITask } from '../type';
+import { AlertType, ITaskForm, MessageType, ITask } from '../../type';
 import {
   Paper,
   FormHelperText,
@@ -166,7 +166,7 @@ const JobForm: React.FC = () => {
             : (e) => handleForm(e, 'success')
         }
       >
-        <Title>Create a New Task</Title>
+        <Title>{!edit ? 'Create a New Task' : 'Edit Task'}</Title>
         {alerts.success && (
           <Alert severity="success" role="alert">
             {alerts.success}

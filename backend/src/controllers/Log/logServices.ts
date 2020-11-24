@@ -1,14 +1,14 @@
 import { Log } from '../../models/models';
-import { TaskServices } from './taskServices';
+import { TaskServices } from '../Task/taskServices';
 import {
   CreateTaskLogType,
   GetTaskLogType,
   GetTaskLogItemType,
   DeleteTaskLogItemType,
-} from './types';
+} from '../Task/types';
 
-export class TaskLogServices {
-  public static getTaskLog: GetTaskLogType = async (projectNumber, taskId) => {
+export class LogServices {
+  public static getLog: GetTaskLogType = async (projectNumber, taskId) => {
     return await Log.findAll({
       where: { projectNumber, TaskId: taskId },
       order: [['id', 'DESC']],

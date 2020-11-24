@@ -29,7 +29,7 @@ const TaskLog: React.FC<{
           <TableHead>
             <TableRow>
               <TableCell />
-              <TableCell>Date</TableCell>
+              <TableCell>Logged On</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Project Number</TableCell>
               <TableCell>Hours Permitted</TableCell>
