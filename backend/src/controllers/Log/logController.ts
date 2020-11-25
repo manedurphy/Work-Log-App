@@ -80,14 +80,13 @@ export class LogController {
   @Middleware(customJwtManager.middleware)
   private async updateTaskLogItem(req: ISecureRequest, res: Response) {
     try {
-      console.log(req.body);
       const taskLogItem = await LogServices.getTaskLogItem(+req.params.id);
       if (!taskLogItem)
         return HTTPResponse.notFound(
           res,
           TaskHttpResponseMessages.TASK_NOT_FOUND
         );
-      console.log('LOGGED: AT', req.body.loggedAt);
+
       const updatedTaskLogItem = TaskServices.createNewTask(req);
       await taskLogItem.update({
         ...updatedTaskLogItem,

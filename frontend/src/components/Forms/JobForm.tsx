@@ -56,7 +56,7 @@ const JobForm: React.FC = () => {
     numberOfReviews: '',
     reviewHours: '',
     hoursRequiredByBim: '',
-    dateAssigned: null,
+    dateAssigned: new Date(),
     dueDate: null,
   });
 
@@ -305,6 +305,9 @@ const JobForm: React.FC = () => {
               onChange={(date) =>
                 setFormData({ ...formData, dateAssigned: date })
               }
+              dateFormat="MM/dd/yyyy h:mm aa"
+              timeInputLabel="Time:"
+              showTimeInput
             />
             <FormHelperText>Date assigned</FormHelperText>
             <DatePicker

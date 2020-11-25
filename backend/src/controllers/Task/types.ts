@@ -13,7 +13,7 @@ export type NewTaskType = {
   reviewHours: number;
   hoursRequiredByBim: number;
   complete: boolean;
-  dateAssigned?: Date;
+  dateAssigned?: Date | string;
   dueDate?: Date;
   UserId?: number;
 };

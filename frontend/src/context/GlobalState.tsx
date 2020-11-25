@@ -8,6 +8,7 @@ import { AxiosResponse } from 'axios';
 import { Tasks } from '../enums';
 import { initialUserState } from './user-context';
 import { initialLogState } from './log-context';
+import moment from 'moment-timezone';
 
 const [globalReducer, initialGlobalState] = combineReducers<GlobalReducer>({
   tasks: [taskReducer, initialTaskState],
@@ -42,6 +43,17 @@ const GlobalState: React.FC = ({ children }) => {
         const res: AxiosResponse<ITask[]> = await axios.get('/api/task', {
           headers: { Authorization: `Bearer ${token}` },
         });
+
+        res.data.forEach((task) => {
+          task.dateAssigned = moment(task.dateAssigned)
+            .tz('America/Los_Angeles')
+            .format();
+
+          task.dueDate = moment(task.dueDate)
+            .tz('America/Los_Angeles')
+            .format();
+        });
+
         dispatch({ type: Tasks.updateTasks, payload: res.data });
       } catch (error) {
         throw error;

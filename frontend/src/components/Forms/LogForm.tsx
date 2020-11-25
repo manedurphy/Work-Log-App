@@ -87,7 +87,7 @@ const LogForm: React.FC = () => {
         loggedAt: '',
       });
   }, [edit]);
-  console.log(formData);
+
   // const getTasks = async (): Promise<void> => {
   //   const token = getToken();
   //   const res: AxiosResponse<ITask[]> = await axios.get('/api/task', {
@@ -133,7 +133,6 @@ const LogForm: React.FC = () => {
 
     try {
       if (command === 'update') {
-        console.log('UPDATE FORM DATA: ', formData);
         res = await axios.put(`/api/log/${currentLog.id}`, formData, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -296,10 +295,7 @@ const LogForm: React.FC = () => {
           <Grid item xs={12} sm={4}>
             <DatePicker
               selected={formData.loggedAt}
-              onChange={(date) => {
-                console.log(date);
-                setFormData({ ...formData, loggedAt: date });
-              }}
+              onChange={(date) => setFormData({ ...formData, loggedAt: date })}
             />
             <FormHelperText>Logged on</FormHelperText>
           </Grid>

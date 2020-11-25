@@ -64,6 +64,7 @@ export class TaskServices {
 
   public static saveNewTask: SaveNewTaskType = async (req, userId) => {
     const task = TaskServices.createNewTask(req);
+
     return await Task.create({
       ...task,
       dateAssigned: req.body.dateAssigned,

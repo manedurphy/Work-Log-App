@@ -12,7 +12,7 @@ export interface TaskAttributes {
   reviewHours: number;
   hoursRequiredByBim: number;
   complete: boolean;
-  dateAssigned: Date;
+  dateAssigned: string;
   dueDate: Date;
   UserId: number;
 }
