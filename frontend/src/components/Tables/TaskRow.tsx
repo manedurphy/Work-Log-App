@@ -17,7 +17,6 @@ const Row: React.FC<{
   key: number;
   row: ITask;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setAlertsAndHandleResponse: SetAlertsAndHandleResponseType;
 }> = (props) => {
   const [open, setOpen] = useState(false);
   const [modify, setModify] = useState(false);
@@ -48,10 +47,7 @@ const Row: React.FC<{
             {!modify ? (
               <MoreVert modify={modify} setModify={setModify} />
             ) : (
-              <LogActions
-                setAlertsAndHandleResponse={props.setAlertsAndHandleResponse}
-                row={props.row}
-              />
+              <LogActions row={props.row} />
             )}
           </TableCell>
         ) : !tasks.showCompleted && !log.showLog ? (
@@ -61,7 +57,6 @@ const Row: React.FC<{
             ) : (
               <IncompleteTaskActions
                 setLoading={props.setLoading}
-                setAlertsAndHandleResponse={props.setAlertsAndHandleResponse}
                 row={props.row}
               />
             )}
@@ -73,7 +68,6 @@ const Row: React.FC<{
             ) : (
               <CompletedTaskActions
                 setLoading={props.setLoading}
-                setAlertsAndHandleResponse={props.setAlertsAndHandleResponse}
                 row={props.row}
               />
             )}

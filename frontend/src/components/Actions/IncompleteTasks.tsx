@@ -1,15 +1,14 @@
 import React, { useContext } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { IconButton } from '@material-ui/core';
-import { getLogs, getToken, GlobalContext } from '../../context/GlobalState';
-import { Logs, Tasks } from '../../enums';
 import {
-  HandleActionType,
-  ILog,
-  ITask,
-  MessageType,
-  SetAlertsAndHandleResponseType,
-} from '../../type';
+  getLogs,
+  getTasks,
+  getToken,
+  GlobalContext,
+} from '../../context/GlobalState';
+import { Alerts, Logs, Tasks } from '../../enums';
+import { HandleActionType, ILog, ITask, MessageType } from '../../type';
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
@@ -19,7 +18,6 @@ import {
 
 const IncompleteTasks: React.FC<{
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setAlertsAndHandleResponse: SetAlertsAndHandleResponseType;
   row: ITask | ILog;
 }> = (props) => {
   const { state, dispatch } = useContext(GlobalContext);
@@ -29,60 +27,57 @@ const IncompleteTasks: React.FC<{
     e.preventDefault();
     props.setLoading(true);
     let res: AxiosResponse<MessageType>;
-    const token = getToken();
 
     try {
       if (command === 'success') {
         const task: AxiosResponse<ITask> = await axios.get(
           `api/task/${projectNumber}`,
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${getToken()}` },
           }
         );
         task.data.complete = true;
 
         res = await axios.put(`api/task/${projectNumber}`, task.data, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        props.setAlertsAndHandleResponse(
-          command,
-          res.data.message,
-          'tasks',
-          null,
-          null
-        );
-      } else if (command === 'delete' && !showLog) {
-        res = await axios.delete(`api/task/${projectNumber}`, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${getToken()}` },
         });
 
-        props.setAlertsAndHandleResponse(
-          command,
-          res.data.message,
-          'tasks',
-          props.row.projectNumber,
-          null
-        );
+        dispatch({
+          type: Tasks.updateTasks,
+          payload: await getTasks(state.tasks.showCompleted),
+        });
+        dispatch({ type: Alerts.setAlerts, payload: res.data });
+        setTimeout(() => {
+          dispatch({ type: Alerts.removeAlerts, payload: [] });
+        }, 3000);
+      } else if (command === 'delete' && !showLog) {
+        res = await axios.delete(`api/task/${projectNumber}`, {
+          headers: { Authorization: `Bearer ${getToken()}` },
+        });
+        dispatch({
+          type: Tasks.updateTasks,
+          payload: await getTasks(state.tasks.showCompleted),
+        });
+        dispatch({ type: Alerts.setAlerts, payload: res.data });
+        setTimeout(() => {
+          dispatch({ type: Alerts.removeAlerts, payload: [] });
+        }, 3000);
       } else if (command === 'log') {
         dispatch({ type: Logs.setShowLog, payload: true });
         dispatch({ type: Logs.setLogs, payload: await getLogs(projectNumber) });
       } else {
         const task = await axios.get(`api/task/${projectNumber}`, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${getToken()}` },
         });
 
         dispatch({ type: Tasks.updateTask, payload: task.data });
       }
       props.setLoading(false);
     } catch (err) {
-      //TEST THIS ERR LATER
-      props.setAlertsAndHandleResponse(
-        'error',
-        err.response.data.message,
-        null,
-        null,
-        err
-      );
+      dispatch({ type: Alerts.setAlerts, payload: err.response.data.message });
+      setTimeout(() => {
+        dispatch({ type: Alerts.removeAlerts, payload: [] });
+      }, 3000);
     }
   };
 

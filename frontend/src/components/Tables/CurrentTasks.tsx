@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
 import TaskRow from './TaskRow';
-import { SetAlertsAndHandleResponseType } from '../../type';
 import { GlobalContext } from '../../context/GlobalState';
 import {
   Table,
@@ -13,7 +12,6 @@ import {
 
 const CurrentTasks: React.FC<{
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setAlertsAndHandleResponse: SetAlertsAndHandleResponseType;
 }> = (props) => {
   const [showTaskBody, setShowTaskBody] = useState(false);
   const tasks = useContext(GlobalContext).state.tasks.currentTasks;
@@ -40,12 +38,7 @@ const CurrentTasks: React.FC<{
           </TableHead>
           <TableBody className="action-cell">
             {tasks.map((row) => (
-              <TaskRow
-                key={row.id}
-                row={row}
-                setLoading={props.setLoading}
-                setAlertsAndHandleResponse={props.setAlertsAndHandleResponse}
-              />
+              <TaskRow key={row.id} row={row} setLoading={props.setLoading} />
             ))}
           </TableBody>
         </>

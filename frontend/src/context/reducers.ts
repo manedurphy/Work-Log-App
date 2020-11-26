@@ -48,9 +48,7 @@ export const logReducer = (logState: any, action: any) => {
 export const alertReducer = (alertState: any, action: any) => {
   switch (action.type) {
     case Alerts.setAlerts:
-      const newAlertState = [...alertState];
-      newAlertState.push(action.payload);
-      return newAlertState;
+      return [...alertState, action.payload];
     case Alerts.removeAlerts:
       return action.payload;
     default:

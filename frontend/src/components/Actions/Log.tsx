@@ -3,17 +3,10 @@ import axios, { AxiosResponse } from 'axios';
 import { Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';
 import { getToken, GlobalContext } from '../../context/GlobalState';
-import {
-  HandleLogActionType,
-  ILog,
-  ITask,
-  MessageType,
-  SetAlertsAndHandleResponseType,
-} from '../../type';
+import { HandleLogActionType, ILog, ITask, MessageType } from '../../type';
 import { Logs } from '../../enums';
 
 const Log: React.FC<{
-  setAlertsAndHandleResponse: SetAlertsAndHandleResponseType;
   row: ITask | ILog;
 }> = (props) => {
   const { dispatch } = useContext(GlobalContext);
@@ -27,13 +20,6 @@ const Log: React.FC<{
             headers: { Authorization: `Bearer ${getToken()}` },
           }
         );
-        props.setAlertsAndHandleResponse(
-          'delete',
-          res.data.message,
-          'logs',
-          props.row.projectNumber,
-          null
-        );
       } else {
         const res: AxiosResponse<ILog> = await axios.get(
           `/api/log/${props.row.id}`,
@@ -46,13 +32,6 @@ const Log: React.FC<{
       }
     } catch (err) {
       //TEST THIS ERROR LATER
-      props.setAlertsAndHandleResponse(
-        'error',
-        err.response.data.message,
-        null,
-        null,
-        err
-      );
     }
   };
   return (

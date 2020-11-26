@@ -4,7 +4,7 @@ import CurrentTasks from './Tables/CurrentTasks';
 import TaskLog from './Tables/TaskLog';
 import Spinner from './Spinner';
 import { Alert } from '@material-ui/lab';
-import { Logs, Tasks } from '../enums';
+import { Alerts, Logs, Tasks } from '../enums';
 import { GlobalContext } from '../context/GlobalState';
 import { AlertType, SetAlertsAndHandleResponseType } from '../type';
 import { Link, makeStyles } from '@material-ui/core';
@@ -33,45 +33,30 @@ const TasksComponent: React.FC<{
     error: null,
   });
 
-  const setAlertsAndHandleResponse: SetAlertsAndHandleResponseType = async (
-    command,
-    message,
-    target,
-    projectNumber,
-    err = null
-  ) => {
-    if (!err && target === 'tasks')
-      dispatch({
-        type: Tasks.updateTasks,
-        payload: await getTasks(state.tasks.showCompleted),
-      });
-    if (!err && target === 'logs' && projectNumber)
-      dispatch({ type: Logs.setLogs, payload: await getLogs(projectNumber) });
+  // const setAlertsAndHandleResponse: SetAlertsAndHandleResponseType = async (
+  //   command,
+  //   message,
+  //   target,
+  //   projectNumber,
+  //   err = null
+  // ) => {
+  //   if (!err && target === 'tasks')
+  //     dispatch({
+  //       type: Tasks.updateTasks,
+  //       payload: await getTasks(state.tasks.showCompleted),
+  //     });
 
-    setAlerts({ ...alerts, [command]: message });
-    setTimeout(() => {
-      setAlerts({ success: null, delete: null, error: null });
-    }, 3000);
-  };
+  //   if (!err && target === 'logs' && projectNumber)
+  //     dispatch({ type: Logs.setLogs, payload: await getLogs(projectNumber) });
+
+  //   setAlerts({ ...alerts, [command]: message });
+  //   setTimeout(() => {
+  //     setAlerts({ success: null, delete: null, error: null });
+  //   }, 3000);
+  // };
 
   return (
     <>
-      {alerts.error && (
-        <Alert severity="error" role="alert">
-          {alerts.error}
-        </Alert>
-      )}
-      {alerts.success && (
-        <Alert severity="success" role="alert">
-          {alerts.success}
-        </Alert>
-      )}
-      {alerts.delete && (
-        <Alert severity="warning" role="alert">
-          {alerts.delete}
-        </Alert>
-      )}
-
       <Title>
         {loading
           ? 'Loading'
@@ -87,10 +72,7 @@ const TasksComponent: React.FC<{
         <Spinner />
       ) : showLog ? (
         <>
-          <TaskLog
-            setLoading={setLoading}
-            setAlertsAndHandleResponse={setAlertsAndHandleResponse}
-          />
+          <TaskLog setLoading={setLoading} />
           <div className={classes.seeMore}>
             <Link
               color="primary"
@@ -104,10 +86,7 @@ const TasksComponent: React.FC<{
           </div>
         </>
       ) : (
-        <CurrentTasks
-          setLoading={setLoading}
-          setAlertsAndHandleResponse={setAlertsAndHandleResponse}
-        />
+        <CurrentTasks setLoading={setLoading} />
       )}
     </>
   );

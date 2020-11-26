@@ -2,9 +2,14 @@ import React from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { IconButton } from '@material-ui/core';
 import { Delete as DeleteIcon, LibraryBooks } from '@material-ui/icons';
-import { getLogs, getToken, GlobalContext } from '../../context/GlobalState';
+import {
+  getLogs,
+  getTasks,
+  getToken,
+  GlobalContext,
+} from '../../context/GlobalState';
 import { useContext } from 'react';
-import { Logs } from '../../enums';
+import { Alerts, Logs, Tasks } from '../../enums';
 import {
   HandleActionType,
   ILog,
@@ -15,7 +20,6 @@ import {
 
 const CompletedTasks: React.FC<{
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setAlertsAndHandleResponse: SetAlertsAndHandleResponseType;
   row: ITask | ILog;
 }> = (props) => {
   const { state, dispatch } = useContext(GlobalContext);
@@ -33,26 +37,24 @@ const CompletedTasks: React.FC<{
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        props.setAlertsAndHandleResponse(
-          command,
-          res.data.message,
-          'tasks',
-          null,
-          null
-        );
+        dispatch({
+          type: Tasks.updateTasks,
+          payload: await getTasks(state.tasks.showCompleted),
+        });
+        dispatch({ type: Alerts.setAlerts, payload: res.data });
+        setTimeout(() => {
+          dispatch({ type: Alerts.removeAlerts, payload: [] });
+        }, 3000);
       } else {
         dispatch({ type: Logs.setShowLog, payload: true });
         dispatch({ type: Logs.setLogs, payload: await getLogs(projectNumber) });
       }
       props.setLoading(false);
     } catch (err) {
-      props.setAlertsAndHandleResponse(
-        'error',
-        err.response.data.message,
-        null,
-        null,
-        err
-      );
+      dispatch({ type: Alerts.setAlerts, payload: err.response.data.message });
+      setTimeout(() => {
+        dispatch({ type: Alerts.removeAlerts, payload: [] });
+      }, 3000);
     }
   };
 

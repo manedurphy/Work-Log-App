@@ -115,7 +115,6 @@ export class TaskController {
         );
 
       const task = await TaskServices.getTask(+req.params.id, +req.payload.id);
-
       if (!task)
         return HTTPResponse.notFound(
           res,
@@ -155,7 +154,10 @@ export class TaskController {
         );
 
       await TaskServices.deleteTask(task);
-      HTTPResponse.OK(res, { message: TaskHttpResponseMessages.TASK_DELETED });
+      HTTPResponse.OK(res, {
+        message: TaskHttpResponseMessages.TASK_DELETED,
+        type: AlertResponse.WARNING,
+      });
     } catch (error) {
       HTTPResponse.serverError(res);
     }
