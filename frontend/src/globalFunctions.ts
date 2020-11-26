@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { ITask, ILog, ITaskForm, MessageType } from './type';
+import { ITask, ILog, ITaskForm, MessageType, ILogForm } from './type';
 import moment from 'moment-timezone';
 
 export const getToken = (): string | null => {
@@ -38,17 +38,24 @@ export const createNewTask = async (formData: ITaskForm) => {
 };
 
 export const updateTask = async (formData: ITaskForm) => {
-  const res = await axios.put(`api/task/${formData.projectNumber}`, formData, {
-    headers: { Authorization: `Bearer ${getToken()}` },
-  });
+  const res: AxiosResponse<MessageType> = await axios.put(
+    `api/task/${formData.projectNumber}`,
+    formData,
+    {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }
+  );
 
   return res.data;
 };
 
 export const deleteTask = async (projectNumber: number) => {
-  const res = await axios.delete(`api/task/${projectNumber}`, {
-    headers: { Authorization: `Bearer ${getToken()}` },
-  });
+  const res: AxiosResponse<MessageType> = await axios.delete(
+    `api/task/${projectNumber}`,
+    {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }
+  );
 
   return res.data;
 };
@@ -79,18 +86,25 @@ export const getLog = async (logId: number) => {
   return res.data;
 };
 
-export const updateLog = async (logId: number, formData: ITaskForm) => {
-  const res = await axios.put(`/api/log/${logId}`, formData, {
-    headers: { Authorization: `Bearer ${getToken()}` },
-  });
+export const updateLog = async (logId: number, formData: ILogForm) => {
+  const res: AxiosResponse<MessageType> = await axios.put(
+    `/api/log/${logId}`,
+    formData,
+    {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }
+  );
 
   return res.data;
 };
 
 export const deleteLog = async (logId: number) => {
-  const res = await axios.delete(`/api/log/${logId}`, {
-    headers: { Authorization: `Bearer ${getToken()}` },
-  });
+  const res: AxiosResponse<MessageType> = await axios.delete(
+    `/api/log/${logId}`,
+    {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }
+  );
 
   return res.data;
 };

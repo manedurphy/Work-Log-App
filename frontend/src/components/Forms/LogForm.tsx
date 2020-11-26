@@ -11,7 +11,7 @@ import Title from '../Title';
 import { Alerts, Commands, Logs } from '../../enums';
 import { GlobalContext } from '../../context/GlobalState';
 import { deleteLog, getLogs, updateLog } from '../../globalFunctions';
-import { MessageType } from '../../type';
+import { ILogForm, MessageType } from '../../type';
 import {
   Paper,
   FormHelperText,
@@ -35,7 +35,7 @@ const LogForm: React.FC = () => {
   const { edit, currentLog } = state.log;
   const [deleteMode, setDeleteMode] = useState(false);
 
-  const [formData, setFormData] = useState<any>({
+  const [formData, setFormData] = useState<ILogForm>({
     name: '',
     projectNumber: '',
     hoursAvailableToWork: '',
@@ -44,7 +44,7 @@ const LogForm: React.FC = () => {
     numberOfReviews: '',
     reviewHours: '',
     hoursRequiredByBim: '',
-    loggedAt: null,
+    loggedAt: new Date(),
   });
 
   const clearForm = () => {
@@ -57,8 +57,7 @@ const LogForm: React.FC = () => {
       numberOfReviews: '',
       reviewHours: '',
       hoursRequiredByBim: '',
-      dateAssigned: new Date(),
-      dueDate: new Date(),
+      loggedAt: new Date(),
     });
   };
 
@@ -74,7 +73,6 @@ const LogForm: React.FC = () => {
         reviewHours: currentLog.reviewHours.toString(),
         hoursRequiredByBim: currentLog.hoursRequiredByBim.toString(),
         loggedAt: new Date(currentLog.loggedAt),
-        TaskId: currentLog.TaskId,
       });
   }, [edit]);
 
@@ -97,7 +95,7 @@ const LogForm: React.FC = () => {
 
       dispatch({
         type: Logs.setLogs,
-        payload: await getLogs(formData.projectNumber),
+        payload: await getLogs(+formData.projectNumber),
       });
       dispatch({ type: Alerts.setAlerts, payload: responseData });
       clearForm();

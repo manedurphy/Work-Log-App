@@ -64,6 +64,18 @@ export interface ILog {
   createdAt?: string;
 }
 
+export interface ILogForm {
+  name: string;
+  projectNumber: string;
+  hoursAvailableToWork: string;
+  hoursWorked: string;
+  notes: string | null;
+  numberOfReviews: string;
+  reviewHours: string;
+  hoursRequiredByBim: string;
+  loggedAt: any;
+}
+
 export type LogStateType = {
   currentLogs: ILog[];
   currentLog: ILog;
