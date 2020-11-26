@@ -88,20 +88,19 @@ const JobForm: React.FC = () => {
   const handleForm = async (e: FormEvent<HTMLFormElement>, command: string) => {
     e.preventDefault();
     let res: AxiosResponse<MessageType>;
-    const token = getToken();
 
     try {
       if (command === 'success') {
         res = await axios.post('api/task', formData, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${getToken()}` },
         });
       } else if (command === 'update') {
         res = await axios.put(`api/task/${formData.projectNumber}`, formData, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${getToken()}` },
         });
       } else {
         res = await axios.delete(`api/task/${formData.projectNumber}`, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${getToken()}` },
         });
       }
 

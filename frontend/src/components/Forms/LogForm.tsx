@@ -5,9 +5,9 @@ import React, {
   FormEvent,
   useEffect,
 } from 'react';
+import axios, { AxiosResponse } from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import axios, { AxiosResponse } from 'axios';
 import Title from '../Title';
 import { Alerts, Logs } from '../../enums';
 import { getLogs, getToken, GlobalContext } from '../../context/GlobalState';

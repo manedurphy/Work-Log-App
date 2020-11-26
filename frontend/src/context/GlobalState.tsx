@@ -68,6 +68,18 @@ export const getLogs = async (projectNumber: number) => {
   return res.data;
 };
 
+export const getLog = async (logId: number) => {
+  const res: AxiosResponse<ILog> = await axios.get(`/api/log/${logId}`, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+
+  res.data.loggedAt = moment(res.data.loggedAt)
+    .tz('America/Los_Angeles')
+    .format();
+
+  return res.data;
+};
+
 const GlobalState: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer<GlobalReducer>(
     globalReducer,
