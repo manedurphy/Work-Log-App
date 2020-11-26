@@ -2,12 +2,13 @@ import React, { useContext } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';
-import { getLogs, getToken, GlobalContext } from '../../context/GlobalState';
-import { HandleLogActionType, ILog, ITask, MessageType } from '../../type';
+import { GlobalContext } from '../../context/GlobalState';
+import { getLogs, getToken } from '../../globalFunctions';
+import { HandleLogActionType, ILog, MessageType } from '../../type';
 import { Alerts, Logs } from '../../enums';
 
 const Log: React.FC<{
-  row: ITask | ILog;
+  row: ILog;
 }> = (props) => {
   const { state, dispatch } = useContext(GlobalContext);
 

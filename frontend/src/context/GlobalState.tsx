@@ -31,55 +31,6 @@ export const GlobalContext = React.createContext<{
   dispatch: () => null,
 });
 
-export const getToken = (): string | null => {
-  return localStorage.getItem('token');
-};
-
-export const getTasks = async (showComplete: boolean) => {
-  const res: AxiosResponse<ITask[]> = await axios.get(
-    showComplete ? '/api/archive' : '/api/task',
-    {
-      headers: { Authorization: `Bearer ${getToken()}` },
-    }
-  );
-
-  res.data.forEach((task) => {
-    task.dateAssigned = moment(task.dateAssigned)
-      .tz('America/Los_Angeles')
-      .format();
-
-    task.dueDate = moment(task.dueDate).tz('America/Los_Angeles').format();
-  });
-
-  return res.data;
-};
-
-export const getLogs = async (projectNumber: number) => {
-  const res: AxiosResponse<ILog[]> = await axios.get(
-    `api/log/task/${projectNumber}`,
-    {
-      headers: { Authorization: `Bearer ${getToken()}` },
-    }
-  );
-
-  res.data.forEach((log) => {
-    log.loggedAt = moment(log.loggedAt).tz('America/Los_Angeles').format();
-  });
-  return res.data;
-};
-
-export const getLog = async (logId: number) => {
-  const res: AxiosResponse<ILog> = await axios.get(`/api/log/${logId}`, {
-    headers: { Authorization: `Bearer ${getToken()}` },
-  });
-
-  res.data.loggedAt = moment(res.data.loggedAt)
-    .tz('America/Los_Angeles')
-    .format();
-
-  return res.data;
-};
-
 const GlobalState: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer<GlobalReducer>(
     globalReducer,

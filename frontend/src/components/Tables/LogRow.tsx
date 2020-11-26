@@ -1,11 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import DropDown from './DropDown';
-import IncompleteTaskActions from '../Actions/IncompleteTasks';
-import CompletedTaskActions from '../Actions/CompletedTasks';
 import MoreVert from '../Actions/MoreVert';
 import moment from 'moment';
 import LogActions from '../Actions/Log';
-import { GlobalContext } from '../../context/GlobalState';
 import { ILog } from '../../type';
 import { TableRow, TableCell, IconButton } from '@material-ui/core';
 import {
@@ -20,7 +17,6 @@ const Row: React.FC<{
 }> = (props) => {
   const [open, setOpen] = useState(false);
   const [modify, setModify] = useState(false);
-  const { log, tasks } = useContext(GlobalContext).state;
 
   return (
     <>
@@ -42,37 +38,13 @@ const Row: React.FC<{
         <TableCell>{props.row.hoursAvailableToWork}</TableCell>
         <TableCell>{props.row.hoursWorked}</TableCell>
         <TableCell>{props.row.numberOfReviews}</TableCell>
-        {log.showLog ? (
-          <TableCell>
-            {!modify ? (
-              <MoreVert modify={modify} setModify={setModify} />
-            ) : (
-              <LogActions row={props.row} />
-            )}
-          </TableCell>
-        ) : !tasks.showCompleted && !log.showLog ? (
-          <TableCell>
-            {!modify ? (
-              <MoreVert modify={modify} setModify={setModify} />
-            ) : (
-              <IncompleteTaskActions
-                setLoading={props.setLoading}
-                row={props.row}
-              />
-            )}
-          </TableCell>
-        ) : (
-          <TableCell>
-            {!modify ? (
-              <MoreVert modify={modify} setModify={setModify} />
-            ) : (
-              <CompletedTaskActions
-                setLoading={props.setLoading}
-                row={props.row}
-              />
-            )}
-          </TableCell>
-        )}
+        <TableCell>
+          {!modify ? (
+            <MoreVert modify={modify} setModify={setModify} />
+          ) : (
+            <LogActions row={props.row} />
+          )}
+        </TableCell>
       </TableRow>
       <DropDown row={props.row} open={open} />
     </>

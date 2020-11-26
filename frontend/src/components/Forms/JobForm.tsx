@@ -5,12 +5,17 @@ import React, {
   FormEvent,
   useEffect,
 } from 'react';
-import axios, { AxiosResponse } from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Title from '../Title';
-import { Alerts, Tasks } from '../../enums';
-import { getTasks, getToken, GlobalContext } from '../../context/GlobalState';
+import { Alerts, Commands, Tasks } from '../../enums';
+import { GlobalContext } from '../../context/GlobalState';
+import {
+  createNewTask,
+  deleteTask,
+  getTasks,
+  updateTask,
+} from '../../globalFunctions';
 import { ITaskForm, MessageType } from '../../type';
 import {
   Paper,
@@ -87,28 +92,22 @@ const JobForm: React.FC = () => {
 
   const handleForm = async (e: FormEvent<HTMLFormElement>, command: string) => {
     e.preventDefault();
-    let res: AxiosResponse<MessageType>;
+    let responseData: MessageType;
 
     try {
-      if (command === 'success') {
-        res = await axios.post('api/task', formData, {
-          headers: { Authorization: `Bearer ${getToken()}` },
-        });
-      } else if (command === 'update') {
-        res = await axios.put(`api/task/${formData.projectNumber}`, formData, {
-          headers: { Authorization: `Bearer ${getToken()}` },
-        });
+      if (command === Commands.SUCCESS) {
+        responseData = await createNewTask(formData);
+      } else if (command === Commands.UPDATE) {
+        responseData = await updateTask(formData);
       } else {
-        res = await axios.delete(`api/task/${formData.projectNumber}`, {
-          headers: { Authorization: `Bearer ${getToken()}` },
-        });
+        responseData = await deleteTask(+formData.projectNumber);
       }
 
       dispatch({
         type: Tasks.updateTasks,
         payload: await getTasks(state.tasks.showCompleted),
       });
-      dispatch({ type: Alerts.setAlerts, payload: res.data });
+      dispatch({ type: Alerts.setAlerts, payload: responseData });
       clearForm();
       setTimeout(() => {
         dispatch({ type: Alerts.removeAlerts, payload: [] });
@@ -127,10 +126,10 @@ const JobForm: React.FC = () => {
         className={classes.form}
         onSubmit={
           edit && deleteMode
-            ? (e) => handleForm(e, 'delete')
+            ? (e) => handleForm(e, Commands.DELETE)
             : edit
-            ? (e) => handleForm(e, 'update')
-            : (e) => handleForm(e, 'success')
+            ? (e) => handleForm(e, Commands.UPDATE)
+            : (e) => handleForm(e, Commands.SUCCESS)
         }
       >
         <Title>{!edit ? 'Create a New Task' : 'Edit Task'}</Title>

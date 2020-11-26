@@ -19,3 +19,9 @@ export enum Alerts {
   setAlerts = 'SET_ALERTS',
   removeAlerts = 'REMOVE_ALERTS',
 }
+
+export enum Commands {
+  SUCCESS = 'success',
+  UPDATE = 'update',
+  DELETE = 'delete',
+}

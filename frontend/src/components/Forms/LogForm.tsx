@@ -5,12 +5,12 @@ import React, {
   FormEvent,
   useEffect,
 } from 'react';
-import axios, { AxiosResponse } from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Title from '../Title';
-import { Alerts, Logs } from '../../enums';
-import { getLogs, getToken, GlobalContext } from '../../context/GlobalState';
+import { Alerts, Commands, Logs } from '../../enums';
+import { GlobalContext } from '../../context/GlobalState';
+import { deleteLog, getLogs, updateLog } from '../../globalFunctions';
 import { MessageType } from '../../type';
 import {
   Paper,
@@ -86,25 +86,20 @@ const LogForm: React.FC = () => {
 
   const handleForm = async (e: FormEvent<HTMLFormElement>, command: string) => {
     e.preventDefault();
-    let res: AxiosResponse<MessageType>;
-    const token = getToken();
+    let responseData: MessageType;
 
     try {
-      if (command === 'update') {
-        res = await axios.put(`/api/log/${currentLog.id}`, formData, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+      if (command === Commands.UPDATE) {
+        responseData = await updateLog(currentLog.id, formData);
       } else {
-        res = await axios.delete(`/api/log/${currentLog.id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        responseData = await deleteLog(currentLog.id);
       }
 
       dispatch({
         type: Logs.setLogs,
         payload: await getLogs(formData.projectNumber),
       });
-      dispatch({ type: Alerts.setAlerts, payload: res.data });
+      dispatch({ type: Alerts.setAlerts, payload: responseData });
       clearForm();
       setTimeout(() => {
         dispatch({ type: Alerts.removeAlerts, payload: [] });
@@ -122,11 +117,9 @@ const LogForm: React.FC = () => {
       <form
         className={classes.form}
         onSubmit={
-          edit && deleteMode
-            ? (e) => handleForm(e, 'delete')
-            : edit
-            ? (e) => handleForm(e, 'update')
-            : (e) => handleForm(e, 'success')
+          deleteMode
+            ? (e) => handleForm(e, Commands.DELETE)
+            : (e) => handleForm(e, Commands.UPDATE)
         }
       >
         <Title>Edit Log Item</Title>
@@ -255,38 +248,26 @@ const LogForm: React.FC = () => {
         </Grid>
 
         <div className="submit">
-          {edit ? (
-            <>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                onClick={() => setDeleteMode(false)}
-                style={{ margin: '10px' }}
-              >
-                Update
-              </Button>
-              <Button
-                type="submit"
-                variant="contained"
-                color="secondary"
-                onClick={() => setDeleteMode(true)}
-                style={{ margin: '10px' }}
-              >
-                Delete
-              </Button>
-            </>
-          ) : (
+          <div>
             <Button
-              className="job-form-button"
               type="submit"
               variant="contained"
               color="primary"
+              onClick={() => setDeleteMode(false)}
               style={{ margin: '10px' }}
             >
-              Submit
+              Update
             </Button>
-          )}
+            <Button
+              type="submit"
+              variant="contained"
+              color="secondary"
+              onClick={() => setDeleteMode(true)}
+              style={{ margin: '10px' }}
+            >
+              Delete
+            </Button>
+          </div>
         </div>
       </form>
     </Paper>

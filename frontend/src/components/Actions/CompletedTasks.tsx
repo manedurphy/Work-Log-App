@@ -2,21 +2,11 @@ import React from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { IconButton } from '@material-ui/core';
 import { Delete as DeleteIcon, LibraryBooks } from '@material-ui/icons';
-import {
-  getLogs,
-  getTasks,
-  getToken,
-  GlobalContext,
-} from '../../context/GlobalState';
+import { GlobalContext } from '../../context/GlobalState';
+import { getTasks, getToken, getLogs } from '../../globalFunctions';
 import { useContext } from 'react';
 import { Alerts, Logs, Tasks } from '../../enums';
-import {
-  HandleActionType,
-  ILog,
-  ITask,
-  MessageType,
-  SetAlertsAndHandleResponseType,
-} from '../../type';
+import { HandleActionType, ILog, ITask, MessageType } from '../../type';
 
 const CompletedTasks: React.FC<{
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;

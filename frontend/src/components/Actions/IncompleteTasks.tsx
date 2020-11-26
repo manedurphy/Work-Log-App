@@ -1,12 +1,7 @@
 import React, { useContext } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { IconButton } from '@material-ui/core';
-import {
-  getLogs,
-  getTasks,
-  getToken,
-  GlobalContext,
-} from '../../context/GlobalState';
+import { getLogs, getTasks, getToken } from '../../globalFunctions';
 import { Alerts, Logs, Tasks } from '../../enums';
 import { HandleActionType, ILog, ITask, MessageType } from '../../type';
 import {
@@ -15,6 +10,7 @@ import {
   CheckCircleOutline as CheckCircleOutlineIcon,
   LibraryBooks,
 } from '@material-ui/icons';
+import { GlobalContext } from '../../context/GlobalState';
 
 const IncompleteTasks: React.FC<{
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
