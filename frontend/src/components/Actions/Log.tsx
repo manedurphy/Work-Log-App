@@ -1,6 +1,10 @@
 import React, { useContext } from 'react';
 import axios, { AxiosResponse } from 'axios';
-import { Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons';
+import {
+  Delete as DeleteIcon,
+  Edit as EditIcon,
+  ChevronRight as ChevronRightIcon,
+} from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';
 import { GlobalContext } from '../../context/GlobalState';
 import { getLogs, getToken } from '../../globalFunctions';
@@ -9,6 +13,7 @@ import { Alerts, Logs } from '../../enums';
 
 const Log: React.FC<{
   row: ILog;
+  setModify: React.Dispatch<React.SetStateAction<boolean>>;
 }> = (props) => {
   const { state, dispatch } = useContext(GlobalContext);
 
@@ -58,6 +63,9 @@ const Log: React.FC<{
       </IconButton>
       <IconButton onClick={(e) => handleAction(e, props.row.id, 'delete')}>
         <DeleteIcon />
+      </IconButton>
+      <IconButton onClick={(e) => props.setModify(false)}>
+        <ChevronRightIcon />
       </IconButton>
     </>
   );

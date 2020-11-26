@@ -9,11 +9,13 @@ import {
   Delete as DeleteIcon,
   CheckCircleOutline as CheckCircleOutlineIcon,
   LibraryBooks,
+  ChevronRight as ChevronRightIcon,
 } from '@material-ui/icons';
 import { GlobalContext } from '../../context/GlobalState';
 
 const IncompleteTasks: React.FC<{
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setModify: React.Dispatch<React.SetStateAction<boolean>>;
   row: ITask | ILog;
 }> = (props) => {
   const { state, dispatch } = useContext(GlobalContext);
@@ -98,6 +100,9 @@ const IncompleteTasks: React.FC<{
         onClick={(e) => handleAction(e, props.row.projectNumber, 'log')}
       >
         <LibraryBooks />
+      </IconButton>
+      <IconButton onClick={() => props.setModify(false)}>
+        <ChevronRightIcon />
       </IconButton>
     </>
   );

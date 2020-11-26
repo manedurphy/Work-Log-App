@@ -42,7 +42,7 @@ const Row: React.FC<{
           {!modify ? (
             <MoreVert modify={modify} setModify={setModify} />
           ) : (
-            <LogActions row={props.row} />
+            <LogActions row={props.row} setModify={setModify} />
           )}
         </TableCell>
       </TableRow>

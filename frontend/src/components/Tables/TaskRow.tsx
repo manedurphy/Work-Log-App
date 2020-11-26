@@ -42,11 +42,16 @@ const Row: React.FC<{
         <TableCell>{props.row.hoursWorked}</TableCell>
         <TableCell>{props.row.numberOfReviews}</TableCell>
         {tasks.showCompleted && modify ? (
-          <CompletedTaskActions setLoading={props.setLoading} row={props.row} />
+          <CompletedTaskActions
+            setLoading={props.setLoading}
+            row={props.row}
+            setModify={setModify}
+          />
         ) : !tasks.showCompleted && modify ? (
           <IncompleteTaskActions
             setLoading={props.setLoading}
             row={props.row}
+            setModify={setModify}
           />
         ) : (
           <MoreVert modify={modify} setModify={setModify} />

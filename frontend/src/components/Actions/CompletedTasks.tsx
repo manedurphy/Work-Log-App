@@ -1,7 +1,11 @@
 import React from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { IconButton } from '@material-ui/core';
-import { Delete as DeleteIcon, LibraryBooks } from '@material-ui/icons';
+import {
+  Delete as DeleteIcon,
+  LibraryBooks,
+  ChevronRight as ChevronRightIcon,
+} from '@material-ui/icons';
 import { GlobalContext } from '../../context/GlobalState';
 import { getTasks, getToken, getLogs } from '../../globalFunctions';
 import { useContext } from 'react';
@@ -10,6 +14,7 @@ import { HandleActionType, ILog, ITask, MessageType } from '../../type';
 
 const CompletedTasks: React.FC<{
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setModify: React.Dispatch<React.SetStateAction<boolean>>;
   row: ITask | ILog;
 }> = (props) => {
   const { state, dispatch } = useContext(GlobalContext);
@@ -59,6 +64,9 @@ const CompletedTasks: React.FC<{
         onClick={(e) => handleAction(e, props.row.projectNumber, 'log')}
       >
         <LibraryBooks />
+      </IconButton>
+      <IconButton onClick={() => props.setModify(false)}>
+        <ChevronRightIcon />
       </IconButton>
     </>
   );
