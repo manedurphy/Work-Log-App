@@ -14,16 +14,14 @@ import JobForm from './Forms/JobForm';
 import LogForm from './Forms/LogForm';
 import Spinner from './Spinner';
 import { Redirect } from 'react-router-dom';
-import { getToken, GlobalContext } from '../context/GlobalState';
+import { getToken, getTasks, GlobalContext } from '../context/GlobalState';
 import { Users, Tasks, Logs } from '../enums';
-import { ILog, VerifyType } from '../type';
+import { VerifyType } from '../type';
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import { ITask } from '../type';
 import {
   makeStyles,
   CssBaseline,
   Drawer,
-  Box,
   AppBar,
   Toolbar,
   List,
@@ -36,6 +34,7 @@ import {
   Paper,
   Link,
 } from '@material-ui/core';
+import { Alert, AlertTitle } from '@material-ui/lab';
 
 function Copyright() {
   return (
@@ -142,52 +141,26 @@ const Dashboard: React.FC = (): JSX.Element => {
   const { showLog } = state.log;
 
   useEffect(() => {
-    const token = getToken();
-
     (async () => {
       try {
         const res: AxiosResponse<VerifyType> = await axios.get(
           '/api/auth/token',
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${getToken()}` },
           }
         );
-
         dispatch({ type: Users.setUser, payload: res.data.user });
+        dispatch({ type: Logs.setShowLog, payload: false });
+        dispatch({
+          type: Tasks.updateTasks,
+          payload: await getTasks(showCompleted),
+        });
+        setLoadingTasks(false);
       } catch (error) {
         setIsLoggedIn(false);
       }
     })();
-
-    getTasks();
   }, [showCompleted]);
-
-  const getTasks = async (): Promise<void> => {
-    const token = getToken();
-    const res: AxiosResponse<ITask[]> = await axios.get(
-      showCompleted ? '/api/archive' : '/api/task',
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-
-    dispatch({ type: Logs.setShowLog, payload: false });
-    dispatch({ type: Tasks.updateTasks, payload: res.data });
-    setLoadingTasks(false);
-  };
-
-  const getLogs = async (projectNumber: number): Promise<void> => {
-    const token = getToken();
-    const res: AxiosResponse<ILog[]> = await axios.get(
-      `/api/log/task/${projectNumber}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    dispatch({ type: Logs.setLogs, payload: res.data });
-  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -295,12 +268,18 @@ const Dashboard: React.FC = (): JSX.Element => {
           <Spinner />
         ) : (
           <Container maxWidth="lg" className={classes.container}>
+            {state.alerts[0] && (
+              <Alert severity={state.alerts[0].type}>
+                <AlertTitle>{state.alerts[0].message}</AlertTitle>
+              </Alert>
+            )}
             <Grid container spacing={3}>
               <Grid item xs={12} md={8} lg={7}>
                 <Paper className={fixedHeightPaper}>
                   <Chart />
                 </Paper>
               </Grid>
+
               <Grid item xs={12} md={4} lg={5}>
                 <Paper className={fixedHeightPaper}>
                   <Deposits />
@@ -308,11 +287,7 @@ const Dashboard: React.FC = (): JSX.Element => {
               </Grid>
               <Grid item xs={12}>
                 <Paper className={classes.paper}>
-                  <TasksComponent
-                    getTasks={getTasks}
-                    getLogs={getLogs}
-                    showCompleted={showCompleted}
-                  />
+                  <TasksComponent showCompleted={showCompleted} />
                 </Paper>
               </Grid>
             </Grid>

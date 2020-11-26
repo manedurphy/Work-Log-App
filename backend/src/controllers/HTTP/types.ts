@@ -4,5 +4,6 @@ export type ResponseOnlyType = (res: Response) => Response;
 export type ResponseOkType = (res: Response, data: object) => Response;
 export type ResponseWithMessagetype = (
   res: Response,
-  message: string
+  message: string,
+  type: string
 ) => Response;

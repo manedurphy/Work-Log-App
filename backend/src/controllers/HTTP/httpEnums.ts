@@ -18,3 +18,15 @@ export enum UserHttpResponseMessages {
   USER_NOT_CREATED = 'User could not be registerd. Please try again',
   INVALID_CREDENTIALS = 'Invalid Credentials',
 }
+
+export enum LogHttpResponseMessage {
+  LOG_UPDATED = 'Log Updated!',
+  LOG_DELETED = 'Log Deleted!',
+}
+
+export enum AlertResponse {
+  ERROR = 'error',
+  SUCCESS = 'success',
+  WARNING = 'warning',
+  UPDATE = 'info',
+}

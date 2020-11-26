@@ -2,18 +2,25 @@ import React, { useReducer, useEffect } from 'react';
 import combineReducers from 'react-combine-reducers';
 import axios from 'axios';
 import { initialTaskState } from './task-context';
-import { ITask, GlobalStateType, GlobalAction, GlobalReducer } from '../type';
-import { logReducer, taskReducer, userReducer } from './reducers';
+import {
+  ITask,
+  GlobalStateType,
+  GlobalAction,
+  GlobalReducer,
+  ILog,
+} from '../type';
+import { alertReducer, logReducer, taskReducer, userReducer } from './reducers';
 import { AxiosResponse } from 'axios';
-import { Tasks } from '../enums';
 import { initialUserState } from './user-context';
 import { initialLogState } from './log-context';
 import moment from 'moment-timezone';
+import { initialAlertState } from './alert-context';
 
 const [globalReducer, initialGlobalState] = combineReducers<GlobalReducer>({
   tasks: [taskReducer, initialTaskState],
   user: [userReducer, initialUserState],
   log: [logReducer, initialLogState],
+  alerts: [alertReducer, initialAlertState],
 });
 
 export const GlobalContext = React.createContext<{
@@ -28,6 +35,39 @@ export const getToken = (): string | null => {
   return localStorage.getItem('token');
 };
 
+export const getTasks = async (showComplete: boolean) => {
+  const res: AxiosResponse<ITask[]> = await axios.get(
+    showComplete ? '/api/archive' : '/api/task',
+    {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }
+  );
+
+  res.data.forEach((task) => {
+    task.dateAssigned = moment(task.dateAssigned)
+      .tz('America/Los_Angeles')
+      .format();
+
+    task.dueDate = moment(task.dueDate).tz('America/Los_Angeles').format();
+  });
+
+  return res.data;
+};
+
+export const getLogs = async (projectNumber: number) => {
+  const res: AxiosResponse<ILog[]> = await axios.get(
+    `api/log/task/${projectNumber}`,
+    {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }
+  );
+
+  res.data.forEach((log) => {
+    log.loggedAt = moment(log.loggedAt).tz('America/Los_Angeles').format();
+  });
+  return res.data;
+};
+
 const GlobalState: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer<GlobalReducer>(
     globalReducer,
@@ -35,31 +75,6 @@ const GlobalState: React.FC = ({ children }) => {
   );
 
   useEffect(() => console.log('STATE: ', state), [state]);
-
-  useEffect(() => {
-    const token = getToken();
-    (async () => {
-      try {
-        const res: AxiosResponse<ITask[]> = await axios.get('/api/task', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        res.data.forEach((task) => {
-          task.dateAssigned = moment(task.dateAssigned)
-            .tz('America/Los_Angeles')
-            .format();
-
-          task.dueDate = moment(task.dueDate)
-            .tz('America/Los_Angeles')
-            .format();
-        });
-
-        dispatch({ type: Tasks.updateTasks, payload: res.data });
-      } catch (error) {
-        throw error;
-      }
-    })();
-  }, []);
 
   return (
     <GlobalContext.Provider value={{ state, dispatch }}>

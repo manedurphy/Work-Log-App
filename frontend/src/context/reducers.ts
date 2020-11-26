@@ -1,5 +1,5 @@
 import { TaskStateType, TaskAction } from '../type';
-import { Logs, Tasks, Users } from '../enums';
+import { Alerts, Logs, Tasks, Users } from '../enums';
 
 export const taskReducer = (
   taskState: TaskStateType,
@@ -42,5 +42,18 @@ export const logReducer = (logState: any, action: any) => {
       return { ...logState, showLog: action.payload };
     default:
       return logState;
+  }
+};
+
+export const alertReducer = (alertState: any, action: any) => {
+  switch (action.type) {
+    case Alerts.setAlerts:
+      const newAlertState = [...alertState];
+      newAlertState.push(action.payload);
+      return newAlertState;
+    case Alerts.removeAlerts:
+      return action.payload;
+    default:
+      return alertState;
   }
 };

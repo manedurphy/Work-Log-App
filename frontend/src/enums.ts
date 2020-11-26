@@ -14,3 +14,8 @@ export enum Logs {
   setLogs = 'SET_LOGS',
   setShowLog = 'SET_SHOW_LOG',
 }
+
+export enum Alerts {
+  setAlerts = 'SET_ALERTS',
+  removeAlerts = 'REMOVE_ALERTS',
+}

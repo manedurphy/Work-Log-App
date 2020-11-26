@@ -2,6 +2,9 @@ import React from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { IconButton } from '@material-ui/core';
 import { Delete as DeleteIcon, LibraryBooks } from '@material-ui/icons';
+import { getLogs, getToken, GlobalContext } from '../../context/GlobalState';
+import { useContext } from 'react';
+import { Logs } from '../../enums';
 import {
   HandleActionType,
   ILog,
@@ -9,9 +12,6 @@ import {
   MessageType,
   SetAlertsAndHandleResponseType,
 } from '../../type';
-import { getToken, GlobalContext } from '../../context/GlobalState';
-import { useContext } from 'react';
-import { Logs } from '../../enums';
 
 const CompletedTasks: React.FC<{
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -42,14 +42,7 @@ const CompletedTasks: React.FC<{
         );
       } else {
         dispatch({ type: Logs.setShowLog, payload: true });
-        const log: AxiosResponse<ILog[]> = await axios.get(
-          `api/task/log/${projectNumber}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
-        dispatch({ type: Logs.setLogs, payload: log.data });
+        dispatch({ type: Logs.setLogs, payload: await getLogs(projectNumber) });
       }
       props.setLoading(false);
     } catch (err) {

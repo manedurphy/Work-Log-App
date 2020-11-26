@@ -4,10 +4,11 @@ import CurrentTasks from './Tables/CurrentTasks';
 import TaskLog from './Tables/TaskLog';
 import Spinner from './Spinner';
 import { Alert } from '@material-ui/lab';
-import { Logs } from '../enums';
+import { Logs, Tasks } from '../enums';
 import { GlobalContext } from '../context/GlobalState';
 import { AlertType, SetAlertsAndHandleResponseType } from '../type';
 import { Link, makeStyles } from '@material-ui/core';
+import { getTasks, getLogs } from '../context/GlobalState';
 
 const useStyles = makeStyles((theme) => ({
   seeMore: {
@@ -16,8 +17,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TasksComponent: React.FC<{
-  getTasks: () => Promise<void>;
-  getLogs: (projectNumber: number) => Promise<void>;
   showCompleted: boolean;
 }> = (props): JSX.Element => {
   const classes = useStyles();
@@ -34,16 +33,20 @@ const TasksComponent: React.FC<{
     error: null,
   });
 
-  const setAlertsAndHandleResponse: SetAlertsAndHandleResponseType = (
+  const setAlertsAndHandleResponse: SetAlertsAndHandleResponseType = async (
     command,
     message,
     target,
     projectNumber,
     err = null
   ) => {
-    if (!err && target === 'tasks') props.getTasks();
+    if (!err && target === 'tasks')
+      dispatch({
+        type: Tasks.updateTasks,
+        payload: await getTasks(state.tasks.showCompleted),
+      });
     if (!err && target === 'logs' && projectNumber)
-      props.getLogs(projectNumber);
+      dispatch({ type: Logs.setLogs, payload: await getLogs(projectNumber) });
 
     setAlerts({ ...alerts, [command]: message });
     setTimeout(() => {

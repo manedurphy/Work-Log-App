@@ -9,10 +9,9 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios, { AxiosResponse } from 'axios';
 import Title from '../Title';
-import { Tasks } from '../../enums';
-import { getToken, GlobalContext } from '../../context/GlobalState';
-import { Alert } from '@material-ui/lab';
-import { AlertType, MessageType, ITask } from '../../type';
+import { Alerts, Logs } from '../../enums';
+import { getLogs, getToken, GlobalContext } from '../../context/GlobalState';
+import { MessageType } from '../../type';
 import {
   Paper,
   FormHelperText,
@@ -35,17 +34,6 @@ const LogForm: React.FC = () => {
   const { state, dispatch } = useContext(GlobalContext);
   const { edit, currentLog } = state.log;
   const [deleteMode, setDeleteMode] = useState(false);
-  const [alerts, setAlerts] = useState<{
-    success: AlertType;
-    update: AlertType;
-    delete: AlertType;
-    error: AlertType;
-  }>({
-    success: null,
-    update: null,
-    delete: null,
-    error: null,
-  });
 
   const [formData, setFormData] = useState<any>({
     name: '',
@@ -58,6 +46,21 @@ const LogForm: React.FC = () => {
     hoursRequiredByBim: '',
     loggedAt: null,
   });
+
+  const clearForm = () => {
+    setFormData({
+      name: '',
+      projectNumber: '',
+      hoursAvailableToWork: '',
+      hoursWorked: '',
+      notes: '',
+      numberOfReviews: '',
+      reviewHours: '',
+      hoursRequiredByBim: '',
+      dateAssigned: new Date(),
+      dueDate: new Date(),
+    });
+  };
 
   useEffect((): void => {
     edit &&
@@ -73,57 +76,12 @@ const LogForm: React.FC = () => {
         loggedAt: new Date(currentLog.loggedAt),
         TaskId: currentLog.TaskId,
       });
-
-    !edit &&
-      setFormData({
-        name: '',
-        projectNumber: '',
-        hoursAvailableToWork: '',
-        hoursWorked: '',
-        notes: '',
-        numberOfReviews: '',
-        reviewHours: '',
-        hoursRequiredByBim: '',
-        loggedAt: '',
-      });
   }, [edit]);
-
-  // const getTasks = async (): Promise<void> => {
-  //   const token = getToken();
-  //   const res: AxiosResponse<ITask[]> = await axios.get('/api/task', {
-  //     headers: { Authorization: `Bearer ${token}` },
-  //   });
-  //   setFormData({
-  //     name: '',
-  //     projectNumber: '',
-  //     hoursAvailableToWork: '',
-  //     hoursWorked: '',
-  //     notes: '',
-  //     numberOfReviews: '',
-  //     reviewHours: '',
-  //     hoursRequiredByBim: '',
-  //     loggedAt: new Date(),
-  //   });
-  //   dispatch({ type: Tasks.updateTasks, payload: res.data });
-  // };
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
-  };
-
-  const setAlertsAndGetTasks = (
-    command: string,
-    message: string,
-    err: Error | null = null
-  ) => {
-    // if (!err) getTasks();
-
-    setAlerts({ ...alerts, [command]: message });
-    setTimeout(() => {
-      setAlerts({ success: null, update: null, delete: null, error: null });
-    }, 3000);
   };
 
   const handleForm = async (e: FormEvent<HTMLFormElement>, command: string) => {
@@ -141,9 +99,21 @@ const LogForm: React.FC = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
       }
-      setAlertsAndGetTasks(command, res.data.message);
+
+      dispatch({
+        type: Logs.setLogs,
+        payload: await getLogs(formData.projectNumber),
+      });
+      dispatch({ type: Alerts.setAlerts, payload: res.data });
+      clearForm();
+      setTimeout(() => {
+        dispatch({ type: Alerts.removeAlerts, payload: [] });
+      }, 3000);
     } catch (err) {
-      setAlertsAndGetTasks('error', err.response.data.message, err);
+      dispatch({ type: Alerts.setAlerts, payload: err.response.data.message });
+      setTimeout(() => {
+        dispatch({ type: Alerts.removeAlerts, payload: [] });
+      }, 3000);
     }
   };
 
@@ -160,26 +130,6 @@ const LogForm: React.FC = () => {
         }
       >
         <Title>Edit Log Item</Title>
-        {alerts.success && (
-          <Alert severity="success" role="alert">
-            {alerts.success}
-          </Alert>
-        )}
-        {alerts.update && (
-          <Alert severity="info" role="alert">
-            {alerts.update}
-          </Alert>
-        )}
-        {alerts.delete && (
-          <Alert severity="warning" role="alert">
-            {alerts.delete}
-          </Alert>
-        )}
-        {alerts.error && (
-          <Alert severity="error" role="alert">
-            {alerts.error}
-          </Alert>
-        )}
 
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
@@ -296,6 +246,9 @@ const LogForm: React.FC = () => {
             <DatePicker
               selected={formData.loggedAt}
               onChange={(date) => setFormData({ ...formData, loggedAt: date })}
+              dateFormat="MM/dd/yyyy h:mm aa"
+              timeInputLabel="Time:"
+              showTimeInput
             />
             <FormHelperText>Logged on</FormHelperText>
           </Grid>

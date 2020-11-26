@@ -3,11 +3,11 @@ import { Response } from 'express';
 import { ISecureRequest } from '@overnightjs/jwt';
 import { Logger } from '@overnightjs/logger';
 import { TaskServices } from './taskServices';
-// import { TaskLogServices } from './taskLogServices';
 import { TaskValidation } from './taskValidation';
 import { CheckUserExistance } from '../JWT/checkUserExistance';
 import { HTTPResponse } from '../HTTP/httpResponses';
 import {
+  AlertResponse,
   TaskHttpResponseMessages,
   UserHttpResponseMessages,
 } from '../HTTP/httpEnums';
@@ -44,7 +44,8 @@ export class TaskController {
       if (!task)
         return HTTPResponse.notFound(
           res,
-          TaskHttpResponseMessages.TASK_NOT_FOUND
+          TaskHttpResponseMessages.TASK_NOT_FOUND,
+          AlertResponse.ERROR
         );
 
       HTTPResponse.OK(res, task);
@@ -52,48 +53,6 @@ export class TaskController {
       HTTPResponse.serverError(res);
     }
   }
-
-  // @Get('log/:projectNumber')
-  // @Middleware(customJwtManager.middleware)
-  // private async getTaskLog(req: ISecureRequest, res: Response) {
-  //   try {
-  //     const task = await TaskServices.getTask(
-  //       +req.params.projectNumber,
-  //       +req.payload.id
-  //     );
-
-  //     if (task) {
-  //       const taskLog = await TaskLogServices.getTaskLog(
-  //         +req.params.projectNumber,
-  //         task.id
-  //       );
-
-  //       HTTPResponse.OK(res, taskLog);
-  //     }
-  //   } catch (error) {
-  //     HTTPResponse.serverError(res);
-  //   }
-  // }
-
-  // @Get('singleLog/:id')
-  // @Middleware(customJwtManager.middleware)
-  // private async getSingleLog(req: ISecureRequest, res: Response) {
-  //   try {
-  //     const singleTaskItem = await TaskLogServices.getTaskLogItem(
-  //       +req.params.id
-  //     );
-
-  //     if (!singleTaskItem)
-  //       return HTTPResponse.notFound(
-  //         res,
-  //         TaskHttpResponseMessages.TASK_NOT_FOUND
-  //       );
-
-  //     HTTPResponse.OK(res, singleTaskItem);
-  //   } catch (error) {
-  //     HTTPResponse.serverError(res);
-  //   }
-  // }
 
   @Post('')
   @Middleware(customJwtManager.middleware)
@@ -104,27 +63,37 @@ export class TaskController {
       const taskValidator = new TaskValidation();
 
       if (!taskValidator.validateInput(req))
-        return HTTPResponse.badRequest(res, taskValidator.errorMessage);
+        return HTTPResponse.badRequest(
+          res,
+          taskValidator.errorMessage,
+          AlertResponse.ERROR
+        );
 
       const user = await CheckUserExistance.findUser(req.payload.email);
       if (!user)
         return HTTPResponse.notFound(
           res,
-          UserHttpResponseMessages.USER_NOT_FOUND
+          UserHttpResponseMessages.USER_NOT_FOUND,
+          AlertResponse.ERROR
         );
 
       const task = await TaskServices.getTask(req.body.projectNumber, user.id);
       if (task) {
         return HTTPResponse.badRequest(
           res,
-          TaskHttpResponseMessages.TASK_EXISTS
+          TaskHttpResponseMessages.TASK_EXISTS,
+          AlertResponse.ERROR
         );
       }
 
       const newTask = await TaskServices.saveNewTask(req, user.id);
       await LogServices.createTaskLog(req, newTask.id as number);
 
-      HTTPResponse.created(res, TaskHttpResponseMessages.TASK_CREATED);
+      HTTPResponse.created(
+        res,
+        TaskHttpResponseMessages.TASK_CREATED,
+        AlertResponse.SUCCESS
+      );
     } catch (error) {
       HTTPResponse.serverError(res);
     }
@@ -134,19 +103,24 @@ export class TaskController {
   @Middleware(customJwtManager.middleware)
   @Middleware(TaskValidation.saveTaskValidation)
   private async update(req: ISecureRequest, res: Response) {
-    Logger.Info(req.body);
+    Logger.Info(req.body, true);
     try {
       const taskValidator = new TaskValidation();
 
       if (!taskValidator.validateInput(req))
-        return HTTPResponse.badRequest(res, taskValidator.errorMessage);
+        return HTTPResponse.badRequest(
+          res,
+          taskValidator.errorMessage,
+          AlertResponse.ERROR
+        );
 
       const task = await TaskServices.getTask(+req.params.id, +req.payload.id);
 
       if (!task)
         return HTTPResponse.notFound(
           res,
-          TaskHttpResponseMessages.TASK_NOT_FOUND
+          TaskHttpResponseMessages.TASK_NOT_FOUND,
+          AlertResponse.ERROR
         );
 
       if (req.body.complete) {
@@ -159,7 +133,10 @@ export class TaskController {
       await TaskServices.updateTask(req, task, false);
       await LogServices.createTaskLog(req, task.id);
 
-      HTTPResponse.OK(res, { message: TaskHttpResponseMessages.TASK_UPDATED });
+      HTTPResponse.OK(res, {
+        message: TaskHttpResponseMessages.TASK_UPDATED,
+        type: AlertResponse.UPDATE,
+      });
     } catch (error) {
       HTTPResponse.serverError(res);
     }
@@ -173,7 +150,8 @@ export class TaskController {
       if (!task)
         return HTTPResponse.notFound(
           res,
-          TaskHttpResponseMessages.TASK_NOT_FOUND
+          TaskHttpResponseMessages.TASK_NOT_FOUND,
+          AlertResponse.ERROR
         );
 
       await TaskServices.deleteTask(task);
@@ -182,24 +160,4 @@ export class TaskController {
       HTTPResponse.serverError(res);
     }
   }
-
-  // @Delete('log/:id')
-  // @Middleware(customJwtManager.middleware)
-  // private async deleteTaskLog(req: ISecureRequest, res: Response) {
-  //   try {
-  //     const taskLogItem = await TaskLogServices.getTaskLogItem(+req.params.id);
-  //     if (!taskLogItem)
-  //       return HTTPResponse.notFound(
-  //         res,
-  //         TaskHttpResponseMessages.TASK_NOT_FOUND
-  //       );
-
-  //     await TaskLogServices.deleteTaskLogItem(taskLogItem);
-  //     HTTPResponse.OK(res, {
-  //       message: TaskHttpResponseMessages.TASK_LOG_ITEM_DELETED,
-  //     });
-  //   } catch (error) {
-  //     HTTPResponse.serverError(res);
-  //   }
-  // }
 }

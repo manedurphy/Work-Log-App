@@ -1,18 +1,15 @@
 import customJwtManager from '../JWT/jwtController';
 import { LogServices } from './logServices';
-import {
-  Get,
-  Post,
-  Controller,
-  Middleware,
-  Delete,
-  Put,
-} from '@overnightjs/core';
 import { ISecureRequest } from '@overnightjs/jwt';
 import { Response } from 'express';
 import { TaskServices } from '../Task/taskServices';
 import { HTTPResponse } from '../HTTP/httpResponses';
-import { TaskHttpResponseMessages } from '../HTTP/httpEnums';
+import { Get, Controller, Middleware, Delete, Put } from '@overnightjs/core';
+import {
+  AlertResponse,
+  LogHttpResponseMessage,
+  TaskHttpResponseMessages,
+} from '../HTTP/httpEnums';
 
 @Controller('api/log')
 export class LogController {
@@ -47,7 +44,8 @@ export class LogController {
       if (!taskLogItem)
         return HTTPResponse.notFound(
           res,
-          TaskHttpResponseMessages.TASK_NOT_FOUND
+          TaskHttpResponseMessages.TASK_NOT_FOUND,
+          AlertResponse.ERROR
         );
 
       HTTPResponse.OK(res, taskLogItem);
@@ -64,13 +62,16 @@ export class LogController {
       if (!taskLogItem)
         return HTTPResponse.notFound(
           res,
-          TaskHttpResponseMessages.TASK_NOT_FOUND
+          TaskHttpResponseMessages.TASK_NOT_FOUND,
+          AlertResponse.ERROR
         );
 
       await LogServices.deleteTaskLogItem(taskLogItem);
-      HTTPResponse.OK(res, {
-        message: TaskHttpResponseMessages.TASK_LOG_ITEM_DELETED,
-      });
+      HTTPResponse.OKWithMessage(
+        res,
+        LogHttpResponseMessage.LOG_DELETED,
+        AlertResponse.WARNING
+      );
     } catch (error) {
       HTTPResponse.serverError(res);
     }
@@ -84,7 +85,8 @@ export class LogController {
       if (!taskLogItem)
         return HTTPResponse.notFound(
           res,
-          TaskHttpResponseMessages.TASK_NOT_FOUND
+          TaskHttpResponseMessages.TASK_NOT_FOUND,
+          AlertResponse.ERROR
         );
 
       const updatedTaskLogItem = TaskServices.createNewTask(req);
@@ -94,7 +96,11 @@ export class LogController {
         TaskId: +req.body.TaskId,
       });
 
-      HTTPResponse.OK(res, updatedTaskLogItem);
+      HTTPResponse.OKWithMessage(
+        res,
+        LogHttpResponseMessage.LOG_UPDATED,
+        AlertResponse.UPDATE
+      );
     } catch (error) {
       HTTPResponse.serverError(res);
     }

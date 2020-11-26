@@ -6,7 +6,7 @@ import MoreVert from '../Actions/MoreVert';
 import moment from 'moment';
 import LogActions from '../Actions/Log';
 import { GlobalContext } from '../../context/GlobalState';
-import { ILog, ITask, SetAlertsAndHandleResponseType } from '../../type';
+import { ITask, SetAlertsAndHandleResponseType } from '../../type';
 import { TableRow, TableCell, IconButton } from '@material-ui/core';
 import {
   KeyboardArrowUp as KeyboardArrowUpIcon,

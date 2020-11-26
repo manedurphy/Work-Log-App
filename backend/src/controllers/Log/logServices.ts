@@ -1,5 +1,5 @@
 import { Log } from '../../models/models';
-import { TaskServices } from '../Task/taskServices';
+import { Record } from '../Record/record';
 import {
   CreateTaskLogType,
   GetTaskLogType,
@@ -20,7 +20,7 @@ export class LogServices {
   };
 
   public static createTaskLog: CreateTaskLogType = async (req, taskId) => {
-    const log = TaskServices.createNewTask(req);
+    const log = Record.createRecord(req);
     await Log.create({
       ...log,
       loggedAt: req.body.loggedAt || new Date(),

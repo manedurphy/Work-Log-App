@@ -1,3 +1,5 @@
+import { Task } from '../../models/models';
+import { Record } from '../Record/record';
 import {
   CreateNewTaskType,
   DeleteTaskType,
@@ -6,7 +8,6 @@ import {
   SaveNewTaskType,
   UpdateTaskType,
 } from './types';
-import { Task } from '../../models/models';
 
 export class TaskServices {
   public static getTask: GetTaskType = async (projectNumber, userId) => {
@@ -25,31 +26,11 @@ export class TaskServices {
   };
 
   public static createNewTask: CreateNewTaskType = (req) => {
-    const {
-      name,
-      projectNumber,
-      hoursAvailableToWork,
-      hoursWorked,
-      notes,
-      numberOfReviews,
-      reviewHours,
-      hoursRequiredByBim,
-    } = req.body;
-
-    const hoursRemaining =
-      +hoursAvailableToWork - +hoursWorked - +reviewHours - +hoursRequiredByBim;
-
+    const record = Record.createRecord(req);
     return {
-      name,
-      projectNumber: +projectNumber,
-      hoursAvailableToWork: +hoursAvailableToWork,
-      hoursWorked: +hoursWorked,
-      notes,
-      hoursRemaining,
-      numberOfReviews: +numberOfReviews,
-      reviewHours: +reviewHours,
-      hoursRequiredByBim: +hoursRequiredByBim,
-      complete: false,
+      ...record,
+      dateAssigned: req.body.dateAssigned,
+      dueDate: req.body.dueDate,
     };
   };
 
@@ -67,8 +48,6 @@ export class TaskServices {
 
     return await Task.create({
       ...task,
-      dateAssigned: req.body.dateAssigned,
-      dueDate: req.body.dueDate,
       UserId: userId,
     });
   };

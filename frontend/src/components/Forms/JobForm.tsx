@@ -5,14 +5,13 @@ import React, {
   FormEvent,
   useEffect,
 } from 'react';
+import axios, { AxiosResponse } from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import axios, { AxiosResponse } from 'axios';
 import Title from '../Title';
-import { Tasks } from '../../enums';
-import { getToken, GlobalContext } from '../../context/GlobalState';
-import { Alert } from '@material-ui/lab';
-import { AlertType, ITaskForm, MessageType, ITask } from '../../type';
+import { Alerts, Tasks } from '../../enums';
+import { getTasks, getToken, GlobalContext } from '../../context/GlobalState';
+import { ITaskForm, MessageType } from '../../type';
 import {
   Paper,
   FormHelperText,
@@ -35,17 +34,6 @@ const JobForm: React.FC = () => {
   const { state, dispatch } = useContext(GlobalContext);
   const { edit, currentTask } = state.tasks;
   const [deleteMode, setDeleteMode] = useState(false);
-  const [alerts, setAlerts] = useState<{
-    success: AlertType;
-    update: AlertType;
-    delete: AlertType;
-    error: AlertType;
-  }>({
-    success: null,
-    update: null,
-    delete: null,
-    error: null,
-  });
 
   const [formData, setFormData] = useState<ITaskForm>({
     name: '',
@@ -57,8 +45,23 @@ const JobForm: React.FC = () => {
     reviewHours: '',
     hoursRequiredByBim: '',
     dateAssigned: new Date(),
-    dueDate: null,
+    dueDate: new Date(),
   });
+
+  const clearForm = () => {
+    setFormData({
+      name: '',
+      projectNumber: '',
+      hoursAvailableToWork: '',
+      hoursWorked: '',
+      notes: '',
+      numberOfReviews: '',
+      reviewHours: '',
+      hoursRequiredByBim: '',
+      dateAssigned: new Date(),
+      dueDate: new Date(),
+    });
+  };
 
   useEffect((): void => {
     edit &&
@@ -74,59 +77,12 @@ const JobForm: React.FC = () => {
         dateAssigned: new Date(currentTask.dateAssigned),
         dueDate: new Date(currentTask.dueDate),
       });
-
-    !edit &&
-      setFormData({
-        name: '',
-        projectNumber: '',
-        hoursAvailableToWork: '',
-        hoursWorked: '',
-        notes: '',
-        numberOfReviews: '',
-        reviewHours: '',
-        hoursRequiredByBim: '',
-        dateAssigned: new Date(),
-        dueDate: new Date(),
-      });
   }, [edit]);
-
-  const getTasks = async (): Promise<void> => {
-    const token = getToken();
-    const res: AxiosResponse<ITask[]> = await axios.get('/api/task', {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    setFormData({
-      name: '',
-      projectNumber: '',
-      hoursAvailableToWork: '',
-      hoursWorked: '',
-      notes: '',
-      numberOfReviews: '',
-      reviewHours: '',
-      hoursRequiredByBim: '',
-      dateAssigned: new Date(),
-      dueDate: new Date(),
-    });
-    dispatch({ type: Tasks.updateTasks, payload: res.data });
-  };
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
-  };
-
-  const setAlertsAndGetTasks = (
-    command: string,
-    message: string,
-    err: Error | null = null
-  ) => {
-    if (!err) getTasks();
-
-    setAlerts({ ...alerts, [command]: message });
-    setTimeout(() => {
-      setAlerts({ success: null, update: null, delete: null, error: null });
-    }, 3000);
   };
 
   const handleForm = async (e: FormEvent<HTMLFormElement>, command: string) => {
@@ -148,9 +104,21 @@ const JobForm: React.FC = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
       }
-      setAlertsAndGetTasks(command, res.data.message);
+
+      dispatch({
+        type: Tasks.updateTasks,
+        payload: await getTasks(state.tasks.showCompleted),
+      });
+      dispatch({ type: Alerts.setAlerts, payload: res.data });
+      clearForm();
+      setTimeout(() => {
+        dispatch({ type: Alerts.removeAlerts, payload: [] });
+      }, 3000);
     } catch (err) {
-      setAlertsAndGetTasks('error', err.response.data.message, err);
+      dispatch({ type: Alerts.setAlerts, payload: err.response.data.message });
+      setTimeout(() => {
+        dispatch({ type: Alerts.removeAlerts, payload: [] });
+      }, 3000);
     }
   };
 
@@ -167,26 +135,6 @@ const JobForm: React.FC = () => {
         }
       >
         <Title>{!edit ? 'Create a New Task' : 'Edit Task'}</Title>
-        {alerts.success && (
-          <Alert severity="success" role="alert">
-            {alerts.success}
-          </Alert>
-        )}
-        {alerts.update && (
-          <Alert severity="info" role="alert">
-            {alerts.update}
-          </Alert>
-        )}
-        {alerts.delete && (
-          <Alert severity="warning" role="alert">
-            {alerts.delete}
-          </Alert>
-        )}
-        {alerts.error && (
-          <Alert severity="error" role="alert">
-            {alerts.error}
-          </Alert>
-        )}
 
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
@@ -313,6 +261,9 @@ const JobForm: React.FC = () => {
             <DatePicker
               selected={formData.dueDate}
               onChange={(date) => setFormData({ ...formData, dueDate: date })}
+              dateFormat="MM/dd/yyyy h:mm aa"
+              timeInputLabel="Time:"
+              showTimeInput
             />
             <FormHelperText>Due date</FormHelperText>
           </Grid>

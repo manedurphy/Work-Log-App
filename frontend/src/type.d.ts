@@ -1,5 +1,5 @@
 import * as H from 'history';
-import { Tasks, Users, Logs } from './enums';
+import { Tasks, Users, Logs, Alerts } from './enums';
 
 /** TASKS  */
 export interface ITask {
@@ -102,8 +102,16 @@ export type UserAction =
 
 /**ALERTS */
 export type AlertType = string | null;
+
+export type AlertStateType = MessageType[];
+
+export type AlertAction =
+  | { type: Alerts.setAlerts; payload: MessageType }
+  | { type: Alerts.removeAlerts; payload: [] };
+
 export type MessageType = {
   message: string;
+  type: 'error' | 'success' | 'info' | 'warning' | undefined;
 };
 
 export type VerifyType = {
@@ -152,9 +160,10 @@ export type GlobalStateType = {
   tasks: TaskStateType;
   user: UserStateType;
   log: LogStateType;
+  alerts: AlertStateType;
 };
 
-export type GlobalAction = TaskAction | UserAction | LogAction;
+export type GlobalAction = TaskAction | UserAction | LogAction | AlertAction;
 
 export type GlobalReducer = (
   state: GlobalStateType,

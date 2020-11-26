@@ -3,7 +3,7 @@ import { Get, Post, Controller, Middleware } from '@overnightjs/core';
 import { Request, Response } from 'express';
 import { CheckUserExistance } from './checkUserExistance';
 import { HTTPResponse } from '../HTTP/httpResponses';
-import { UserHttpResponseMessages } from '../HTTP/httpEnums';
+import { AlertResponse, UserHttpResponseMessages } from '../HTTP/httpEnums';
 import { JWTServices } from './jwtServices';
 import { UserValidation } from './userValidation';
 
@@ -23,13 +23,15 @@ export class JWTController {
       if (!user)
         return HTTPResponse.notFound(
           res,
-          UserHttpResponseMessages.USER_NOT_FOUND
+          UserHttpResponseMessages.USER_NOT_FOUND,
+          AlertResponse.ERROR
         );
 
       if (!JWTServices.verifyAccountIsActive(user))
         return HTTPResponse.badRequest(
           res,
-          UserHttpResponseMessages.USER_NOT_ACTIVE
+          UserHttpResponseMessages.USER_NOT_ACTIVE,
+          AlertResponse.ERROR
         );
 
       HTTPResponse.OK(res, JWTServices.tokenSuccess(user));
@@ -46,7 +48,8 @@ export class JWTController {
       if (!activationPassword)
         return HTTPResponse.badRequest(
           res,
-          UserHttpResponseMessages.USER_NOT_ACTIVE
+          UserHttpResponseMessages.USER_NOT_ACTIVE,
+          AlertResponse.ERROR
         );
 
       const user = await CheckUserExistance.findUserByPk(
@@ -56,7 +59,8 @@ export class JWTController {
       if (!user)
         return HTTPResponse.notFound(
           res,
-          UserHttpResponseMessages.USER_NOT_FOUND
+          UserHttpResponseMessages.USER_NOT_FOUND,
+          AlertResponse.ERROR
         );
 
       await JWTServices.activateUser(user, activationPassword);
@@ -74,26 +78,33 @@ export class JWTController {
       const userValidator = new UserValidation();
 
       if (!userValidator.validateInput(req))
-        return HTTPResponse.badRequest(res, userValidator.errorMessage);
+        return HTTPResponse.badRequest(
+          res,
+          userValidator.errorMessage,
+          AlertResponse.ERROR
+        );
 
       const existingUser = await CheckUserExistance.findUser(req.body.email);
       if (existingUser)
         return HTTPResponse.badRequest(
           res,
-          UserHttpResponseMessages.USER_EXISTS
+          UserHttpResponseMessages.USER_EXISTS,
+          AlertResponse.ERROR
         );
 
       if (!JWTServices.verifyPasswordsMatch(req.body))
         return HTTPResponse.badRequest(
           res,
-          UserHttpResponseMessages.PASSWORD_NOT_MATCH
+          UserHttpResponseMessages.PASSWORD_NOT_MATCH,
+          AlertResponse.ERROR
         );
 
       const user = await JWTServices.createNewUser(req.body, 12);
       if (!user)
         return HTTPResponse.badRequest(
           res,
-          UserHttpResponseMessages.USER_NOT_CREATED
+          UserHttpResponseMessages.USER_NOT_CREATED,
+          AlertResponse.ERROR
         );
 
       await JWTServices.createActivationPassword(user.id);
@@ -112,13 +123,15 @@ export class JWTController {
       if (!existingUser)
         return HTTPResponse.badRequest(
           res,
-          UserHttpResponseMessages.INVALID_CREDENTIALS
+          UserHttpResponseMessages.INVALID_CREDENTIALS,
+          AlertResponse.ERROR
         );
 
       if (!JWTServices.verifyAccountIsActive(existingUser))
         return HTTPResponse.badRequest(
           res,
-          UserHttpResponseMessages.USER_NOT_ACTIVE
+          UserHttpResponseMessages.USER_NOT_ACTIVE,
+          AlertResponse.ERROR
         );
 
       const passwordVerified = await JWTServices.verifyLoginPassword(
@@ -128,7 +141,8 @@ export class JWTController {
       if (!passwordVerified)
         return HTTPResponse.badRequest(
           res,
-          UserHttpResponseMessages.INVALID_CREDENTIALS
+          UserHttpResponseMessages.INVALID_CREDENTIALS,
+          AlertResponse.ERROR
         );
 
       HTTPResponse.OK(res, JWTServices.loginSuccess(existingUser));
