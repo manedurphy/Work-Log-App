@@ -15,12 +15,11 @@ const Log: React.FC<{
   row: ILog;
   setModify: React.Dispatch<React.SetStateAction<boolean>>;
 }> = (props) => {
-  const { state, dispatch } = useContext(GlobalContext);
+  const { dispatch } = useContext(GlobalContext);
 
   const handleAction: HandleLogActionType = async (e, logItemId, command) => {
     try {
       if (command === 'delete') {
-        console.log('THIS BLOCK WAS HIT');
         const res: AxiosResponse<MessageType> = await axios.delete(
           `api/log/${logItemId}`,
           {
