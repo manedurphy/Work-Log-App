@@ -10,6 +10,7 @@ import {
   LogHttpResponseMessage,
   TaskHttpResponseMessages,
 } from '../HTTP/httpEnums';
+import { Logger } from '@overnightjs/logger';
 
 @Controller('api/log')
 export class LogController {
@@ -80,6 +81,7 @@ export class LogController {
   @Put(':id')
   @Middleware(customJwtManager.middleware)
   private async updateTaskLogItem(req: ISecureRequest, res: Response) {
+    Logger.Info(req.body, true);
     try {
       const taskLogItem = await LogServices.getTaskLogItem(+req.params.id);
       if (!taskLogItem)
@@ -89,12 +91,7 @@ export class LogController {
           AlertResponse.ERROR
         );
 
-      const updatedTaskLogItem = TaskServices.createNewTask(req);
-      await taskLogItem.update({
-        ...updatedTaskLogItem,
-        loggedAt: req.body.loggedAt,
-        TaskId: +req.body.TaskId,
-      });
+      await LogServices.updateTaskLog(req, taskLogItem);
 
       HTTPResponse.OKWithMessage(
         res,

@@ -22,6 +22,7 @@ export const initialTaskState: TaskStateType = {
   },
   currentTasks: [],
   edit: false,
+  showForm: false,
   showCompleted: false,
 };
 

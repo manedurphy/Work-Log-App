@@ -3,7 +3,7 @@ import Title from './Title';
 import CurrentTasks from './Tables/CurrentTasks';
 import TaskLog from './Tables/TaskLog';
 import Spinner from './Spinner';
-import { Logs } from '../enums';
+import { Logs, Tasks } from '../enums';
 import { GlobalContext } from '../context/GlobalState';
 import { Link, makeStyles } from '@material-ui/core';
 
@@ -19,6 +19,7 @@ const TasksComponent: React.FC<{
   const classes = useStyles();
   const { state, dispatch } = useContext(GlobalContext);
   const { showLog } = state.log;
+  const { showForm, showCompleted } = state.tasks;
   const [loading, setLoading] = useState(false);
 
   return (
@@ -52,7 +53,22 @@ const TasksComponent: React.FC<{
           </div>
         </>
       ) : (
-        <CurrentTasks setLoading={setLoading} />
+        <>
+          <CurrentTasks setLoading={setLoading} />
+          {!showForm && !showCompleted && (
+            <div className={classes.seeMore}>
+              <Link
+                color="primary"
+                href="#"
+                onClick={() =>
+                  dispatch({ type: Tasks.setShowForm, payload: true })
+                }
+              >
+                Create new task
+              </Link>
+            </div>
+          )}
+        </>
       )}
     </>
   );

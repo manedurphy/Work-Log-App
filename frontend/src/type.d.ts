@@ -38,13 +38,15 @@ export type TaskStateType = {
   currentTask: ITask;
   currentTasks: ITask[];
   edit: boolean;
+  showForm: boolean;
   showCompleted: boolean;
 };
 
 export type TaskAction =
   | { type: Tasks.updateTasks; payload: ITask[] }
   | { type: Tasks.updateTask; payload: ITask }
-  | { type: Tasks.setShowCompleted; payload: boolean };
+  | { type: Tasks.setShowCompleted; payload: boolean }
+  | { type: Tasks.setShowForm; payload: boolean };
 
 /**LOGS */
 export interface ILog {

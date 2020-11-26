@@ -7,16 +7,29 @@ export const taskReducer = (
 ): TaskStateType => {
   switch (action.type) {
     case Tasks.updateTasks:
-      return { ...taskState, currentTasks: action.payload, edit: false };
+      return {
+        ...taskState,
+        currentTasks: action.payload,
+        edit: false,
+        showForm: false,
+      };
     case Tasks.updateTask:
       return {
         ...taskState,
         currentTask: action.payload,
         edit: true,
         showCompleted: false,
+        showForm: true,
       };
     case Tasks.setShowCompleted:
-      return { ...taskState, showCompleted: action.payload, edit: false };
+      return {
+        ...taskState,
+        showCompleted: action.payload,
+        edit: false,
+        showForm: false,
+      };
+    case Tasks.setShowForm:
+      return { ...taskState, showForm: true };
     default:
       return taskState;
   }
@@ -35,7 +48,7 @@ export const userReducer = (userState: any, action: any) => {
 export const logReducer = (logState: any, action: any) => {
   switch (action.type) {
     case Logs.setLogs:
-      return { ...logState, currentLogs: action.payload };
+      return { ...logState, currentLogs: action.payload, edit: false };
     case Logs.setLog:
       return { ...logState, currentLog: action.payload, edit: true };
     case Logs.setShowLog:

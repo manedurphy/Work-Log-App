@@ -1,11 +1,12 @@
 import { Log } from '../../models/models';
 import { Record } from '../Record/record';
+import { UpdateTaskLogType } from './types';
 import {
   CreateTaskLogType,
-  GetTaskLogType,
   GetTaskLogItemType,
   DeleteTaskLogItemType,
-} from '../Task/types';
+  GetTaskLogType,
+} from './types';
 
 export class LogServices {
   public static getLog: GetTaskLogType = async (projectNumber, taskId) => {
@@ -25,6 +26,15 @@ export class LogServices {
       ...log,
       loggedAt: req.body.loggedAt || new Date(),
       TaskId: taskId,
+    });
+  };
+
+  public static updateTaskLog: UpdateTaskLogType = async (req, log) => {
+    const updatedLog = Record.createRecord(req);
+    await log.update({
+      ...updatedLog,
+      loggedAt: req.body.loggedAt,
+      TaskId: log.TaskId,
     });
   };
 

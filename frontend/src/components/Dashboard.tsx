@@ -138,7 +138,7 @@ const Dashboard: React.FC = (): JSX.Element => {
   const [open, setOpen] = useState(true);
   const [loadingTasks, setLoadingTasks] = useState(true);
   const { state, dispatch } = useContext(GlobalContext);
-  const { showCompleted } = state.tasks;
+  const { showCompleted, showForm } = state.tasks;
   const { showLog } = state.log;
 
   useEffect(() => {
@@ -293,7 +293,7 @@ const Dashboard: React.FC = (): JSX.Element => {
               </Grid>
             </Grid>
             {showLog && state.log.edit && <LogForm />}
-            {!showLog && !showCompleted && <JobForm />}
+            {!showLog && !showCompleted && showForm && <JobForm />}
           </Container>
         )}
       </main>

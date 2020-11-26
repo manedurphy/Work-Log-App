@@ -57,17 +57,3 @@ export type SaveNewTaskType = (
 ) => Promise<NewTaskType>;
 
 export type DeleteTaskType = (task: Task) => Promise<void>;
-
-export type GetTaskLogType = (
-  projectNumber: number,
-  taskId: number
-) => Promise<Log[]>;
-
-export type CreateTaskLogType = (
-  req: ISecureRequest,
-  taskId: number
-) => Promise<void>;
-
-export type GetTaskLogItemType = (id: number) => Promise<Log | null>;
-
-export type DeleteTaskLogItemType = (log: Log) => Promise<void>;
