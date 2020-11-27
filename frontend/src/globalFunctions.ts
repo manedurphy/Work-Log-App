@@ -2,6 +2,16 @@ import axios, { AxiosResponse } from 'axios';
 import { ITask, ILog, ITaskForm, MessageType, ILogForm } from './type';
 import moment from 'moment-timezone';
 
+const hoursRemaining = (formData: ITaskForm): boolean => {
+  return (
+    +formData.hoursAvailableToWork -
+      +formData.hoursWorked -
+      +formData.reviewHours -
+      +formData.hoursRequiredByBim >
+    0
+  );
+};
+
 export const getToken = (): string | null => {
   return localStorage.getItem('token');
 };
@@ -39,7 +49,9 @@ export const createNewTask = async (formData: ITaskForm) => {
 
 export const updateTask = async (formData: ITaskForm) => {
   const res: AxiosResponse<MessageType> = await axios.put(
-    `api/task/${formData.projectNumber}`,
+    hoursRemaining(formData)
+      ? `api/task/${formData.projectNumber}`
+      : `api/task/complete/${formData.projectNumber}`,
     formData,
     {
       headers: { Authorization: `Bearer ${getToken()}` },

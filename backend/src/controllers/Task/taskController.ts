@@ -87,7 +87,7 @@ export class TaskController {
       }
 
       const newTask = await TaskServices.saveNewTask(req, user.id);
-      await LogServices.createTaskLog(req, newTask.id as number);
+      await LogServices.createTaskLog(req, newTask.id as number, false);
 
       HTTPResponse.created(
         res,
@@ -124,17 +124,51 @@ export class TaskController {
 
       if (req.body.complete) {
         await TaskServices.updateTask(req, task, true);
+        await LogServices.createTaskLog(req, task.id, true);
         return HTTPResponse.OK(res, {
           message: TaskHttpResponseMessages.TASK_COMPLETED,
         });
       }
 
       await TaskServices.updateTask(req, task, false);
-      await LogServices.createTaskLog(req, task.id);
+      await LogServices.createTaskLog(req, task.id, false);
 
       HTTPResponse.OK(res, {
         message: TaskHttpResponseMessages.TASK_UPDATED,
         type: AlertResponse.UPDATE,
+      });
+    } catch (error) {
+      HTTPResponse.serverError(res);
+    }
+  }
+
+  @Put('complete/:id')
+  @Middleware(customJwtManager.middleware)
+  @Middleware(TaskValidation.saveTaskValidation)
+  private async completeTask(req: ISecureRequest, res: Response) {
+    try {
+      const taskValidator = new TaskValidation();
+
+      if (!taskValidator.validateInput(req))
+        return HTTPResponse.badRequest(
+          res,
+          taskValidator.errorMessage,
+          AlertResponse.ERROR
+        );
+
+      const task = await TaskServices.getTask(+req.params.id, req.payload.id);
+
+      if (!task)
+        return HTTPResponse.notFound(
+          res,
+          TaskHttpResponseMessages.TASK_NOT_FOUND,
+          AlertResponse.ERROR
+        );
+
+      await TaskServices.updateTask(req, task, true);
+      await LogServices.createTaskLog(req, task.id, true);
+      return HTTPResponse.OK(res, {
+        message: TaskHttpResponseMessages.TASK_COMPLETED,
       });
     } catch (error) {
       HTTPResponse.serverError(res);

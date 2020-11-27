@@ -20,8 +20,14 @@ export class LogServices {
     return await Log.findOne({ where: { id } });
   };
 
-  public static createTaskLog: CreateTaskLogType = async (req, taskId) => {
+  public static createTaskLog: CreateTaskLogType = async (
+    req,
+    taskId,
+    complete
+  ) => {
     const log = Record.createRecord(req);
+    if (complete) log.complete = true;
+
     await Log.create({
       ...log,
       loggedAt: req.body.loggedAt || new Date(),

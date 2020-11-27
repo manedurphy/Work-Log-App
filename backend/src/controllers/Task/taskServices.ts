@@ -35,12 +35,11 @@ export class TaskServices {
   };
 
   public static updateTask: UpdateTaskType = async (req, task, complete) => {
+    const updatedTask = TaskServices.createNewTask(req);
     if (complete) {
-      await task.update({ complete: req.body.complete });
-    } else {
-      const updatedTask = TaskServices.createNewTask(req);
-      await task.update(updatedTask);
+      updatedTask.complete = true;
     }
+    await task.update(updatedTask);
   };
 
   public static saveNewTask: SaveNewTaskType = async (req, userId) => {

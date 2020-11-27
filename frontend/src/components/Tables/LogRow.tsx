@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import DropDown from './DropDown';
 import MoreVert from '../Actions/MoreVert';
+import LogDropDown from './LogDropDown';
 import moment from 'moment';
 import LogActions from '../Actions/Log';
 import { ILog } from '../../type';
@@ -55,7 +55,7 @@ const Row: React.FC<{
           )}
         </TableCell>
       </TableRow>
-      <DropDown row={props.row} open={open} />
+      <LogDropDown row={props.row} open={open} />
     </>
   );
 };

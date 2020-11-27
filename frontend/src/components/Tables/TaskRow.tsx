@@ -1,9 +1,8 @@
 import React, { useState, useContext } from 'react';
-import DropDown from './DropDown';
+import TaskDropDown from './TaskDropDown';
 import IncompleteTaskActions from '../Actions/IncompleteTasks';
 import CompletedTaskActions from '../Actions/CompletedTasks';
 import MoreVert from '../Actions/MoreVert';
-import moment from 'moment';
 import { GlobalContext } from '../../context/GlobalState';
 import { ITask } from '../../type';
 import { TableRow, TableCell, IconButton, makeStyles } from '@material-ui/core';
@@ -20,7 +19,7 @@ const useRowStyles = makeStyles({
   },
 });
 
-const Row: React.FC<{
+const TaskRow: React.FC<{
   key: number;
   row: ITask;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -42,9 +41,7 @@ const Row: React.FC<{
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell>
-          {moment().format(props.row.dateAssigned).slice(0, 10)}
-        </TableCell>
+        <TableCell>{props.row.dateAssigned.slice(0, 10)}</TableCell>
         <TableCell>{props.row.name}</TableCell>
         <TableCell>{props.row.projectNumber}</TableCell>
         <TableCell>{props.row.hoursAvailableToWork}</TableCell>
@@ -68,9 +65,9 @@ const Row: React.FC<{
           )}
         </TableCell>
       </TableRow>
-      <DropDown row={props.row} open={open} />
+      <TaskDropDown row={props.row} open={open} />
     </>
   );
 };
 
-export default Row;
+export default TaskRow;
