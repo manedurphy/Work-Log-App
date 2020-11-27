@@ -10,8 +10,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import Title from '../Title';
 import { Alerts, Commands, Logs } from '../../enums';
 import { GlobalContext } from '../../context/GlobalState';
-import { deleteLog, getLogs, updateLog } from '../../globalFunctions';
-import { ILogForm, MessageType } from '../../type';
+import { deleteLog, getLogs, updateLog } from '../../global/functions/axios';
+import { ILogForm, MessageType } from '../../global/types/type';
 import {
   Paper,
   FormHelperText,

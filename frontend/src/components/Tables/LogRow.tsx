@@ -3,7 +3,7 @@ import MoreVert from '../Actions/MoreVert';
 import LogDropDown from './LogDropDown';
 import moment from 'moment';
 import LogActions from '../Actions/Log';
-import { ILog } from '../../type';
+import { ILog } from '../../global/types/type';
 import { TableRow, TableCell, IconButton, makeStyles } from '@material-ui/core';
 import {
   KeyboardArrowUp as KeyboardArrowUpIcon,

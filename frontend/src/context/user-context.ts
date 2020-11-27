@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserStateType, UserAction } from '../type';
+import { UserStateType, UserAction } from '../global/types/type';
 
 export const initialUserState: UserStateType = {
   firstName: '',

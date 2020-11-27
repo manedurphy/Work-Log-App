@@ -1,5 +1,5 @@
 import * as H from 'history';
-import { Tasks, Users, Logs, Alerts } from './enums';
+import { Tasks, Users, Logs, Alerts, Dates } from '../../enums';
 
 /** TASKS  */
 export interface ITask {
@@ -123,6 +123,14 @@ export type AlertAction =
   | { type: Alerts.setAlerts; payload: MessageType }
   | { type: Alerts.removeAlerts; payload: [] };
 
+/** DATE STATE */
+export type DateStateType = { dueDate: string; tasksDue: ITask[] };
+
+export type DateAction = {
+  type: Dates.setDate;
+  payload: { dueDate: string; tasksDue: ITask[] };
+};
+
 export type MessageType = {
   message: string;
   type: 'error' | 'success' | 'info' | 'warning' | undefined;
@@ -175,9 +183,15 @@ export type GlobalStateType = {
   user: UserStateType;
   log: LogStateType;
   alerts: AlertStateType;
+  date: DateStateType;
 };
 
-export type GlobalAction = TaskAction | UserAction | LogAction | AlertAction;
+export type GlobalAction =
+  | TaskAction
+  | UserAction
+  | LogAction
+  | AlertAction
+  | DateAction;
 
 export type GlobalReducer = (
   state: GlobalStateType,
@@ -194,12 +208,4 @@ export type HandleLogActionType = (
   e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   logItemId: number,
   command: string
-) => void;
-
-export type SetAlertsAndHandleResponseType = (
-  command: string,
-  message: string,
-  target: string | null,
-  projectNumber: number | null,
-  err: Error | null
 ) => void;

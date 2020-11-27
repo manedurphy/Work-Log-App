@@ -1,8 +1,12 @@
 import React, { useContext } from 'react';
 import { IconButton } from '@material-ui/core';
 import { GlobalContext } from '../../context/GlobalState';
-import { deleteLog, getLog, getLogs } from '../../globalFunctions';
-import { HandleLogActionType, ILog, MessageType } from '../../type';
+import { deleteLog, getLog, getLogs } from '../../global/functions/axios';
+import {
+  HandleLogActionType,
+  ILog,
+  MessageType,
+} from '../../global/types/type';
 import { Alerts, Commands, Logs } from '../../enums';
 import {
   Delete as DeleteIcon,

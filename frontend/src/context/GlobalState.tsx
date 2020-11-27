@@ -1,26 +1,29 @@
 import React, { useReducer, useEffect } from 'react';
 import combineReducers from 'react-combine-reducers';
-import axios from 'axios';
 import { initialTaskState } from './task-context';
+import { initialUserState } from './user-context';
+import { initialLogState } from './log-context';
+import { initialAlertState } from './alert-context';
+import { initialDateState } from './date-context';
 import {
-  ITask,
   GlobalStateType,
   GlobalAction,
   GlobalReducer,
-  ILog,
-} from '../type';
-import { alertReducer, logReducer, taskReducer, userReducer } from './reducers';
-import { AxiosResponse } from 'axios';
-import { initialUserState } from './user-context';
-import { initialLogState } from './log-context';
-import moment from 'moment-timezone';
-import { initialAlertState } from './alert-context';
+} from '../global/types/type';
+import {
+  alertReducer,
+  dateReducer,
+  logReducer,
+  taskReducer,
+  userReducer,
+} from './reducers';
 
 const [globalReducer, initialGlobalState] = combineReducers<GlobalReducer>({
   tasks: [taskReducer, initialTaskState],
   user: [userReducer, initialUserState],
   log: [logReducer, initialLogState],
   alerts: [alertReducer, initialAlertState],
+  date: [dateReducer, initialDateState],
 });
 
 export const GlobalContext = React.createContext<{

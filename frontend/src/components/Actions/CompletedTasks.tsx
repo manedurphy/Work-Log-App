@@ -1,10 +1,15 @@
 import React from 'react';
 import { IconButton } from '@material-ui/core';
 import { GlobalContext } from '../../context/GlobalState';
-import { getTasks, getLogs, deleteTask } from '../../globalFunctions';
+import { getTasks, getLogs, deleteTask } from '../../global/functions/axios';
 import { useContext } from 'react';
 import { Alerts, Commands, Logs, Tasks } from '../../enums';
-import { HandleActionType, ILog, ITask, MessageType } from '../../type';
+import {
+  HandleActionType,
+  ILog,
+  ITask,
+  MessageType,
+} from '../../global/types/type';
 import {
   Delete as DeleteIcon,
   LibraryBooks,

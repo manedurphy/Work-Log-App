@@ -1,5 +1,5 @@
 import React from 'react';
-import { LogStateType, LogAction } from '../type';
+import { LogStateType, LogAction } from '../global/types/type';
 
 export const initialLogState: LogStateType = {
   currentLogs: [],

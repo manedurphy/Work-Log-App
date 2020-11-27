@@ -1,6 +1,6 @@
 import React from 'react';
 import Title from '../Title';
-import { ITask } from '../../type';
+import { ITask } from '../../global/types/type';
 import {
   Table,
   TableRow,

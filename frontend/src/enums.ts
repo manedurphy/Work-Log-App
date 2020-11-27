@@ -28,3 +28,10 @@ export enum Commands {
   EDIT = 'edit',
   LOG = 'log',
 }
+
+export enum Dates {
+  setDateAndTasksDue = 'SET_DATE_AND_TASKS_DUE',
+  DAYS = 'days',
+  ADD = 'add',
+  SUBTRACT = 'subtract',
+}

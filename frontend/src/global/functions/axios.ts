@@ -1,20 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
-import { ITask, ILog, ITaskForm, MessageType, ILogForm } from './type';
 import moment from 'moment-timezone';
-
-const hoursRemaining = (formData: ITaskForm): boolean => {
-  return (
-    +formData.hoursAvailableToWork -
-      +formData.hoursWorked -
-      +formData.reviewHours -
-      +formData.hoursRequiredByBim >
-    0
-  );
-};
-
-export const getToken = (): string | null => {
-  return localStorage.getItem('token');
-};
+import { ILog, ILogForm, ITask, ITaskForm, MessageType } from '../types/type';
+import { getToken, hoursRemaining } from './helpers';
 
 export const getTasks = async (showComplete: boolean) => {
   const res: AxiosResponse<ITask[]> = await axios.get(

@@ -4,7 +4,7 @@ import IncompleteTaskActions from '../Actions/IncompleteTasks';
 import CompletedTaskActions from '../Actions/CompletedTasks';
 import MoreVert from '../Actions/MoreVert';
 import { GlobalContext } from '../../context/GlobalState';
-import { ITask } from '../../type';
+import { ITask } from '../../global/types/type';
 import { TableRow, TableCell, IconButton, makeStyles } from '@material-ui/core';
 import {
   KeyboardArrowUp as KeyboardArrowUpIcon,

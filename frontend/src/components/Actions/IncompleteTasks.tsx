@@ -2,14 +2,19 @@ import React, { useContext } from 'react';
 import { GlobalContext } from '../../context/GlobalState';
 import { IconButton } from '@material-ui/core';
 import { Alerts, Commands, Logs, Tasks } from '../../enums';
-import { HandleActionType, ILog, ITask, MessageType } from '../../type';
+import {
+  HandleActionType,
+  ILog,
+  ITask,
+  MessageType,
+} from '../../global/types/type';
 import {
   completeTask,
   deleteTask,
   getLogs,
   getTask,
   getTasks,
-} from '../../globalFunctions';
+} from '../../global/functions/axios';
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,

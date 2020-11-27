@@ -15,8 +15,8 @@ import {
   deleteTask,
   getTasks,
   updateTask,
-} from '../../globalFunctions';
-import { ITaskForm, MessageType } from '../../type';
+} from '../../global/functions/axios';
+import { ITaskForm, MessageType } from '../../global/types/type';
 import {
   Paper,
   FormHelperText,

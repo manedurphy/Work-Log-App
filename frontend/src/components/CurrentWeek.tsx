@@ -1,10 +1,17 @@
-import React, { useContext } from 'react';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
+import React, { useContext, useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Pagination from '@material-ui/lab/Pagination';
 import Title from './Title';
-import { GlobalContext } from '../context/GlobalState';
 import Date from './Date';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
+import { GlobalContext } from '../context/GlobalState';
+import moment from 'moment';
+import { Dates } from '../enums';
+import {
+  getFilterTasksDue,
+  getFormattedDate,
+} from '../global/functions/helpers';
+import { useEffect } from 'react';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -22,7 +29,36 @@ const useStyles = makeStyles((theme) =>
 
 const Deposits = () => {
   const classes = useStyles();
-  const { user, tasks } = useContext(GlobalContext).state;
+  const { dispatch } = useContext(GlobalContext);
+  const { user, tasks, date } = useContext(GlobalContext).state;
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    dispatch({
+      type: Dates.setDateAndTasksDue,
+      payload: {
+        dueDate: date.dueDate,
+        tasksDue: getFilterTasksDue(tasks.currentTasks, date.dueDate),
+      },
+    });
+  }, [tasks.currentTasks]);
+
+  const handleChange = (e: React.ChangeEvent<unknown>, value: number) => {
+    const newDate =
+      value > page
+        ? getFormattedDate(Dates.ADD, value - page, date.dueDate)
+        : getFormattedDate(Dates.SUBTRACT, page - value, date.dueDate);
+
+    dispatch({
+      type: Dates.setDateAndTasksDue,
+      payload: {
+        dueDate: newDate,
+        tasksDue: getFilterTasksDue(tasks.currentTasks, newDate),
+      },
+    });
+    setPage(value);
+  };
+
   return (
     <>
       <Title>{user.firstName && `Good Morning ${user.firstName}`}</Title>
@@ -31,8 +67,9 @@ const Deposits = () => {
         <Date />
       </Typography>
       <Typography className={classes.depositContext}>
-        Due: "{tasks.currentTasks[0] && tasks.currentTasks[0].name}" (not
-        complete)
+        {date.tasksDue.length
+          ? 'Due: ' + date.tasksDue.map((task) => task.name).join(', ')
+          : 'Nothing due'}
       </Typography>
       <div className={classes.root}>
         <Pagination
@@ -40,6 +77,8 @@ const Deposits = () => {
           defaultPage={1}
           boundaryCount={3}
           siblingCount={0}
+          page={page}
+          onChange={handleChange}
         />
       </div>
     </>

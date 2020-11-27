@@ -14,7 +14,7 @@ import {
   Container,
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { AlertType, RegisterType } from '../../type';
+import { AlertType, RegisterType } from '../../global/types/type';
 
 function Copyright() {
   return (

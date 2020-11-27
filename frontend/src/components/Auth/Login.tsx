@@ -18,8 +18,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { Redirect } from 'react-router-dom';
 import { Tasks, Users } from '../../enums';
 import { GlobalContext } from '../../context/GlobalState';
-import { getToken } from '../../globalFunctions';
-import { LoginType, ITask } from '../../type';
+import { getToken } from '../../global/functions/helpers';
+import { LoginType, ITask } from '../../global/types/type';
 
 function Copyright() {
   return (

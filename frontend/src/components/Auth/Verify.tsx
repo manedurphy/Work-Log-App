@@ -2,7 +2,7 @@ import React from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
-import { VerifyProps } from '../../type';
+import { VerifyProps } from '../../global/types/type';
 
 const Verify: React.FC<VerifyProps> = ({ match: { params } }) => {
   const [isVerified, setIsVerified] = useState(false);

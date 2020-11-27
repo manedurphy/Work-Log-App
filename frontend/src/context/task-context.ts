@@ -1,5 +1,5 @@
 import React from 'react';
-import { TaskAction, TaskStateType } from '../type';
+import { TaskAction, TaskStateType } from '../global/types/type';
 
 export const initialTaskState: TaskStateType = {
   currentTask: {

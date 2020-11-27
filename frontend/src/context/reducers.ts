@@ -1,5 +1,5 @@
-import { TaskStateType, TaskAction } from '../type';
-import { Alerts, Logs, Tasks, Users } from '../enums';
+import { TaskStateType, TaskAction } from '../global/types/type';
+import { Alerts, Dates, Logs, Tasks, Users } from '../enums';
 
 export const taskReducer = (
   taskState: TaskStateType,
@@ -66,5 +66,18 @@ export const alertReducer = (alertState: any, action: any) => {
       return action.payload;
     default:
       return alertState;
+  }
+};
+
+export const dateReducer = (dateState: any, action: any) => {
+  switch (action.type) {
+    case Dates.setDateAndTasksDue:
+      return {
+        ...dateState,
+        dueDate: action.payload.dueDate,
+        tasksDue: action.payload.tasksDue,
+      };
+    default:
+      return dateState;
   }
 };

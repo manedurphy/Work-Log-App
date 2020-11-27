@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertAction, AlertStateType } from '../type';
+import { AlertAction, AlertStateType } from '../global/types/type';
 
 export const initialAlertState: AlertStateType = [];
 
