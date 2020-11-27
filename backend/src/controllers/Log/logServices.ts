@@ -1,4 +1,4 @@
-import { Log } from '../../models/models';
+import { Log, Task } from '../../models/models';
 import { Record } from '../Record/record';
 import { UpdateTaskLogType } from './types';
 import {
@@ -6,6 +6,7 @@ import {
   GetTaskLogItemType,
   DeleteTaskLogItemType,
   GetTaskLogType,
+  UpdateCompleteStatusType,
 } from './types';
 
 export class LogServices {
@@ -42,6 +43,12 @@ export class LogServices {
       loggedAt: req.body.loggedAt,
       TaskId: log.TaskId,
     });
+  };
+
+  public static updateCompleteStatus: UpdateCompleteStatusType = async (
+    log
+  ) => {
+    await log.update({ complete: true });
   };
 
   public static deleteTaskLogItem: DeleteTaskLogItemType = async (log) => {

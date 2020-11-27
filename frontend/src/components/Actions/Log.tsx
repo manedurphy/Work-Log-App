@@ -1,17 +1,16 @@
 import React, { useContext } from 'react';
-import axios, { AxiosResponse } from 'axios';
+import { IconButton } from '@material-ui/core';
+import { GlobalContext } from '../../context/GlobalState';
+import { deleteLog, getLog, getLogs } from '../../globalFunctions';
+import { HandleLogActionType, ILog, MessageType } from '../../type';
+import { Alerts, Commands, Logs } from '../../enums';
 import {
   Delete as DeleteIcon,
   Edit as EditIcon,
   ChevronRight as ChevronRightIcon,
 } from '@material-ui/icons';
-import { IconButton } from '@material-ui/core';
-import { GlobalContext } from '../../context/GlobalState';
-import { getLogs, getToken } from '../../globalFunctions';
-import { HandleLogActionType, ILog, MessageType } from '../../type';
-import { Alerts, Logs } from '../../enums';
 
-const Log: React.FC<{
+const LogActions: React.FC<{
   row: ILog;
   setModify: React.Dispatch<React.SetStateAction<boolean>>;
 }> = (props) => {
@@ -19,35 +18,24 @@ const Log: React.FC<{
 
   const handleAction: HandleLogActionType = async (e, logItemId, command) => {
     try {
-      if (command === 'delete') {
-        const res: AxiosResponse<MessageType> = await axios.delete(
-          `api/log/${logItemId}`,
-          {
-            headers: { Authorization: `Bearer ${getToken()}` },
-          }
-        );
+      if (command === Commands.DELETE) {
+        const responseData: MessageType = await deleteLog(logItemId);
 
         dispatch({
           type: Logs.setLogs,
           payload: await getLogs(props.row.projectNumber),
         });
-        dispatch({ type: Alerts.setAlerts, payload: res.data });
+        dispatch({ type: Alerts.setAlerts, payload: responseData });
         setTimeout(() => {
           dispatch({ type: Alerts.removeAlerts, payload: [] });
         }, 3000);
       } else {
-        const res: AxiosResponse<ILog> = await axios.get(
-          `/api/log/${props.row.id}`,
-          {
-            headers: { Authorization: `Bearer ${getToken()}` },
-          }
-        );
-
-        dispatch({ type: Logs.setLog, payload: res.data });
+        const responseData: ILog = await getLog(props.row.id);
+        dispatch({ type: Logs.setLog, payload: responseData });
       }
     } catch (err) {
       //TEST THIS ERROR LATER
-      dispatch({ type: Alerts.setAlerts, payload: err.response.data.message });
+      dispatch({ type: Alerts.setAlerts, payload: err.response.data });
       setTimeout(() => {
         dispatch({ type: Alerts.removeAlerts, payload: [] });
       }, 3000);
@@ -56,11 +44,13 @@ const Log: React.FC<{
   return (
     <>
       <IconButton
-        onClick={(e) => handleAction(e, props.row.projectNumber, 'edit')}
+        onClick={(e) => handleAction(e, props.row.projectNumber, Commands.EDIT)}
       >
         <EditIcon />
       </IconButton>
-      <IconButton onClick={(e) => handleAction(e, props.row.id, 'delete')}>
+      <IconButton
+        onClick={(e) => handleAction(e, props.row.id, Commands.DELETE)}
+      >
         <DeleteIcon />
       </IconButton>
       <IconButton onClick={(e) => props.setModify(false)}>
@@ -70,4 +60,4 @@ const Log: React.FC<{
   );
 };
 
-export default Log;
+export default LogActions;

@@ -1,9 +1,15 @@
 import React, { useContext } from 'react';
-import axios, { AxiosResponse } from 'axios';
+import { GlobalContext } from '../../context/GlobalState';
 import { IconButton } from '@material-ui/core';
-import { getLogs, getTasks, getToken } from '../../globalFunctions';
-import { Alerts, Logs, Tasks } from '../../enums';
+import { Alerts, Commands, Logs, Tasks } from '../../enums';
 import { HandleActionType, ILog, ITask, MessageType } from '../../type';
+import {
+  completeTask,
+  deleteTask,
+  getLogs,
+  getTask,
+  getTasks,
+} from '../../globalFunctions';
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
@@ -11,7 +17,6 @@ import {
   LibraryBooks,
   ChevronRight as ChevronRightIcon,
 } from '@material-ui/icons';
-import { GlobalContext } from '../../context/GlobalState';
 
 const IncompleteTasks: React.FC<{
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,51 +29,38 @@ const IncompleteTasks: React.FC<{
   const handleAction: HandleActionType = async (e, projectNumber, command) => {
     e.preventDefault();
     props.setLoading(true);
-    let res: AxiosResponse<MessageType>;
+    let responseData: MessageType;
 
     try {
-      if (command === 'success') {
-        const task: AxiosResponse<ITask> = await axios.get(
-          `api/task/${projectNumber}`,
-          {
-            headers: { Authorization: `Bearer ${getToken()}` },
-          }
-        );
-        task.data.complete = true;
-
-        res = await axios.put(`api/task/${projectNumber}`, task.data, {
-          headers: { Authorization: `Bearer ${getToken()}` },
-        });
+      if (command === Commands.SUCCESS) {
+        responseData = await completeTask(projectNumber);
 
         dispatch({
           type: Tasks.updateTasks,
           payload: await getTasks(state.tasks.showCompleted),
         });
-        dispatch({ type: Alerts.setAlerts, payload: res.data });
+        dispatch({ type: Alerts.setAlerts, payload: responseData });
         setTimeout(() => {
           dispatch({ type: Alerts.removeAlerts, payload: [] });
         }, 3000);
-      } else if (command === 'delete' && !showLog) {
-        res = await axios.delete(`api/task/${projectNumber}`, {
-          headers: { Authorization: `Bearer ${getToken()}` },
-        });
+      } else if (command === Commands.DELETE && !showLog) {
+        responseData = await deleteTask(projectNumber);
         dispatch({
           type: Tasks.updateTasks,
           payload: await getTasks(state.tasks.showCompleted),
         });
-        dispatch({ type: Alerts.setAlerts, payload: res.data });
+        dispatch({ type: Alerts.setAlerts, payload: responseData });
         setTimeout(() => {
           dispatch({ type: Alerts.removeAlerts, payload: [] });
         }, 3000);
-      } else if (command === 'log') {
+      } else if (command === Commands.LOG) {
         dispatch({ type: Logs.setShowLog, payload: true });
         dispatch({ type: Logs.setLogs, payload: await getLogs(projectNumber) });
       } else {
-        const task = await axios.get(`api/task/${projectNumber}`, {
-          headers: { Authorization: `Bearer ${getToken()}` },
+        dispatch({
+          type: Tasks.updateTask,
+          payload: await getTask(projectNumber),
         });
-
-        dispatch({ type: Tasks.updateTask, payload: task.data });
       }
       props.setLoading(false);
     } catch (err) {
@@ -82,22 +74,26 @@ const IncompleteTasks: React.FC<{
   return (
     <>
       <IconButton
-        onClick={(e) => handleAction(e, props.row.projectNumber, 'edit')}
+        onClick={(e) => handleAction(e, props.row.projectNumber, Commands.EDIT)}
       >
         <EditIcon />
       </IconButton>
       <IconButton
-        onClick={(e) => handleAction(e, props.row.projectNumber, 'delete')}
+        onClick={(e) =>
+          handleAction(e, props.row.projectNumber, Commands.DELETE)
+        }
       >
         <DeleteIcon />
       </IconButton>
       <IconButton
-        onClick={(e) => handleAction(e, props.row.projectNumber, 'success')}
+        onClick={(e) =>
+          handleAction(e, props.row.projectNumber, Commands.SUCCESS)
+        }
       >
         <CheckCircleOutlineIcon />
       </IconButton>
       <IconButton
-        onClick={(e) => handleAction(e, props.row.projectNumber, 'log')}
+        onClick={(e) => handleAction(e, props.row.projectNumber, Commands.LOG)}
       >
         <LibraryBooks />
       </IconButton>

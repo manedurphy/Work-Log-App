@@ -57,3 +57,5 @@ export type SaveNewTaskType = (
 ) => Promise<NewTaskType>;
 
 export type DeleteTaskType = (task: Task) => Promise<void>;
+
+export type CompleteTaskType = (task: Task) => Promise<void>;

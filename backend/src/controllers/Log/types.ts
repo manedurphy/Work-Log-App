@@ -20,3 +20,5 @@ export type CreateTaskLogType = (
 ) => Promise<void>;
 
 export type DeleteTaskLogItemType = (log: Log) => Promise<void>;
+
+export type UpdateCompleteStatusType = (log: Log) => Promise<void>;

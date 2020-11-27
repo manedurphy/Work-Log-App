@@ -1,6 +1,7 @@
 import { Task } from '../../models/models';
 import { Record } from '../Record/record';
 import {
+  CompleteTaskType,
   CreateNewTaskType,
   DeleteTaskType,
   GetTasksType,
@@ -22,6 +23,7 @@ export class TaskServices {
   public static getTasks: GetTasksType = async (userId, complete) => {
     return await Task.findAll({
       where: { UserId: userId, complete },
+      order: [['id', 'DESC']],
     });
   };
 
@@ -40,6 +42,10 @@ export class TaskServices {
       updatedTask.complete = true;
     }
     await task.update(updatedTask);
+  };
+
+  public static completeTask: CompleteTaskType = async (task) => {
+    await task.update({ complete: true });
   };
 
   public static saveNewTask: SaveNewTaskType = async (req, userId) => {

@@ -35,6 +35,17 @@ export const getTasks = async (showComplete: boolean) => {
   return res.data;
 };
 
+export const getTask = async (projectNumber: number) => {
+  const res: AxiosResponse<ITask> = await axios.get(
+    `api/task/${projectNumber}`,
+    {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }
+  );
+
+  return res.data;
+};
+
 export const createNewTask = async (formData: ITaskForm) => {
   const res: AxiosResponse<MessageType> = await axios.post(
     'api/task',
@@ -56,6 +67,16 @@ export const updateTask = async (formData: ITaskForm) => {
     {
       headers: { Authorization: `Bearer ${getToken()}` },
     }
+  );
+
+  return res.data;
+};
+
+export const completeTask = async (projectNumber: number) => {
+  const res: AxiosResponse<MessageType> = await axios.put(
+    `/api/task/complete/no-form/${projectNumber}`,
+    null,
+    { headers: { Authorization: `Bearer ${getToken()}` } }
   );
 
   return res.data;

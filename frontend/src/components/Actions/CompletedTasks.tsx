@@ -1,16 +1,15 @@
 import React from 'react';
-import axios, { AxiosResponse } from 'axios';
 import { IconButton } from '@material-ui/core';
+import { GlobalContext } from '../../context/GlobalState';
+import { getTasks, getLogs, deleteTask } from '../../globalFunctions';
+import { useContext } from 'react';
+import { Alerts, Commands, Logs, Tasks } from '../../enums';
+import { HandleActionType, ILog, ITask, MessageType } from '../../type';
 import {
   Delete as DeleteIcon,
   LibraryBooks,
   ChevronRight as ChevronRightIcon,
 } from '@material-ui/icons';
-import { GlobalContext } from '../../context/GlobalState';
-import { getTasks, getToken, getLogs } from '../../globalFunctions';
-import { useContext } from 'react';
-import { Alerts, Logs, Tasks } from '../../enums';
-import { HandleActionType, ILog, ITask, MessageType } from '../../type';
 
 const CompletedTasks: React.FC<{
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,20 +22,16 @@ const CompletedTasks: React.FC<{
   const handleAction: HandleActionType = async (e, projectNumber, command) => {
     e.preventDefault();
     props.setLoading(true);
-    let res: AxiosResponse<MessageType>;
-    const token = getToken();
 
     try {
-      if (command === 'delete' && !showLog) {
-        res = await axios.delete(`api/task/${projectNumber}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+      if (command === Commands.DELETE && !showLog) {
+        const responseData: MessageType = await deleteTask(projectNumber);
 
         dispatch({
           type: Tasks.updateTasks,
           payload: await getTasks(state.tasks.showCompleted),
         });
-        dispatch({ type: Alerts.setAlerts, payload: res.data });
+        dispatch({ type: Alerts.setAlerts, payload: responseData });
         setTimeout(() => {
           dispatch({ type: Alerts.removeAlerts, payload: [] });
         }, 3000);
@@ -46,7 +41,7 @@ const CompletedTasks: React.FC<{
       }
       props.setLoading(false);
     } catch (err) {
-      dispatch({ type: Alerts.setAlerts, payload: err.response.data.message });
+      dispatch({ type: Alerts.setAlerts, payload: err.response.data });
       setTimeout(() => {
         dispatch({ type: Alerts.removeAlerts, payload: [] });
       }, 3000);

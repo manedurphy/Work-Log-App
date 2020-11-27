@@ -25,4 +25,6 @@ export enum Commands {
   SUCCESS = 'success',
   UPDATE = 'update',
   DELETE = 'delete',
+  EDIT = 'edit',
+  LOG = 'log',
 }

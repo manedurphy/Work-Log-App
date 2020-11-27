@@ -6,6 +6,7 @@ import { TaskServices } from './taskServices';
 import { TaskValidation } from './taskValidation';
 import { CheckUserExistance } from '../JWT/checkUserExistance';
 import { HTTPResponse } from '../HTTP/httpResponses';
+import { LogServices } from '../Log/logServices';
 import {
   AlertResponse,
   TaskHttpResponseMessages,
@@ -19,7 +20,6 @@ import {
   Post,
   Delete,
 } from '@overnightjs/core';
-import { LogServices } from '../Log/logServices';
 
 @Controller('api/task')
 export class TaskController {
@@ -145,7 +145,7 @@ export class TaskController {
   @Put('complete/:id')
   @Middleware(customJwtManager.middleware)
   @Middleware(TaskValidation.saveTaskValidation)
-  private async completeTask(req: ISecureRequest, res: Response) {
+  private async completeTaskWithForm(req: ISecureRequest, res: Response) {
     try {
       const taskValidator = new TaskValidation();
 
@@ -170,6 +170,34 @@ export class TaskController {
       return HTTPResponse.OK(res, {
         message: TaskHttpResponseMessages.TASK_COMPLETED,
       });
+    } catch (error) {
+      HTTPResponse.serverError(res);
+    }
+  }
+
+  @Put('complete/no-form/:id')
+  @Middleware(customJwtManager.middleware)
+  private async completeTaskNoForm(req: ISecureRequest, res: Response) {
+    try {
+      const task = await TaskServices.getTask(+req.params.id, +req.payload.id);
+
+      if (!task)
+        return HTTPResponse.notFound(
+          res,
+          TaskHttpResponseMessages.TASK_NOT_FOUND,
+          AlertResponse.ERROR
+        );
+
+      const log = await LogServices.getLog(+req.params.id, task.id);
+
+      await TaskServices.completeTask(task);
+      await LogServices.updateCompleteStatus(log[0]);
+
+      HTTPResponse.OKWithMessage(
+        res,
+        TaskHttpResponseMessages.TASK_COMPLETED,
+        AlertResponse.SUCCESS
+      );
     } catch (error) {
       HTTPResponse.serverError(res);
     }

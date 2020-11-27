@@ -113,7 +113,7 @@ const JobForm: React.FC = () => {
         dispatch({ type: Alerts.removeAlerts, payload: [] });
       }, 3000);
     } catch (err) {
-      dispatch({ type: Alerts.setAlerts, payload: err.response.data.message });
+      dispatch({ type: Alerts.setAlerts, payload: err.response.data });
       setTimeout(() => {
         dispatch({ type: Alerts.removeAlerts, payload: [] });
       }, 3000);
