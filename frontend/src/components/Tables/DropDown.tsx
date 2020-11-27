@@ -17,9 +17,9 @@ const DropDown: React.FC<{
 }> = (props) => {
   return (
     <TableRow>
-      <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+      <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
         <Collapse in={props.open} timeout="auto" unmountOnExit>
-          <Box>
+          <Box margin={1}>
             <Title>More Information</Title>
             <Table size="small" aria-label="more-information">
               <TableHead>

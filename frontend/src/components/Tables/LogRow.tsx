@@ -4,11 +4,19 @@ import MoreVert from '../Actions/MoreVert';
 import moment from 'moment';
 import LogActions from '../Actions/Log';
 import { ILog } from '../../type';
-import { TableRow, TableCell, IconButton } from '@material-ui/core';
+import { TableRow, TableCell, IconButton, makeStyles } from '@material-ui/core';
 import {
   KeyboardArrowUp as KeyboardArrowUpIcon,
   KeyboardArrowDown as KeyboardArrowDownIcon,
 } from '@material-ui/icons';
+
+const useRowStyles = makeStyles({
+  root: {
+    '& > *': {
+      borderBottom: 'unset',
+    },
+  },
+});
 
 const Row: React.FC<{
   key: number;
@@ -17,10 +25,11 @@ const Row: React.FC<{
 }> = (props) => {
   const [open, setOpen] = useState(false);
   const [modify, setModify] = useState(false);
+  const classes = useRowStyles();
 
   return (
     <>
-      <TableRow>
+      <TableRow className={classes.root}>
         <TableCell>
           <IconButton
             aria-label="expand row"

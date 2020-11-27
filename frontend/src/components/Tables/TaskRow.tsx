@@ -6,11 +6,19 @@ import MoreVert from '../Actions/MoreVert';
 import moment from 'moment';
 import { GlobalContext } from '../../context/GlobalState';
 import { ITask } from '../../type';
-import { TableRow, TableCell, IconButton } from '@material-ui/core';
+import { TableRow, TableCell, IconButton, makeStyles } from '@material-ui/core';
 import {
   KeyboardArrowUp as KeyboardArrowUpIcon,
   KeyboardArrowDown as KeyboardArrowDownIcon,
 } from '@material-ui/icons';
+
+const useRowStyles = makeStyles({
+  root: {
+    '& > *': {
+      borderBottom: 'unset',
+    },
+  },
+});
 
 const Row: React.FC<{
   key: number;
@@ -20,10 +28,11 @@ const Row: React.FC<{
   const [open, setOpen] = useState(false);
   const [modify, setModify] = useState(false);
   const { tasks } = useContext(GlobalContext).state;
+  const classes = useRowStyles();
 
   return (
     <>
-      <TableRow>
+      <TableRow className={classes.root}>
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -41,21 +50,23 @@ const Row: React.FC<{
         <TableCell>{props.row.hoursAvailableToWork}</TableCell>
         <TableCell>{props.row.hoursWorked}</TableCell>
         <TableCell>{props.row.numberOfReviews}</TableCell>
-        {tasks.showCompleted && modify ? (
-          <CompletedTaskActions
-            setLoading={props.setLoading}
-            row={props.row}
-            setModify={setModify}
-          />
-        ) : !tasks.showCompleted && modify ? (
-          <IncompleteTaskActions
-            setLoading={props.setLoading}
-            row={props.row}
-            setModify={setModify}
-          />
-        ) : (
-          <MoreVert modify={modify} setModify={setModify} />
-        )}
+        <TableCell>
+          {tasks.showCompleted && modify ? (
+            <CompletedTaskActions
+              setLoading={props.setLoading}
+              row={props.row}
+              setModify={setModify}
+            />
+          ) : !tasks.showCompleted && modify ? (
+            <IncompleteTaskActions
+              setLoading={props.setLoading}
+              row={props.row}
+              setModify={setModify}
+            />
+          ) : (
+            <MoreVert modify={modify} setModify={setModify} />
+          )}
+        </TableCell>
       </TableRow>
       <DropDown row={props.row} open={open} />
     </>
