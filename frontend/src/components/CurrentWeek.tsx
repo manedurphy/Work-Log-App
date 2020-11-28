@@ -5,9 +5,9 @@ import Title from './Title';
 import Date from './Date';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { GlobalContext } from '../context/GlobalState';
-import moment from 'moment';
 import { Dates } from '../enums';
 import {
+  getDispatchDate,
   getFilterTasksDue,
   getFormattedDate,
 } from '../global/functions/helpers';
@@ -34,11 +34,13 @@ const Deposits = () => {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
+    const resetDate = getDispatchDate();
+
     dispatch({
       type: Dates.setDateAndTasksDue,
       payload: {
-        dueDate: date.dueDate,
-        tasksDue: getFilterTasksDue(tasks.currentTasks, date.dueDate),
+        dueDate: resetDate,
+        tasksDue: getFilterTasksDue(tasks.currentTasks, resetDate),
       },
     });
   }, [tasks.currentTasks]);
