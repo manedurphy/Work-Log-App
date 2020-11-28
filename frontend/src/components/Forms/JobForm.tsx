@@ -53,21 +53,6 @@ const JobForm: React.FC = () => {
     dueDate: new Date(),
   });
 
-  const clearForm = () => {
-    setFormData({
-      name: '',
-      projectNumber: '',
-      hoursAvailableToWork: '',
-      hoursWorked: '',
-      notes: '',
-      numberOfReviews: '',
-      reviewHours: '',
-      hoursRequiredByBim: '',
-      dateAssigned: new Date(),
-      dueDate: new Date(),
-    });
-  };
-
   useEffect((): void => {
     edit &&
       setFormData({
@@ -108,10 +93,10 @@ const JobForm: React.FC = () => {
         payload: await getTasks(state.tasks.showCompleted),
       });
       dispatch({ type: Alerts.setAlerts, payload: responseData });
-      clearForm();
-      setTimeout(() => {
-        dispatch({ type: Alerts.removeAlerts, payload: [] });
-      }, 3000);
+
+      // setTimeout(() => {
+      //   dispatch({ type: Alerts.removeAlerts, payload: [] });
+      // }, 3000);
     } catch (err) {
       dispatch({ type: Alerts.setAlerts, payload: err.response.data });
       setTimeout(() => {

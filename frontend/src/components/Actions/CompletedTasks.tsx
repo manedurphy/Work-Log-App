@@ -37,9 +37,6 @@ const CompletedTasks: React.FC<{
           payload: await getTasks(state.tasks.showCompleted),
         });
         dispatch({ type: Alerts.setAlerts, payload: responseData });
-        setTimeout(() => {
-          dispatch({ type: Alerts.removeAlerts, payload: [] });
-        }, 3000);
       } else {
         dispatch({ type: Logs.setShowLog, payload: true });
         dispatch({ type: Logs.setLogs, payload: await getLogs(projectNumber) });
@@ -47,9 +44,6 @@ const CompletedTasks: React.FC<{
       props.setLoading(false);
     } catch (err) {
       dispatch({ type: Alerts.setAlerts, payload: err.response.data });
-      setTimeout(() => {
-        dispatch({ type: Alerts.removeAlerts, payload: [] });
-      }, 3000);
     }
   };
 

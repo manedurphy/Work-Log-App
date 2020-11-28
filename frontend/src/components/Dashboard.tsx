@@ -23,7 +23,12 @@ import {
 } from '../global/functions/helpers';
 import { Users, Tasks, Logs, Dates } from '../enums';
 import { VerifyType } from '../global/types/type';
-import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import {
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Snackbar,
+} from '@material-ui/core';
 import {
   makeStyles,
   CssBaseline,
@@ -42,6 +47,7 @@ import {
 } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import moment from 'moment';
+import SnackBarComponent from './SnackBar';
 
 function Copyright() {
   return (
@@ -275,11 +281,13 @@ const Dashboard: React.FC = (): JSX.Element => {
           <Spinner />
         ) : (
           <Container maxWidth="lg" className={classes.container}>
-            {state.alerts[0] && (
-              <Alert severity={state.alerts[0].type}>
-                <AlertTitle>{state.alerts[0].message}</AlertTitle>
-              </Alert>
-            )}
+            {/* {state.alerts[0] && (
+              
+                <Alert severity={state.alerts[0].type}>
+                  <AlertTitle>{state.alerts[0].message}</AlertTitle>
+                </Alert>
+             
+            )} */}
             <Grid container spacing={3}>
               <Grid item xs={12} md={8} lg={7}>
                 <Paper className={fixedHeightPaper}>
@@ -300,6 +308,13 @@ const Dashboard: React.FC = (): JSX.Element => {
             </Grid>
             {showLog && state.log.edit && <LogForm />}
             {!showLog && !showCompleted && showForm && <JobForm />}
+            {state.alerts.map((alert, i) => (
+              <SnackBarComponent
+                key={i}
+                message={alert.message}
+                type={alert.type}
+              />
+            ))}
           </Container>
         )}
       </main>

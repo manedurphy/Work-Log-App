@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Pagination from '@material-ui/lab/Pagination';
 import Title from './Title';
@@ -11,7 +11,6 @@ import {
   getFilterTasksDue,
   getFormattedDate,
 } from '../global/functions/helpers';
-import { useEffect } from 'react';
 
 const useStyles = makeStyles((theme) =>
   createStyles({

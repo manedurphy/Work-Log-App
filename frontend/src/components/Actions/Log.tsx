@@ -30,9 +30,6 @@ const LogActions: React.FC<{
           payload: await getLogs(props.row.projectNumber),
         });
         dispatch({ type: Alerts.setAlerts, payload: responseData });
-        setTimeout(() => {
-          dispatch({ type: Alerts.removeAlerts, payload: [] });
-        }, 3000);
       } else {
         const responseData: ILog = await getLog(props.row.id);
         dispatch({ type: Logs.setLog, payload: responseData });
@@ -40,9 +37,6 @@ const LogActions: React.FC<{
     } catch (err) {
       //TEST THIS ERROR LATER
       dispatch({ type: Alerts.setAlerts, payload: err.response.data });
-      setTimeout(() => {
-        dispatch({ type: Alerts.removeAlerts, payload: [] });
-      }, 3000);
     }
   };
   return (

@@ -45,9 +45,6 @@ const IncompleteTasks: React.FC<{
           payload: await getTasks(state.tasks.showCompleted),
         });
         dispatch({ type: Alerts.setAlerts, payload: responseData });
-        setTimeout(() => {
-          dispatch({ type: Alerts.removeAlerts, payload: [] });
-        }, 3000);
       } else if (command === Commands.DELETE && !showLog) {
         responseData = await deleteTask(projectNumber);
         dispatch({
@@ -55,9 +52,6 @@ const IncompleteTasks: React.FC<{
           payload: await getTasks(state.tasks.showCompleted),
         });
         dispatch({ type: Alerts.setAlerts, payload: responseData });
-        setTimeout(() => {
-          dispatch({ type: Alerts.removeAlerts, payload: [] });
-        }, 3000);
       } else if (command === Commands.LOG) {
         dispatch({ type: Logs.setShowLog, payload: true });
         dispatch({ type: Logs.setLogs, payload: await getLogs(projectNumber) });

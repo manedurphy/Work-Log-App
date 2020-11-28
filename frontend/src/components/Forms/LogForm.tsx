@@ -47,20 +47,6 @@ const LogForm: React.FC = () => {
     loggedAt: new Date(),
   });
 
-  const clearForm = () => {
-    setFormData({
-      name: '',
-      projectNumber: '',
-      hoursAvailableToWork: '',
-      hoursWorked: '',
-      notes: '',
-      numberOfReviews: '',
-      reviewHours: '',
-      hoursRequiredByBim: '',
-      loggedAt: new Date(),
-    });
-  };
-
   useEffect((): void => {
     edit &&
       setFormData({
@@ -98,10 +84,6 @@ const LogForm: React.FC = () => {
         payload: await getLogs(+formData.projectNumber),
       });
       dispatch({ type: Alerts.setAlerts, payload: responseData });
-      clearForm();
-      setTimeout(() => {
-        dispatch({ type: Alerts.removeAlerts, payload: [] });
-      }, 3000);
     } catch (err) {
       dispatch({ type: Alerts.setAlerts, payload: err.response.data.message });
       setTimeout(() => {
