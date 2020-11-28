@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import clsx from 'clsx';
 import MenuIcon from '@material-ui/icons/Menu';
+import SnackBarComponent from './SnackBar';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
@@ -16,19 +17,10 @@ import Spinner from './Spinner';
 import { Redirect } from 'react-router-dom';
 import { GlobalContext } from '../context/GlobalState';
 import { getTasks } from '../global/functions/axios';
-import {
-  getDispatchDate,
-  getFilterTasksDue,
-  getToken,
-} from '../global/functions/helpers';
-import { Users, Tasks, Logs, Dates } from '../enums';
+import { getToken } from '../global/functions/helpers';
+import { Users, Tasks, Logs, Alerts } from '../enums';
 import { VerifyType } from '../global/types/type';
-import {
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Snackbar,
-} from '@material-ui/core';
+import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import {
   makeStyles,
   CssBaseline,
@@ -45,9 +37,6 @@ import {
   Paper,
   Link,
 } from '@material-ui/core';
-import { Alert, AlertTitle } from '@material-ui/lab';
-import moment from 'moment';
-import SnackBarComponent from './SnackBar';
 
 function Copyright() {
   return (
@@ -164,6 +153,7 @@ const Dashboard: React.FC = (): JSX.Element => {
         );
         dispatch({ type: Users.setUser, payload: res.data.user });
         dispatch({ type: Logs.setShowLog, payload: false });
+        dispatch({ type: Alerts.removeAlerts, payload: [] });
         dispatch({
           type: Tasks.updateTasks,
           payload: await getTasks(showCompleted),
@@ -281,13 +271,6 @@ const Dashboard: React.FC = (): JSX.Element => {
           <Spinner />
         ) : (
           <Container maxWidth="lg" className={classes.container}>
-            {/* {state.alerts[0] && (
-              
-                <Alert severity={state.alerts[0].type}>
-                  <AlertTitle>{state.alerts[0].message}</AlertTitle>
-                </Alert>
-             
-            )} */}
             <Grid container spacing={3}>
               <Grid item xs={12} md={8} lg={7}>
                 <Paper className={fixedHeightPaper}>
@@ -317,6 +300,7 @@ const Dashboard: React.FC = (): JSX.Element => {
             ))}
           </Container>
         )}
+        <Copyright />
       </main>
     </div>
   );

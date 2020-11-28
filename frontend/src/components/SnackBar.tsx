@@ -30,7 +30,7 @@ const SnackBar: React.FC<{
 
   return (
     <div className={classes.root}>
-      <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
+      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
         <Alert onClose={handleClose} severity={props.type}>
           {props.message}
         </Alert>

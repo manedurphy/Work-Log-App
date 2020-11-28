@@ -42,6 +42,7 @@ const Deposits = () => {
         tasksDue: getFilterTasksDue(tasks.currentTasks, resetDate),
       },
     });
+    setPage(1);
   }, [tasks.currentTasks]);
 
   const handleChange = (e: React.ChangeEvent<unknown>, value: number) => {
@@ -68,7 +69,13 @@ const Deposits = () => {
         <Date />
       </Typography>
       <Typography className={classes.depositContext}>
-        {date.tasksDue.length
+        {date.tasksDue.length >= 5
+          ? 'Due: ' +
+            date.tasksDue
+              .map((task) => task.name)
+              .slice(0, 5)
+              .join(', ')
+          : date.tasksDue.length
           ? 'Due: ' + date.tasksDue.map((task) => task.name).join(', ')
           : 'Nothing due'}
       </Typography>
