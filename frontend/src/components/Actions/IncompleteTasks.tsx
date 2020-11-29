@@ -46,6 +46,7 @@ const IncompleteTasks: React.FC<{
           payload: await getTasks(state.tasks.showCompleted),
         });
         dispatch({ type: Alerts.setAlerts, payload: responseData });
+        props.setLoading(false);
       } else if (command === Commands.DELETE && !showLog) {
         props.setLoading(true);
         responseData = await deleteTask(projectNumber);
@@ -54,19 +55,20 @@ const IncompleteTasks: React.FC<{
           payload: await getTasks(state.tasks.showCompleted),
         });
         dispatch({ type: Alerts.setAlerts, payload: responseData });
+        props.setLoading(false);
       } else if (command === Commands.LOG) {
         props.setLoading(true);
         dispatch({ type: Logs.setShowLog, payload: true });
         dispatch({ type: Logs.setLogs, payload: await getLogs(projectNumber) });
+        props.setLoading(false);
       } else {
         props.setLoadingEditTask(true);
         dispatch({
           type: Tasks.updateTask,
           payload: await getTask(projectNumber),
         });
+        props.setLoadingEditTask(false);
       }
-      props.setLoading(false);
-      props.setLoadingEditTask(false);
     } catch (err) {
       dispatch({ type: Alerts.setAlerts, payload: err.response.data.message });
       setTimeout(() => {
