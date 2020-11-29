@@ -17,6 +17,7 @@ import {
 const LogActions: React.FC<{
   row: ILog;
   setModify: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
 }> = (props) => {
   const { dispatch } = useContext(GlobalContext);
 
@@ -31,8 +32,10 @@ const LogActions: React.FC<{
         });
         dispatch({ type: Alerts.setAlerts, payload: responseData });
       } else {
+        props.setLoadingEditTask(true);
         const responseData: ILog = await getLog(props.row.id);
         dispatch({ type: Logs.setLog, payload: responseData });
+        props.setLoadingEditTask(false);
       }
     } catch (err) {
       //TEST THIS ERROR LATER

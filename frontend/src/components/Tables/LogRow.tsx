@@ -22,6 +22,7 @@ const Row: React.FC<{
   key: number;
   row: ILog;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
 }> = (props) => {
   const [open, setOpen] = useState(false);
   const [modify, setModify] = useState(false);
@@ -51,7 +52,11 @@ const Row: React.FC<{
           {!modify ? (
             <MoreVert modify={modify} setModify={setModify} />
           ) : (
-            <LogActions row={props.row} setModify={setModify} />
+            <LogActions
+              row={props.row}
+              setModify={setModify}
+              setLoadingEditTask={props.setLoadingEditTask}
+            />
           )}
         </TableCell>
       </TableRow>

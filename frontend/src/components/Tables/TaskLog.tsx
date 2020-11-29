@@ -12,6 +12,7 @@ import {
 
 const TaskLog: React.FC<{
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
 }> = (props) => {
   const [showLogBody, setShowLogBody] = useState(true);
   const currentLogs = useContext(GlobalContext).state.log.currentLogs;
@@ -38,7 +39,12 @@ const TaskLog: React.FC<{
           </TableHead>
           <TableBody className="action-cell">
             {currentLogs.map((row) => (
-              <LogRow key={row.id} row={row} setLoading={props.setLoading} />
+              <LogRow
+                key={row.id}
+                row={row}
+                setLoading={props.setLoading}
+                setLoadingEditTask={props.setLoadingEditTask}
+              />
             ))}
           </TableBody>
         </>

@@ -13,7 +13,7 @@ import Deposits from './CurrentWeek';
 import TasksComponent from './Tasks';
 import JobForm from './Forms/JobForm';
 import LogForm from './Forms/LogForm';
-import Spinner from './Spinner';
+import Spinner from './UI/Spinner';
 import { Redirect } from 'react-router-dom';
 import { GlobalContext } from '../context/GlobalState';
 import { getTasks } from '../global/functions/axios';

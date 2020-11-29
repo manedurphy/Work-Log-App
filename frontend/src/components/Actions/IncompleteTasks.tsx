@@ -26,6 +26,7 @@ import {
 const IncompleteTasks: React.FC<{
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setModify: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
   row: ITask | ILog;
 }> = (props) => {
   const { state, dispatch } = useContext(GlobalContext);
@@ -33,11 +34,11 @@ const IncompleteTasks: React.FC<{
 
   const handleAction: HandleActionType = async (e, projectNumber, command) => {
     e.preventDefault();
-    props.setLoading(true);
     let responseData: MessageType;
 
     try {
       if (command === Commands.SUCCESS) {
+        props.setLoading(true);
         responseData = await completeTask(projectNumber);
 
         dispatch({
@@ -46,6 +47,7 @@ const IncompleteTasks: React.FC<{
         });
         dispatch({ type: Alerts.setAlerts, payload: responseData });
       } else if (command === Commands.DELETE && !showLog) {
+        props.setLoading(true);
         responseData = await deleteTask(projectNumber);
         dispatch({
           type: Tasks.updateTasks,
@@ -53,15 +55,18 @@ const IncompleteTasks: React.FC<{
         });
         dispatch({ type: Alerts.setAlerts, payload: responseData });
       } else if (command === Commands.LOG) {
+        props.setLoading(true);
         dispatch({ type: Logs.setShowLog, payload: true });
         dispatch({ type: Logs.setLogs, payload: await getLogs(projectNumber) });
       } else {
+        props.setLoadingEditTask(true);
         dispatch({
           type: Tasks.updateTask,
           payload: await getTask(projectNumber),
         });
       }
       props.setLoading(false);
+      props.setLoadingEditTask(false);
     } catch (err) {
       dispatch({ type: Alerts.setAlerts, payload: err.response.data.message });
       setTimeout(() => {

@@ -23,6 +23,7 @@ const TaskRow: React.FC<{
   key: number;
   row: ITask;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
 }> = (props) => {
   const [open, setOpen] = useState(false);
   const [modify, setModify] = useState(false);
@@ -57,6 +58,7 @@ const TaskRow: React.FC<{
           ) : !tasks.showCompleted && modify ? (
             <IncompleteTaskActions
               setLoading={props.setLoading}
+              setLoadingEditTask={props.setLoadingEditTask}
               row={props.row}
               setModify={setModify}
             />

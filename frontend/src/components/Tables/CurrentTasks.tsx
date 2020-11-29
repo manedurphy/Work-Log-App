@@ -12,6 +12,7 @@ import {
 
 const CurrentTasks: React.FC<{
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
 }> = (props) => {
   const [showTaskBody, setShowTaskBody] = useState(false);
   const tasks = useContext(GlobalContext).state.tasks.currentTasks;
@@ -38,7 +39,12 @@ const CurrentTasks: React.FC<{
           </TableHead>
           <TableBody className="action-cell">
             {tasks.map((row) => (
-              <TaskRow key={row.id} row={row} setLoading={props.setLoading} />
+              <TaskRow
+                key={row.id}
+                row={row}
+                setLoading={props.setLoading}
+                setLoadingEditTask={props.setLoadingEditTask}
+              />
             ))}
           </TableBody>
         </>
