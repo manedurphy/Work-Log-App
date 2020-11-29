@@ -3,6 +3,7 @@ export enum Tasks {
   updateTasks = 'UPDATE_TASKS',
   setShowCompleted = 'SET_SHOW_COMPLETED',
   setShowForm = 'SET_SHOW_FORM',
+  removeForm = 'REMOVE_FORM',
 }
 
 export enum Users {

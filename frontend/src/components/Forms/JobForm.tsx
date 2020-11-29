@@ -24,7 +24,9 @@ import {
   TextField,
   makeStyles,
   Button,
+  IconButton,
 } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -117,7 +119,16 @@ const JobForm: React.FC = () => {
             : (e) => handleForm(e, Commands.SUCCESS)
         }
       >
-        <Title>{!edit ? 'Create a New Task' : 'Edit Task'}</Title>
+        <div className="task-box-header close-btn">
+          <Title>{!edit ? 'Create a New Task' : 'Edit Task'}</Title>
+          <IconButton
+            onClick={() =>
+              dispatch({ type: Tasks.setShowForm, payload: false })
+            }
+          >
+            <CloseIcon />
+          </IconButton>
+        </div>
 
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>

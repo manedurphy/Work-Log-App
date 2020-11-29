@@ -29,7 +29,8 @@ export const taskReducer = (
         showForm: false,
       };
     case Tasks.setShowForm:
-      return { ...taskState, showForm: true };
+    case Tasks.removeForm:
+      return { ...taskState, showForm: action.payload };
     default:
       return taskState;
   }

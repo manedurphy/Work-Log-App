@@ -1,5 +1,4 @@
 import React from 'react';
-import Title from '../Title';
 import { ITask } from '../../global/types/type';
 import {
   Table,
@@ -20,7 +19,6 @@ const TaskDropDown: React.FC<{
       <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
         <Collapse in={props.open} timeout="auto" unmountOnExit>
           <Box margin={1}>
-            <Title>More Information</Title>
             <Table size="small" aria-label="more-information">
               <TableHead>
                 <TableRow>
