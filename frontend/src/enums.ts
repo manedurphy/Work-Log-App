@@ -15,6 +15,7 @@ export enum Logs {
   setLog = 'SET_LOG',
   setLogs = 'SET_LOGS',
   setShowLog = 'SET_SHOW_LOG',
+  setEditLog = 'SET_EDIT_LOG',
 }
 
 export enum Alerts {

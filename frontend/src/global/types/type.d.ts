@@ -89,7 +89,8 @@ export type LogStateType = {
 export type LogAction =
   | { type: Logs.setLogs; payload: ILog[] }
   | { type: Logs.setLog; payload: ILog }
-  | { type: Logs.setShowLog; payload: boolean };
+  | { type: Logs.setShowLog; payload: boolean }
+  | { type: Logs.setEditLog; payload: boolean };
 
 /** USERS */
 export interface IUser {

@@ -7,8 +7,9 @@ import React, {
 } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import CloseIcon from '@material-ui/icons/Close';
 import Title from '../Title';
-import { Alerts, Commands, Logs } from '../../enums';
+import { Alerts, Commands, Logs, Tasks } from '../../enums';
 import { GlobalContext } from '../../context/GlobalState';
 import { deleteLog, getLogs, updateLog } from '../../global/functions/axios';
 import { ILogForm, MessageType } from '../../global/types/type';
@@ -19,6 +20,7 @@ import {
   TextField,
   makeStyles,
   Button,
+  IconButton,
 } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -102,7 +104,14 @@ const LogForm: React.FC = () => {
             : (e) => handleForm(e, Commands.UPDATE)
         }
       >
-        <Title>Edit Log Item</Title>
+        <div className="task-box-header close-btn">
+          <Title>Edit Log Item</Title>
+          <IconButton
+            onClick={() => dispatch({ type: Logs.setEditLog, payload: false })}
+          >
+            <CloseIcon />
+          </IconButton>
+        </div>
 
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>

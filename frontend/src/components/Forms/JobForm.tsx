@@ -95,10 +95,6 @@ const JobForm: React.FC = () => {
         payload: await getTasks(state.tasks.showCompleted),
       });
       dispatch({ type: Alerts.setAlerts, payload: responseData });
-
-      // setTimeout(() => {
-      //   dispatch({ type: Alerts.removeAlerts, payload: [] });
-      // }, 3000);
     } catch (err) {
       dispatch({ type: Alerts.setAlerts, payload: err.response.data });
       setTimeout(() => {
