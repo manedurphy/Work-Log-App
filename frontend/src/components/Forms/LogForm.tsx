@@ -9,7 +9,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import CloseIcon from '@material-ui/icons/Close';
 import Title from '../Title';
-import { Alerts, Commands, Logs, Tasks } from '../../enums';
+import { Alerts, Commands, Logs } from '../../enums';
 import { GlobalContext } from '../../context/GlobalState';
 import { deleteLog, getLogs, updateLog } from '../../global/functions/axios';
 import { ILogForm, MessageType } from '../../global/types/type';
