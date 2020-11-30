@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { GlobalContext } from '../../context/GlobalState';
-import { IconButton } from '@material-ui/core';
+import { createStyles, IconButton, makeStyles, Theme } from '@material-ui/core';
 import { Alerts, Commands, Logs, Tasks } from '../../enums';
 import {
   HandleActionType,
@@ -20,17 +20,27 @@ import {
   Delete as DeleteIcon,
   CheckCircleOutline as CheckCircleOutlineIcon,
   LibraryBooks,
-  ChevronRight as ChevronRightIcon,
 } from '@material-ui/icons';
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      color: 'green',
+    },
+    button: {
+      color: 'purple',
+    },
+  })
+);
+
 const IncompleteTasks: React.FC<{
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setModify: React.Dispatch<React.SetStateAction<boolean>>;
-  setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
   row: ITask | ILog;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
 }> = (props) => {
   const { state, dispatch } = useContext(GlobalContext);
   const { showLog } = state.log;
+  const classes = useStyles();
 
   const handleAction: HandleActionType = async (e, projectNumber, command) => {
     e.preventDefault();
@@ -80,11 +90,13 @@ const IncompleteTasks: React.FC<{
   return (
     <>
       <IconButton
+        color="primary"
         onClick={(e) => handleAction(e, props.row.projectNumber, Commands.EDIT)}
       >
         <EditIcon />
       </IconButton>
       <IconButton
+        color="secondary"
         onClick={(e) =>
           handleAction(e, props.row.projectNumber, Commands.DELETE)
         }
@@ -92,6 +104,7 @@ const IncompleteTasks: React.FC<{
         <DeleteIcon />
       </IconButton>
       <IconButton
+        className={classes.root}
         onClick={(e) =>
           handleAction(e, props.row.projectNumber, Commands.SUCCESS)
         }
@@ -99,12 +112,10 @@ const IncompleteTasks: React.FC<{
         <CheckCircleOutlineIcon />
       </IconButton>
       <IconButton
+        className={classes.button}
         onClick={(e) => handleAction(e, props.row.projectNumber, Commands.LOG)}
       >
         <LibraryBooks />
-      </IconButton>
-      <IconButton onClick={() => props.setModify(false)}>
-        <ChevronRightIcon />
       </IconButton>
     </>
   );

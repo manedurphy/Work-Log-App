@@ -1,4 +1,5 @@
 import React from 'react';
+import LogActions from '../Actions/Log';
 import { ILog } from '../../global/types/type';
 import {
   Table,
@@ -13,6 +14,8 @@ import {
 const TaskDropDown: React.FC<{
   row: ILog;
   open: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
 }> = (props) => {
   return (
     <TableRow>
@@ -41,6 +44,13 @@ const TaskDropDown: React.FC<{
                 </TableRow>
               </TableBody>
             </Table>
+          </Box>
+          <Box display="flex" justifyContent="flex-end">
+            <LogActions
+              row={props.row}
+              setLoading={props.setLoading}
+              setLoadingEditTask={props.setLoadingEditTask}
+            />
           </Box>
         </Collapse>
       </TableCell>

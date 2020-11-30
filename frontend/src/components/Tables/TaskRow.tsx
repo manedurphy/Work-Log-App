@@ -1,9 +1,5 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import TaskDropDown from './TaskDropDown';
-import IncompleteTaskActions from '../Actions/IncompleteTasks';
-import CompletedTaskActions from '../Actions/CompletedTasks';
-import MoreVert from '../Actions/MoreVert';
-import { GlobalContext } from '../../context/GlobalState';
 import { ITask } from '../../global/types/type';
 import { TableRow, TableCell, IconButton, makeStyles } from '@material-ui/core';
 import {
@@ -26,8 +22,6 @@ const TaskRow: React.FC<{
   setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
 }> = (props) => {
   const [open, setOpen] = useState(false);
-  const [modify, setModify] = useState(false);
-  const { tasks } = useContext(GlobalContext).state;
   const classes = useRowStyles();
 
   return (
@@ -48,26 +42,13 @@ const TaskRow: React.FC<{
         <TableCell>{props.row.hoursAvailableToWork}</TableCell>
         <TableCell>{props.row.hoursWorked}</TableCell>
         <TableCell>{props.row.numberOfReviews}</TableCell>
-        <TableCell>
-          {tasks.showCompleted && modify ? (
-            <CompletedTaskActions
-              setLoading={props.setLoading}
-              row={props.row}
-              setModify={setModify}
-            />
-          ) : !tasks.showCompleted && modify ? (
-            <IncompleteTaskActions
-              setLoading={props.setLoading}
-              setLoadingEditTask={props.setLoadingEditTask}
-              row={props.row}
-              setModify={setModify}
-            />
-          ) : (
-            <MoreVert modify={modify} setModify={setModify} />
-          )}
-        </TableCell>
       </TableRow>
-      <TaskDropDown row={props.row} open={open} />
+      <TaskDropDown
+        row={props.row}
+        open={open}
+        setLoading={props.setLoading}
+        setLoadingEditTask={props.setLoadingEditTask}
+      />
     </>
   );
 };

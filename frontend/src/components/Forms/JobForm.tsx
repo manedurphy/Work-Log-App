@@ -115,7 +115,7 @@ const JobForm: React.FC = () => {
             : (e) => handleForm(e, Commands.SUCCESS)
         }
       >
-        <div className="task-box-header close-btn">
+        <div className="task-box-header">
           <Title>{!edit ? 'Create a New Task' : 'Edit Task'}</Title>
           <IconButton
             onClick={() =>
@@ -127,7 +127,7 @@ const JobForm: React.FC = () => {
         </div>
 
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} md={6}>
             <TextField
               name="name"
               variant="outlined"
@@ -141,7 +141,7 @@ const JobForm: React.FC = () => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} md={6}>
             <TextField
               variant="outlined"
               required
@@ -155,7 +155,7 @@ const JobForm: React.FC = () => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} md={4}>
             <TextField
               variant="outlined"
               required
@@ -170,7 +170,7 @@ const JobForm: React.FC = () => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} md={4}>
             <TextField
               variant="outlined"
               required
@@ -184,7 +184,7 @@ const JobForm: React.FC = () => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} md={4}>
             <TextField
               variant="outlined"
               required
@@ -199,7 +199,7 @@ const JobForm: React.FC = () => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} md={4}>
             <TextField
               variant="outlined"
               required
@@ -213,7 +213,7 @@ const JobForm: React.FC = () => {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} md={4}>
             <TextField
               variant="outlined"
               required
@@ -226,7 +226,7 @@ const JobForm: React.FC = () => {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} md={4}>
             <TextField
               variant="outlined"
               fullWidth
@@ -237,7 +237,7 @@ const JobForm: React.FC = () => {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} md={4}>
             <DatePicker
               selected={formData.dateAssigned}
               onChange={(date) =>

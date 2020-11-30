@@ -9,7 +9,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import DataUsageIcon from '@material-ui/icons/DataUsage';
 import Chart from './Chart';
-import Deposits from './CurrentWeek';
+import CurrentWeek from './CurrentWeek';
 import TasksComponent from './Tasks';
 import JobForm from './Forms/JobForm';
 import LogForm from './Forms/LogForm';
@@ -280,7 +280,7 @@ const Dashboard: React.FC = (): JSX.Element => {
 
               <Grid item xs={12} md={4} lg={5}>
                 <Paper className={fixedHeightPaper}>
-                  <Deposits />
+                  <CurrentWeek />
                 </Paper>
               </Grid>
               <Grid item xs={12}>

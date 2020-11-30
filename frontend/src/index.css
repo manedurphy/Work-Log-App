@@ -57,10 +57,6 @@ code {
   justify-content: space-between;
 }
 
-.close-btn:hover {
-  cursor: pointer;
-}
-
 /* LOADER */
 .loader {
   font-size: 10px;

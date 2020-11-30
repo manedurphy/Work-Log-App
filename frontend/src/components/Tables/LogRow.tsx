@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import MoreVert from '../Actions/MoreVert';
 import LogDropDown from './LogDropDown';
 import moment from 'moment';
-import LogActions from '../Actions/Log';
 import { ILog } from '../../global/types/type';
 import { TableRow, TableCell, IconButton, makeStyles } from '@material-ui/core';
 import {
@@ -48,19 +46,13 @@ const Row: React.FC<{
         <TableCell>{props.row.hoursAvailableToWork}</TableCell>
         <TableCell>{props.row.hoursWorked}</TableCell>
         <TableCell>{props.row.numberOfReviews}</TableCell>
-        <TableCell>
-          {!modify ? (
-            <MoreVert modify={modify} setModify={setModify} />
-          ) : (
-            <LogActions
-              row={props.row}
-              setModify={setModify}
-              setLoadingEditTask={props.setLoadingEditTask}
-            />
-          )}
-        </TableCell>
       </TableRow>
-      <LogDropDown row={props.row} open={open} />
+      <LogDropDown
+        row={props.row}
+        open={open}
+        setLoading={props.setLoading}
+        setLoadingEditTask={props.setLoadingEditTask}
+      />
     </>
   );
 };

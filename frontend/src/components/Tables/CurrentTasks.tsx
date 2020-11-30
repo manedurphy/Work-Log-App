@@ -34,7 +34,6 @@ const CurrentTasks: React.FC<{
               <TableCell>Hours Permitted</TableCell>
               <TableCell>Hours Worked</TableCell>
               <TableCell>No. Reviews</TableCell>
-              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody className="action-cell">

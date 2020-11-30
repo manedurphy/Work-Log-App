@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { ITask } from '../../global/types/type';
+import IncompleteTaskActions from '../Actions/IncompleteTasks';
 import {
   Table,
   TableRow,
@@ -9,11 +10,16 @@ import {
   Box,
   Collapse,
 } from '@material-ui/core';
+import { GlobalContext } from '../../context/GlobalState';
+import CompletedTasks from '../Actions/CompletedTasks';
 
 const TaskDropDown: React.FC<{
   row: ITask;
   open: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
 }> = (props) => {
+  const { showCompleted } = useContext(GlobalContext).state.tasks;
   return (
     <TableRow>
       <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
@@ -39,6 +45,21 @@ const TaskDropDown: React.FC<{
                 </TableRow>
               </TableBody>
             </Table>
+          </Box>
+          <Box display="flex" justifyContent="flex-end">
+            {showCompleted ? (
+              <CompletedTasks
+                row={props.row}
+                setLoading={props.setLoading}
+                setLoadingEditTask={props.setLoadingEditTask}
+              />
+            ) : (
+              <IncompleteTaskActions
+                row={props.row}
+                setLoading={props.setLoading}
+                setLoadingEditTask={props.setLoadingEditTask}
+              />
+            )}
           </Box>
         </Collapse>
       </TableCell>

@@ -8,15 +8,11 @@ import {
   MessageType,
 } from '../../global/types/type';
 import { Alerts, Commands, Logs } from '../../enums';
-import {
-  Delete as DeleteIcon,
-  Edit as EditIcon,
-  ChevronRight as ChevronRightIcon,
-} from '@material-ui/icons';
+import { Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons';
 
 const LogActions: React.FC<{
   row: ILog;
-  setModify: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
 }> = (props) => {
   const { dispatch } = useContext(GlobalContext);
@@ -45,17 +41,16 @@ const LogActions: React.FC<{
   return (
     <>
       <IconButton
+        color="primary"
         onClick={(e) => handleAction(e, props.row.projectNumber, Commands.EDIT)}
       >
         <EditIcon />
       </IconButton>
       <IconButton
+        color="secondary"
         onClick={(e) => handleAction(e, props.row.id, Commands.DELETE)}
       >
         <DeleteIcon />
-      </IconButton>
-      <IconButton onClick={(e) => props.setModify(false)}>
-        <ChevronRightIcon />
       </IconButton>
     </>
   );
