@@ -23,7 +23,6 @@ const Row: React.FC<{
   setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
 }> = (props) => {
   const [open, setOpen] = useState(false);
-  const [modify, setModify] = useState(false);
   const classes = useRowStyles();
 
   return (

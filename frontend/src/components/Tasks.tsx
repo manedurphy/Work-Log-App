@@ -5,8 +5,9 @@ import TaskLog from './Tables/TaskLog';
 import Spinner from './UI/Spinner';
 import { Logs, Tasks } from '../enums';
 import { GlobalContext } from '../context/GlobalState';
-import { Link, makeStyles } from '@material-ui/core';
+import { Box, Fab, Link, makeStyles } from '@material-ui/core';
 import SmallSpinner from './UI/SmallSpinner';
+import { Add as AddIcon } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   seeMore: {
@@ -67,17 +68,19 @@ const TasksComponent: React.FC<{
             setLoadingEditTask={setLoadingEditTask}
           />
           {!showForm && !showCompleted && (
-            <div className={classes.seeMore}>
-              <Link
-                color="primary"
-                href="#create"
-                onClick={() =>
-                  dispatch({ type: Tasks.setShowForm, payload: true })
-                }
-              >
-                Create new task
-              </Link>
-            </div>
+            <Box
+              display="flex"
+              justifyContent="flex-end"
+              className={classes.seeMore}
+            >
+              <Fab color="primary" size="small">
+                <AddIcon
+                  onClick={() =>
+                    dispatch({ type: Tasks.setShowForm, payload: true })
+                  }
+                />
+              </Fab>
+            </Box>
           )}
         </>
       )}
