@@ -137,9 +137,10 @@ const JobForm: React.FC = () => {
           <div className="task-box-header">
             <Title>{!edit ? 'Create a New Task' : 'Edit Task'}</Title>
             <IconButton
-              onClick={() =>
-                dispatch({ type: Tasks.setShowForm, payload: false })
-              }
+              onClick={() => {
+                clearForm();
+                dispatch({ type: Tasks.setShowForm, payload: false });
+              }}
             >
               <CloseIcon />
             </IconButton>
