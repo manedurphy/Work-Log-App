@@ -25,6 +25,7 @@ import {
   makeStyles,
   Button,
   IconButton,
+  Fade,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -104,197 +105,199 @@ const JobForm: React.FC = () => {
   };
 
   return (
-    <Paper>
-      <form
-        className={classes.form}
-        onSubmit={
-          edit && deleteMode
-            ? (e) => handleForm(e, Commands.DELETE)
-            : edit
-            ? (e) => handleForm(e, Commands.UPDATE)
-            : (e) => handleForm(e, Commands.SUCCESS)
-        }
-      >
-        <div className="task-box-header">
-          <Title>{!edit ? 'Create a New Task' : 'Edit Task'}</Title>
-          <IconButton
-            onClick={() =>
-              dispatch({ type: Tasks.setShowForm, payload: false })
-            }
-          >
-            <CloseIcon />
-          </IconButton>
-        </div>
-
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
-            <TextField
-              name="name"
-              variant="outlined"
-              required
-              fullWidth
-              id="name"
-              label="Task Name"
-              autoFocus
-              value={formData.name}
-              onChange={handleChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              type="number"
-              id="projectNumber"
-              label="Project Number"
-              name="projectNumber"
-              value={formData.projectNumber}
-              onChange={handleChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              type="number"
-              id="hoursAvailableToWork"
-              label="Hours Available to Work"
-              name="hoursAvailableToWork"
-              autoComplete="lname"
-              value={formData.hoursAvailableToWork}
-              onChange={handleChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              type="number"
-              id="hoursWorked"
-              label="Hours Worked"
-              name="hoursWorked"
-              value={formData.hoursWorked}
-              onChange={handleChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              type="number"
-              id="reviewHours"
-              label="Hours Spent on Review"
-              name="reviewHours"
-              autoComplete="lname"
-              value={formData.reviewHours}
-              onChange={handleChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              type="number"
-              id="hoursRequiredByBim"
-              label="Hours Required By BIM"
-              name="hoursRequiredByBim"
-              autoComplete="lname"
-              value={formData.hoursRequiredByBim}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              type="number"
-              id="numberOfReviews"
-              label="Number of Reviews"
-              name="numberOfReviews"
-              value={formData.numberOfReviews}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <TextField
-              variant="outlined"
-              fullWidth
-              id="notes"
-              label="Notes or Comments"
-              name="notes"
-              value={formData.notes}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <DatePicker
-              selected={formData.dateAssigned}
-              onChange={(date) =>
-                setFormData({ ...formData, dateAssigned: date })
+    <Fade in={state.tasks.showForm} timeout={500} enter exit={false}>
+      <Paper>
+        <form
+          className={classes.form}
+          onSubmit={
+            edit && deleteMode
+              ? (e) => handleForm(e, Commands.DELETE)
+              : edit
+              ? (e) => handleForm(e, Commands.UPDATE)
+              : (e) => handleForm(e, Commands.SUCCESS)
+          }
+        >
+          <div className="task-box-header">
+            <Title>{!edit ? 'Create a New Task' : 'Edit Task'}</Title>
+            <IconButton
+              onClick={() =>
+                dispatch({ type: Tasks.setShowForm, payload: false })
               }
-              dateFormat="MM/dd/yyyy h:mm aa"
-              timeInputLabel="Time:"
-              showTimeInput
-            />
-            <FormHelperText>Date assigned</FormHelperText>
-            <DatePicker
-              selected={formData.dueDate}
-              onChange={(date) => setFormData({ ...formData, dueDate: date })}
-              dateFormat="MM/dd/yyyy h:mm aa"
-              timeInputLabel="Time:"
-              showTimeInput
-            />
-            <FormHelperText>Due date</FormHelperText>
-          </Grid>
-        </Grid>
+            >
+              <CloseIcon />
+            </IconButton>
+          </div>
 
-        <div className="submit">
-          {edit ? (
-            <>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <TextField
+                name="name"
+                variant="outlined"
+                required
+                fullWidth
+                id="name"
+                label="Task Name"
+                autoFocus
+                value={formData.name}
+                onChange={handleChange}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                type="number"
+                id="projectNumber"
+                label="Project Number"
+                name="projectNumber"
+                value={formData.projectNumber}
+                onChange={handleChange}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                type="number"
+                id="hoursAvailableToWork"
+                label="Hours Available to Work"
+                name="hoursAvailableToWork"
+                autoComplete="lname"
+                value={formData.hoursAvailableToWork}
+                onChange={handleChange}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                type="number"
+                id="hoursWorked"
+                label="Hours Worked"
+                name="hoursWorked"
+                value={formData.hoursWorked}
+                onChange={handleChange}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                type="number"
+                id="reviewHours"
+                label="Hours Spent on Review"
+                name="reviewHours"
+                autoComplete="lname"
+                value={formData.reviewHours}
+                onChange={handleChange}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                type="number"
+                id="hoursRequiredByBim"
+                label="Hours Required By BIM"
+                name="hoursRequiredByBim"
+                autoComplete="lname"
+                value={formData.hoursRequiredByBim}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                type="number"
+                id="numberOfReviews"
+                label="Number of Reviews"
+                name="numberOfReviews"
+                value={formData.numberOfReviews}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextField
+                variant="outlined"
+                fullWidth
+                id="notes"
+                label="Notes or Comments"
+                name="notes"
+                value={formData.notes}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <DatePicker
+                selected={formData.dateAssigned}
+                onChange={(date) =>
+                  setFormData({ ...formData, dateAssigned: date })
+                }
+                dateFormat="MM/dd/yyyy h:mm aa"
+                timeInputLabel="Time:"
+                showTimeInput
+              />
+              <FormHelperText>Date assigned</FormHelperText>
+              <DatePicker
+                selected={formData.dueDate}
+                onChange={(date) => setFormData({ ...formData, dueDate: date })}
+                dateFormat="MM/dd/yyyy h:mm aa"
+                timeInputLabel="Time:"
+                showTimeInput
+              />
+              <FormHelperText>Due date</FormHelperText>
+            </Grid>
+          </Grid>
+
+          <div className="submit">
+            {edit ? (
+              <>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  onClick={() => setDeleteMode(false)}
+                  style={{ margin: '10px' }}
+                >
+                  Update
+                </Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => setDeleteMode(true)}
+                  style={{ margin: '10px' }}
+                >
+                  Delete
+                </Button>
+              </>
+            ) : (
               <Button
+                className="job-form-button"
                 type="submit"
                 variant="contained"
                 color="primary"
-                onClick={() => setDeleteMode(false)}
                 style={{ margin: '10px' }}
               >
-                Update
+                Submit
               </Button>
-              <Button
-                type="submit"
-                variant="contained"
-                color="secondary"
-                onClick={() => setDeleteMode(true)}
-                style={{ margin: '10px' }}
-              >
-                Delete
-              </Button>
-            </>
-          ) : (
-            <Button
-              className="job-form-button"
-              type="submit"
-              variant="contained"
-              color="primary"
-              style={{ margin: '10px' }}
-            >
-              Submit
-            </Button>
-          )}
-        </div>
-      </form>
-    </Paper>
+            )}
+          </div>
+        </form>
+      </Paper>
+    </Fade>
   );
 };
 
