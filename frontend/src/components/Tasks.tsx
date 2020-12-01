@@ -13,6 +13,9 @@ const useStyles = makeStyles((theme) => ({
   seeMore: {
     marginTop: theme.spacing(3),
   },
+  link: {
+    cursor: 'pointer',
+  },
 }));
 
 const TasksComponent: React.FC<{
@@ -51,8 +54,8 @@ const TasksComponent: React.FC<{
           />
           <div className={classes.seeMore}>
             <Link
+              className={classes.link}
               color="primary"
-              href="#tasks"
               onClick={() =>
                 dispatch({ type: Logs.setShowLog, payload: false })
               }

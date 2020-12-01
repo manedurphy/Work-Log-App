@@ -21,36 +21,32 @@ const CurrentTasks: React.FC<{
     tasks.length ? setShowTaskBody(true) : setShowTaskBody(false);
   }, [tasks]);
 
-  return (
+  return showTaskBody ? (
     <Table size="small">
-      {showTaskBody ? (
-        <>
-          <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell>Assigned On</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Project Number</TableCell>
-              <TableCell>Hours Permitted</TableCell>
-              <TableCell>Hours Worked</TableCell>
-              <TableCell>No. Reviews</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody className="action-cell">
-            {tasks.map((row) => (
-              <TaskRow
-                key={row.id}
-                row={row}
-                setLoading={props.setLoading}
-                setLoadingEditTask={props.setLoadingEditTask}
-              />
-            ))}
-          </TableBody>
-        </>
-      ) : (
-        <Box>No tasks to display</Box>
-      )}
+      <TableHead>
+        <TableRow>
+          <TableCell />
+          <TableCell>Assigned On</TableCell>
+          <TableCell>Name</TableCell>
+          <TableCell>Project Number</TableCell>
+          <TableCell>Hours Permitted</TableCell>
+          <TableCell>Hours Worked</TableCell>
+          <TableCell>No. Reviews</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody className="action-cell">
+        {tasks.map((row) => (
+          <TaskRow
+            key={row.id}
+            row={row}
+            setLoading={props.setLoading}
+            setLoadingEditTask={props.setLoadingEditTask}
+          />
+        ))}
+      </TableBody>
     </Table>
+  ) : (
+    <Box>No tasks to display</Box>
   );
 };
 
