@@ -111,7 +111,8 @@ export const getLog = async (logId: number) => {
 
   res.data.loggedAt = moment(res.data.loggedAt)
     .tz('America/Los_Angeles')
-    .format();
+    .format()
+    .slice(0, res.data.loggedAt.length - 8);
 
   return res.data;
 };

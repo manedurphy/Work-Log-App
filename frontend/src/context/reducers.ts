@@ -31,6 +31,8 @@ export const taskReducer = (
     case Tasks.setShowForm:
     case Tasks.removeForm:
       return { ...taskState, showForm: action.payload };
+    case Tasks.setEdit:
+      return { ...taskState, edit: action.payload };
     default:
       return taskState;
   }

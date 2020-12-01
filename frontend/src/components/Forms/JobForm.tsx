@@ -143,6 +143,7 @@ const JobForm: React.FC = () => {
               <IconButton
                 onClick={() => {
                   clearForm();
+                  dispatch({ type: Tasks.setEdit, payload: false });
                   dispatch({ type: Tasks.setShowForm, payload: false });
                 }}
               >

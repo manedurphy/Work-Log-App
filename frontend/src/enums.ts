@@ -4,6 +4,7 @@ export enum Tasks {
   setShowCompleted = 'SET_SHOW_COMPLETED',
   setShowForm = 'SET_SHOW_FORM',
   removeForm = 'REMOVE_FORM',
+  setEdit = 'SET_EDIT',
 }
 
 export enum Users {

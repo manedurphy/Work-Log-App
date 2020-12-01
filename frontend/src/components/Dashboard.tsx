@@ -301,7 +301,6 @@ const Dashboard: React.FC = (): JSX.Element => {
             ))}
           </Container>
         )}
-        <Copyright />
       </main>
     </div>
   );

@@ -47,7 +47,8 @@ export type TaskAction =
   | { type: Tasks.updateTask; payload: ITask }
   | { type: Tasks.setShowCompleted; payload: boolean }
   | { type: Tasks.setShowForm; payload: boolean }
-  | { type: Tasks.removeForm; payload: boolean };
+  | { type: Tasks.removeForm; payload: boolean }
+  | { type: Tasks.setEdit; payload: boolean };
 
 /**LOGS */
 export interface ILog {

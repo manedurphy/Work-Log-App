@@ -5,8 +5,6 @@ import React, {
   FormEvent,
   useEffect,
 } from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import CloseIcon from '@material-ui/icons/Close';
 import Title from '../Title';
 import { Alerts, Commands, Logs } from '../../enums';
@@ -15,7 +13,6 @@ import { deleteLog, getLogs, updateLog } from '../../global/functions/axios';
 import { ILogForm, MessageType } from '../../global/types/type';
 import {
   Paper,
-  FormHelperText,
   Grid,
   TextField,
   makeStyles,
@@ -24,6 +21,7 @@ import {
   Fade,
   Box,
 } from '@material-ui/core';
+import { getFormDate } from '../../global/functions/helpers';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -48,7 +46,7 @@ const LogForm: React.FC = () => {
     numberOfReviews: '',
     reviewHours: '',
     hoursRequiredByBim: '',
-    loggedAt: new Date(),
+    loggedAt: getFormDate(),
   });
 
   useEffect((): void => {
@@ -62,9 +60,9 @@ const LogForm: React.FC = () => {
         numberOfReviews: currentLog.numberOfReviews.toString(),
         reviewHours: currentLog.reviewHours.toString(),
         hoursRequiredByBim: currentLog.hoursRequiredByBim.toString(),
-        loggedAt: new Date(currentLog.loggedAt),
+        loggedAt: currentLog.loggedAt,
       });
-  }, [edit]);
+  }, [edit, currentLog]);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -234,16 +232,17 @@ const LogForm: React.FC = () => {
               />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <DatePicker
-                selected={formData.loggedAt}
+              <TextField
+                type="datetime-local"
+                value={formData.loggedAt}
+                label="Logged at"
+                InputLabelProps={{
+                  shrink: true,
+                }}
                 onChange={(date) =>
-                  setFormData({ ...formData, loggedAt: date })
+                  setFormData({ ...formData, loggedAt: date.target.value })
                 }
-                dateFormat="MM/dd/yyyy h:mm aa"
-                timeInputLabel="Time:"
-                showTimeInput
               />
-              <FormHelperText>Logged on</FormHelperText>
             </Grid>
           </Grid>
 
