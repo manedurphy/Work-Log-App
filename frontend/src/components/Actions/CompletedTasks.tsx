@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import DeleteModal from '../UI/DeleteModal';
 import { createStyles, IconButton, makeStyles, Theme } from '@material-ui/core';
 import { GlobalContext } from '../../context/GlobalState';
 import { getTasks, getLogs, deleteTask } from '../../global/functions/axios';
@@ -28,6 +29,9 @@ const CompletedTasks: React.FC<{
   const { state, dispatch } = useContext(GlobalContext);
   const { showLog } = state.log;
   const classes = useStyles();
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => setOpen(false);
 
   const handleAction: HandleActionType = async (e, projectNumber, command) => {
     e.preventDefault();
@@ -54,10 +58,7 @@ const CompletedTasks: React.FC<{
 
   return (
     <>
-      <IconButton
-        color="secondary"
-        onClick={(e) => handleAction(e, props.row.projectNumber, 'delete')}
-      >
+      <IconButton color="secondary" onClick={() => setOpen(true)}>
         <DeleteIcon />
       </IconButton>
       <IconButton
@@ -66,6 +67,12 @@ const CompletedTasks: React.FC<{
       >
         <LibraryBooks />
       </IconButton>
+      <DeleteModal
+        id={props.row.projectNumber}
+        open={open}
+        handleClose={handleClose}
+        handleAction={handleAction}
+      />
     </>
   );
 };

@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
+import DeleteModal from '../UI/DeleteModal';
 import { IconButton } from '@material-ui/core';
 import { GlobalContext } from '../../context/GlobalState';
 import { deleteLog, getLog, getLogs } from '../../global/functions/axios';
@@ -16,6 +17,8 @@ const LogActions: React.FC<{
   setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
 }> = (props) => {
   const { dispatch } = useContext(GlobalContext);
+  const [open, setOpen] = useState(false);
+  const handleClose = () => setOpen(false);
 
   const handleAction: HandleLogActionType = async (e, logItemId, command) => {
     try {
@@ -46,12 +49,15 @@ const LogActions: React.FC<{
       >
         <EditIcon />
       </IconButton>
-      <IconButton
-        color="secondary"
-        onClick={(e) => handleAction(e, props.row.id, Commands.DELETE)}
-      >
+      <IconButton color="secondary" onClick={() => setOpen(true)}>
         <DeleteIcon />
       </IconButton>
+      <DeleteModal
+        id={props.row.id}
+        open={open}
+        handleClose={handleClose}
+        handleAction={handleAction}
+      />
     </>
   );
 };
