@@ -57,20 +57,19 @@ const JobForm: React.FC = () => {
   });
 
   useEffect((): void => {
-    edit &&
-      setFormData({
-        name: currentTask.name,
-        projectNumber: currentTask.projectNumber.toString(),
-        hoursAvailableToWork: currentTask.hoursAvailableToWork.toString(),
-        hoursWorked: currentTask.hoursWorked.toString(),
-        notes: currentTask.notes || '',
-        numberOfReviews: currentTask.numberOfReviews.toString(),
-        reviewHours: currentTask.reviewHours.toString(),
-        hoursRequiredByBim: currentTask.hoursRequiredByBim.toString(),
-        dateAssigned: new Date(currentTask.dateAssigned),
-        dueDate: new Date(currentTask.dueDate),
-      });
-  }, [edit]);
+    setFormData({
+      name: currentTask.name,
+      projectNumber: currentTask.projectNumber.toString(),
+      hoursAvailableToWork: currentTask.hoursAvailableToWork.toString(),
+      hoursWorked: currentTask.hoursWorked.toString(),
+      notes: currentTask.notes || '',
+      numberOfReviews: currentTask.numberOfReviews.toString(),
+      reviewHours: currentTask.reviewHours.toString(),
+      hoursRequiredByBim: currentTask.hoursRequiredByBim.toString(),
+      dateAssigned: new Date(currentTask.dateAssigned),
+      dueDate: new Date(currentTask.dueDate),
+    });
+  }, [edit, currentTask]);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -146,7 +145,7 @@ const JobForm: React.FC = () => {
             <Grid item xs={12} md={6}>
               <TextField
                 variant="outlined"
-                required
+                disabled
                 fullWidth
                 type="number"
                 id="projectNumber"

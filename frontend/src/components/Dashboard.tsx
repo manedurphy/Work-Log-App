@@ -289,7 +289,7 @@ const Dashboard: React.FC = (): JSX.Element => {
                 </Paper>
               </Grid>
             </Grid>
-            {showLog && state.log.edit && <LogForm />}
+            {showLog && <LogForm />}
             {!showLog && !showCompleted && <JobForm />}
             {state.alerts.map((alert, i) => (
               <SnackBarComponent

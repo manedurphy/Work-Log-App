@@ -2,6 +2,10 @@ import React, { ChangeEvent, useState, FormEvent, useContext } from 'react';
 import SnackBarComponent from '../SnackBar';
 import { Redirect } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { RegisterType } from '../../global/types/type';
+import { GlobalContext } from '../../context/GlobalState';
+import { Alerts } from '../../enums';
 import {
   Avatar,
   Button,
@@ -14,17 +18,13 @@ import {
   Typography,
   Container,
 } from '@material-ui/core';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { AlertType, RegisterType } from '../../global/types/type';
-import { GlobalContext } from '../../context/GlobalState';
-import { Alerts } from '../../enums';
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+        ACCO Work Log 2020
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -77,10 +77,6 @@ export default function SignUp() {
       );
       setSignUpSuccess(res.data.success);
     } catch (err) {
-      //   setAlert(err.response.data.message);
-      //   setTimeout(() => {
-      //     setAlert(null);
-      //   }, 3000);
       dispatch({ type: Alerts.setAlerts, payload: err.response.data });
     }
   };

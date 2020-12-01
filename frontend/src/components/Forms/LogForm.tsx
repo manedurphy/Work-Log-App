@@ -21,6 +21,7 @@ import {
   makeStyles,
   Button,
   IconButton,
+  Fade,
 } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -95,171 +96,177 @@ const LogForm: React.FC = () => {
   };
 
   return (
-    <Paper>
-      <form
-        className={classes.form}
-        onSubmit={
-          deleteMode
-            ? (e) => handleForm(e, Commands.DELETE)
-            : (e) => handleForm(e, Commands.UPDATE)
-        }
-      >
-        <div className="task-box-header close-btn">
-          <Title>Edit Log Item</Title>
-          <IconButton
-            onClick={() => dispatch({ type: Logs.setEditLog, payload: false })}
-          >
-            <CloseIcon />
-          </IconButton>
-        </div>
-
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              name="name"
-              variant="outlined"
-              required
-              fullWidth
-              id="name"
-              label="Task Name"
-              autoFocus
-              value={formData.name}
-              onChange={handleChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              type="number"
-              id="projectNumber"
-              label="Project Number"
-              name="projectNumber"
-              value={formData.projectNumber}
-              onChange={handleChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={4}>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              type="number"
-              id="hoursAvailableToWork"
-              label="Hours Available to Work"
-              name="hoursAvailableToWork"
-              autoComplete="lname"
-              value={formData.hoursAvailableToWork}
-              onChange={handleChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={4}>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              type="number"
-              id="hoursWorked"
-              label="Hours Worked"
-              name="hoursWorked"
-              value={formData.hoursWorked}
-              onChange={handleChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={4}>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              type="number"
-              id="reviewHours"
-              label="Hours Spent on Review"
-              name="reviewHours"
-              autoComplete="lname"
-              value={formData.reviewHours}
-              onChange={handleChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={4}>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              type="number"
-              id="hoursRequiredByBim"
-              label="Hours Required By BIM"
-              name="hoursRequiredByBim"
-              autoComplete="lname"
-              value={formData.hoursRequiredByBim}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              type="number"
-              id="numberOfReviews"
-              label="Number of Reviews"
-              name="numberOfReviews"
-              value={formData.numberOfReviews}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              variant="outlined"
-              fullWidth
-              id="notes"
-              label="Notes or Comments"
-              name="notes"
-              value={formData.notes}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <DatePicker
-              selected={formData.loggedAt}
-              onChange={(date) => setFormData({ ...formData, loggedAt: date })}
-              dateFormat="MM/dd/yyyy h:mm aa"
-              timeInputLabel="Time:"
-              showTimeInput
-            />
-            <FormHelperText>Logged on</FormHelperText>
-          </Grid>
-        </Grid>
-
-        <div className="submit">
-          <div>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              onClick={() => setDeleteMode(false)}
-              style={{ margin: '10px' }}
+    <Fade in={state.log.edit} timeout={500} enter exit>
+      <Paper>
+        <form
+          className={classes.form}
+          onSubmit={
+            deleteMode
+              ? (e) => handleForm(e, Commands.DELETE)
+              : (e) => handleForm(e, Commands.UPDATE)
+          }
+        >
+          <div className="task-box-header close-btn">
+            <Title>Edit Log Item</Title>
+            <IconButton
+              onClick={() =>
+                dispatch({ type: Logs.setEditLog, payload: false })
+              }
             >
-              Update
-            </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              color="secondary"
-              onClick={() => setDeleteMode(true)}
-              style={{ margin: '10px' }}
-            >
-              Delete
-            </Button>
+              <CloseIcon />
+            </IconButton>
           </div>
-        </div>
-      </form>
-    </Paper>
+
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                name="name"
+                variant="outlined"
+                required
+                fullWidth
+                id="name"
+                label="Task Name"
+                autoFocus
+                value={formData.name}
+                onChange={handleChange}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                type="number"
+                id="projectNumber"
+                label="Project Number"
+                name="projectNumber"
+                value={formData.projectNumber}
+                onChange={handleChange}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                type="number"
+                id="hoursAvailableToWork"
+                label="Hours Available to Work"
+                name="hoursAvailableToWork"
+                autoComplete="lname"
+                value={formData.hoursAvailableToWork}
+                onChange={handleChange}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                type="number"
+                id="hoursWorked"
+                label="Hours Worked"
+                name="hoursWorked"
+                value={formData.hoursWorked}
+                onChange={handleChange}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                type="number"
+                id="reviewHours"
+                label="Hours Spent on Review"
+                name="reviewHours"
+                autoComplete="lname"
+                value={formData.reviewHours}
+                onChange={handleChange}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                type="number"
+                id="hoursRequiredByBim"
+                label="Hours Required By BIM"
+                name="hoursRequiredByBim"
+                autoComplete="lname"
+                value={formData.hoursRequiredByBim}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                type="number"
+                id="numberOfReviews"
+                label="Number of Reviews"
+                name="numberOfReviews"
+                value={formData.numberOfReviews}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                variant="outlined"
+                fullWidth
+                id="notes"
+                label="Notes or Comments"
+                name="notes"
+                value={formData.notes}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <DatePicker
+                selected={formData.loggedAt}
+                onChange={(date) =>
+                  setFormData({ ...formData, loggedAt: date })
+                }
+                dateFormat="MM/dd/yyyy h:mm aa"
+                timeInputLabel="Time:"
+                showTimeInput
+              />
+              <FormHelperText>Logged on</FormHelperText>
+            </Grid>
+          </Grid>
+
+          <div className="submit">
+            <div>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                onClick={() => setDeleteMode(false)}
+                style={{ margin: '10px' }}
+              >
+                Update
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                color="secondary"
+                onClick={() => setDeleteMode(true)}
+                style={{ margin: '10px' }}
+              >
+                Delete
+              </Button>
+            </div>
+          </div>
+        </form>
+      </Paper>
+    </Fade>
   );
 };
 
