@@ -139,11 +139,11 @@ const Dashboard: React.FC = (): JSX.Element => {
   const [open, setOpen] = useState(true);
   const [loadingTasks, setLoadingTasks] = useState(true);
   const { state, dispatch } = useContext(GlobalContext);
-  const { showCompleted, showForm } = state.tasks;
+  const { showCompleted } = state.tasks;
   const { showLog } = state.log;
 
-  useEffect(() => {
-    (async () => {
+  useEffect((): void => {
+    (async (): Promise<void> => {
       try {
         const res: AxiosResponse<VerifyType> = await axios.get(
           '/api/auth/token',

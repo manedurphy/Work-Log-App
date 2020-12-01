@@ -12,8 +12,12 @@ export const hoursRemaining = (formData: ITaskForm): boolean => {
   );
 };
 
-export const getDate = () => moment().format('MMMM Do YYYY , h:mm:ss a');
+export const getDateAndTime = () => moment().format('MMMM Do YYYY , h:mm:ss a');
 export const getDispatchDate = () => moment().format().slice(0, 10);
+export const getFormDate = () =>
+  moment()
+    .format()
+    .slice(0, moment().format().length - 9);
 
 export const getFormattedDate = (
   command: string,

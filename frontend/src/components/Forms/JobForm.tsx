@@ -5,8 +5,6 @@ import React, {
   FormEvent,
   useEffect,
 } from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import Title from '../Title';
 import { Alerts, Commands, Tasks } from '../../enums';
 import { GlobalContext } from '../../context/GlobalState';
@@ -19,17 +17,18 @@ import {
 import { ITaskForm, MessageType } from '../../global/types/type';
 import {
   Paper,
-  FormHelperText,
   Grid,
   TextField,
   makeStyles,
   Button,
   IconButton,
   Fade,
+  Theme,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import { getFormDate } from '../../global/functions/helpers';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   form: {
     width: '97%',
     marginTop: theme.spacing(3),
@@ -52,23 +51,40 @@ const JobForm: React.FC = () => {
     numberOfReviews: '',
     reviewHours: '',
     hoursRequiredByBim: '',
-    dateAssigned: new Date(),
-    dueDate: new Date(),
+    dateAssigned: getFormDate(),
+    dueDate: getFormDate(),
   });
 
-  useEffect((): void => {
+  const clearForm = () => {
+    const formDate = getFormDate();
     setFormData({
-      name: currentTask.name,
-      projectNumber: currentTask.projectNumber.toString(),
-      hoursAvailableToWork: currentTask.hoursAvailableToWork.toString(),
-      hoursWorked: currentTask.hoursWorked.toString(),
-      notes: currentTask.notes || '',
-      numberOfReviews: currentTask.numberOfReviews.toString(),
-      reviewHours: currentTask.reviewHours.toString(),
-      hoursRequiredByBim: currentTask.hoursRequiredByBim.toString(),
-      dateAssigned: new Date(currentTask.dateAssigned),
-      dueDate: new Date(currentTask.dueDate),
+      name: '',
+      projectNumber: '',
+      hoursAvailableToWork: '',
+      hoursWorked: '',
+      notes: '',
+      numberOfReviews: '',
+      reviewHours: '',
+      hoursRequiredByBim: '',
+      dateAssigned: formDate,
+      dueDate: formDate,
     });
+  };
+
+  useEffect((): void => {
+    edit &&
+      setFormData({
+        name: currentTask.name,
+        projectNumber: currentTask.projectNumber.toString(),
+        hoursAvailableToWork: currentTask.hoursAvailableToWork.toString(),
+        hoursWorked: currentTask.hoursWorked.toString(),
+        notes: currentTask.notes || '',
+        numberOfReviews: currentTask.numberOfReviews.toString(),
+        reviewHours: currentTask.reviewHours.toString(),
+        hoursRequiredByBim: currentTask.hoursRequiredByBim.toString(),
+        dateAssigned: currentTask.dateAssigned,
+        dueDate: currentTask.dueDate,
+      });
   }, [edit, currentTask]);
 
   const handleChange = (
@@ -84,8 +100,10 @@ const JobForm: React.FC = () => {
     try {
       if (command === Commands.SUCCESS) {
         responseData = await createNewTask(formData);
+        clearForm();
       } else if (command === Commands.UPDATE) {
         responseData = await updateTask(formData);
+        clearForm();
       } else {
         responseData = await deleteTask(+formData.projectNumber);
       }
@@ -143,17 +161,31 @@ const JobForm: React.FC = () => {
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <TextField
-                variant="outlined"
-                disabled
-                fullWidth
-                type="number"
-                id="projectNumber"
-                label="Project Number"
-                name="projectNumber"
-                value={formData.projectNumber}
-                onChange={handleChange}
-              />
+              {edit ? (
+                <TextField
+                  variant="outlined"
+                  disabled
+                  fullWidth
+                  type="number"
+                  id="projectNumber"
+                  label="Project Number"
+                  name="projectNumber"
+                  value={formData.projectNumber}
+                  onChange={handleChange}
+                />
+              ) : (
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  type="number"
+                  id="projectNumber"
+                  label="Project Number"
+                  name="projectNumber"
+                  value={formData.projectNumber}
+                  onChange={handleChange}
+                />
+              )}
             </Grid>
 
             <Grid item xs={12} md={4}>
@@ -239,24 +271,29 @@ const JobForm: React.FC = () => {
               />
             </Grid>
             <Grid item xs={12} md={4}>
-              <DatePicker
-                selected={formData.dateAssigned}
+              <TextField
+                type="datetime-local"
+                value={formData.dateAssigned}
+                label="Date assgined"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                onChange={(date) => {
+                  console.log(date.target.value);
+                  setFormData({ ...formData, dateAssigned: date.target.value });
+                }}
+              />
+              <TextField
+                type="datetime-local"
+                value={formData.dueDate}
+                label="Due date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
                 onChange={(date) =>
-                  setFormData({ ...formData, dateAssigned: date })
+                  setFormData({ ...formData, dueDate: date.target.value })
                 }
-                dateFormat="MM/dd/yyyy h:mm aa"
-                timeInputLabel="Time:"
-                showTimeInput
               />
-              <FormHelperText>Date assigned</FormHelperText>
-              <DatePicker
-                selected={formData.dueDate}
-                onChange={(date) => setFormData({ ...formData, dueDate: date })}
-                dateFormat="MM/dd/yyyy h:mm aa"
-                timeInputLabel="Time:"
-                showTimeInput
-              />
-              <FormHelperText>Due date</FormHelperText>
             </Grid>
           </Grid>
 

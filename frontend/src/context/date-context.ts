@@ -1,6 +1,6 @@
 import React from 'react';
 import { DateAction, DateStateType } from '../global/types/type';
-import { getDate, getDispatchDate } from '../global/functions/helpers';
+import { getDispatchDate } from '../global/functions/helpers';
 
 export const initialDateState: DateStateType = {
   dueDate: getDispatchDate(),
