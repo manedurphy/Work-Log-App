@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
-import { Snackbar } from '@material-ui/core';
+import { Snackbar, SnackbarOrigin } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
 function Alert(props: AlertProps) {
@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SnackBar: React.FC<{
   message: string;
   type: 'error' | 'success' | 'info' | 'warning' | undefined;
+  anchor: SnackbarOrigin;
 }> = (props) => {
   const classes = useStyles();
   const [open, setOpen] = useState(true);
@@ -30,7 +31,12 @@ const SnackBar: React.FC<{
 
   return (
     <div className={classes.root}>
-      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+      <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        onClose={handleClose}
+        anchorOrigin={props.anchor}
+      >
         <Alert onClose={handleClose} severity={props.type}>
           {props.message}
         </Alert>

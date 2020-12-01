@@ -296,6 +296,7 @@ const Dashboard: React.FC = (): JSX.Element => {
                 key={i}
                 message={alert.message}
                 type={alert.type}
+                anchor={{ vertical: 'bottom', horizontal: 'center' }}
               />
             ))}
           </Container>

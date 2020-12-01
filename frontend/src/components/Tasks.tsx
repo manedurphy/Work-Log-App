@@ -74,12 +74,14 @@ const TasksComponent: React.FC<{
               className={classes.seeMore}
             >
               <Fade in={!showForm} timeout={500} enter>
-                <Fab color="primary" size="small">
-                  <AddIcon
-                    onClick={() =>
-                      dispatch({ type: Tasks.setShowForm, payload: true })
-                    }
-                  />
+                <Fab
+                  color="primary"
+                  size="small"
+                  onClick={() =>
+                    dispatch({ type: Tasks.setShowForm, payload: true })
+                  }
+                >
+                  <AddIcon />
                 </Fab>
               </Fade>
             </Box>

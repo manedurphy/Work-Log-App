@@ -1,4 +1,5 @@
 import React, { ChangeEvent, FormEvent, useState, useContext } from 'react';
+import SnackBarComponent from '../SnackBar';
 import axios, { AxiosResponse } from 'axios';
 import {
   Avatar,
@@ -16,7 +17,7 @@ import {
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { Redirect } from 'react-router-dom';
-import { Tasks, Users } from '../../enums';
+import { Alerts, Tasks, Users } from '../../enums';
 import { GlobalContext } from '../../context/GlobalState';
 import { getToken } from '../../global/functions/helpers';
 import { LoginType, ITask } from '../../global/types/type';
@@ -56,9 +57,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles();
-  const { dispatch } = useContext(GlobalContext);
+  const { state, dispatch } = useContext(GlobalContext);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [alert, setAlert] = useState(null);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -86,10 +86,7 @@ export default function SignIn() {
 
       setIsLoggedIn(true);
     } catch (err) {
-      setAlert(err.response.data.message);
-      setTimeout(() => {
-        setAlert(null);
-      }, 3000);
+      dispatch({ type: Alerts.setAlerts, payload: err.response.data });
     }
   };
 
@@ -166,6 +163,14 @@ export default function SignIn() {
         <Copyright />
       </Box>
       {isLoggedIn && <Redirect to="/" />}
+      {state.alerts.map((alert, i) => (
+        <SnackBarComponent
+          key={i}
+          message={alert.message}
+          type={alert.type}
+          anchor={{ vertical: 'top', horizontal: 'center' }}
+        />
+      ))}
     </Container>
   );
 }

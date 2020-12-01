@@ -1,4 +1,5 @@
-import React, { ChangeEvent, useState, FormEvent } from 'react';
+import React, { ChangeEvent, useState, FormEvent, useContext } from 'react';
+import SnackBarComponent from '../SnackBar';
 import { Redirect } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
 import {
@@ -15,6 +16,8 @@ import {
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { AlertType, RegisterType } from '../../global/types/type';
+import { GlobalContext } from '../../context/GlobalState';
+import { Alerts } from '../../enums';
 
 function Copyright() {
   return (
@@ -52,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SignUp() {
   const classes = useStyles();
   const [signUpSuccess, setSignUpSuccess] = useState(false);
-  const [alert, setAlert] = useState<AlertType>(null);
+  const { state, dispatch } = useContext(GlobalContext);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -74,10 +77,11 @@ export default function SignUp() {
       );
       setSignUpSuccess(res.data.success);
     } catch (err) {
-      setAlert(err.response.data.message);
-      setTimeout(() => {
-        setAlert(null);
-      }, 3000);
+      //   setAlert(err.response.data.message);
+      //   setTimeout(() => {
+      //     setAlert(null);
+      //   }, 3000);
+      dispatch({ type: Alerts.setAlerts, payload: err.response.data });
     }
   };
 
@@ -189,6 +193,14 @@ export default function SignUp() {
         <Copyright />
       </Box>
       {signUpSuccess && <Redirect to="/login" />}
+      {state.alerts.map((alert, i) => (
+        <SnackBarComponent
+          key={i}
+          message={alert.message}
+          type={alert.type}
+          anchor={{ vertical: 'top', horizontal: 'center' }}
+        />
+      ))}
     </Container>
   );
 }
