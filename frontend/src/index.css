@@ -52,11 +52,6 @@ code {
   overflow: hidden;
 }
 
-.task-box-header {
-  display: flex;
-  justify-content: space-between;
-}
-
 /* LOADER */
 .loader {
   font-size: 10px;

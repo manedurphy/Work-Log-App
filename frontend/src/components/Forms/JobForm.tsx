@@ -24,6 +24,7 @@ import {
   IconButton,
   Fade,
   Theme,
+  Box,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { getFormDate } from '../../global/functions/helpers';
@@ -134,17 +135,21 @@ const JobForm: React.FC = () => {
               : (e) => handleForm(e, Commands.SUCCESS)
           }
         >
-          <div className="task-box-header">
-            <Title>{!edit ? 'Create a New Task' : 'Edit Task'}</Title>
-            <IconButton
-              onClick={() => {
-                clearForm();
-                dispatch({ type: Tasks.setShowForm, payload: false });
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
-          </div>
+          <Box display="flex">
+            <Box flexGrow={1}>
+              <Title>{!edit ? 'Create a New Task' : 'Edit Task'}</Title>
+            </Box>
+            <Box>
+              <IconButton
+                onClick={() => {
+                  clearForm();
+                  dispatch({ type: Tasks.setShowForm, payload: false });
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </Box>
+          </Box>
 
           <Grid container spacing={2}>
             <Grid item xs={12} md={6}>

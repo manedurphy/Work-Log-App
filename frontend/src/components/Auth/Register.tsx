@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState, FormEvent, useContext } from 'react';
-import SnackBarComponent from '../SnackBar';
+import SnackBarComponent from '../UI/SnackBar';
 import { Redirect } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import clsx from 'clsx';
 import MenuIcon from '@material-ui/icons/Menu';
-import SnackBarComponent from './SnackBar';
+import SnackBarComponent from './UI/SnackBar';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';

@@ -22,6 +22,7 @@ import {
   Button,
   IconButton,
   Fade,
+  Box,
 } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -106,16 +107,20 @@ const LogForm: React.FC = () => {
               : (e) => handleForm(e, Commands.UPDATE)
           }
         >
-          <div className="task-box-header close-btn">
-            <Title>Edit Log Item</Title>
-            <IconButton
-              onClick={() =>
-                dispatch({ type: Logs.setEditLog, payload: false })
-              }
-            >
-              <CloseIcon />
-            </IconButton>
-          </div>
+          <Box display="flex">
+            <Box flexGrow={1}>
+              <Title>Edit Log Item</Title>
+            </Box>
+            <Box>
+              <IconButton
+                onClick={() =>
+                  dispatch({ type: Logs.setEditLog, payload: false })
+                }
+              >
+                <CloseIcon />
+              </IconButton>
+            </Box>
+          </Box>
 
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>

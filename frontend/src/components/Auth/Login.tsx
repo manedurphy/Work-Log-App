@@ -1,6 +1,12 @@
 import React, { ChangeEvent, FormEvent, useState, useContext } from 'react';
-import SnackBarComponent from '../SnackBar';
+import SnackBarComponent from '../UI/SnackBar';
 import axios, { AxiosResponse } from 'axios';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { Redirect } from 'react-router-dom';
+import { Alerts, Tasks, Users } from '../../enums';
+import { GlobalContext } from '../../context/GlobalState';
+import { getToken } from '../../global/functions/helpers';
+import { LoginType, ITask } from '../../global/types/type';
 import {
   Avatar,
   Button,
@@ -15,12 +21,6 @@ import {
   Container,
   makeStyles,
 } from '@material-ui/core';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { Redirect } from 'react-router-dom';
-import { Alerts, Tasks, Users } from '../../enums';
-import { GlobalContext } from '../../context/GlobalState';
-import { getToken } from '../../global/functions/helpers';
-import { LoginType, ITask } from '../../global/types/type';
 
 function Copyright() {
   return (
