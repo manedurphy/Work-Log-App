@@ -83,8 +83,8 @@ const JobForm: React.FC = (): JSX.Element => {
         numberOfReviews: currentTask.numberOfReviews.toString(),
         reviewHours: currentTask.reviewHours.toString(),
         hoursRequiredByBim: currentTask.hoursRequiredByBim.toString(),
-        dateAssigned: currentTask.dateAssigned,
-        dueDate: currentTask.dueDate,
+        dateAssigned: currentTask.dateAssigned.toString(),
+        dueDate: currentTask.dueDate.toString(),
       });
   }, [edit, currentTask]);
 

@@ -33,12 +33,12 @@ export const getTask = async (projectNumber: number) => {
   res.data.dateAssigned = moment(res.data.dateAssigned)
     .tz('America/Los_Angeles')
     .format()
-    .slice(0, res.data.dateAssigned.length - 8);
+    .slice(0, res.data.dateAssigned.toString().length - 8);
 
   res.data.dueDate = moment(res.data.dueDate)
     .tz('America/Los_Angeles')
     .format()
-    .slice(0, res.data.dueDate.length - 8);
+    .slice(0, res.data.dueDate.toString().length - 8);
 
   return res.data;
 };

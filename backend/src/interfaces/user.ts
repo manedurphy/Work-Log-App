@@ -7,9 +7,6 @@ export interface UserAttributes {
   email: string;
   active: boolean;
   password: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-  deletedAt?: Date | null;
 }
 
 export interface UserCreationAttributes

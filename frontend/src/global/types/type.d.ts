@@ -14,11 +14,11 @@ export interface ITask {
   reviewHours: number;
   hoursRequiredByBim: number;
   complete: boolean;
-  dateAssigned: any;
-  dueDate: any;
-  UserId?: number;
-  createdAt?: string;
-  updatedAt?: string;
+  dateAssigned: Date | string;
+  dueDate: Date | string;
+  UserId: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ITaskForm {
@@ -30,8 +30,8 @@ export interface ITaskForm {
   numberOfReviews: string;
   reviewHours: string;
   hoursRequiredByBim: string;
-  dateAssigned: any;
-  dueDate: any;
+  dateAssigned: string;
+  dueDate: string;
 }
 
 export type TaskStateType = {
@@ -64,8 +64,7 @@ export interface ILog {
   hoursRequiredByBim: number;
   complete: boolean;
   loggedAt: any;
-  TaskId?: number;
-  createdAt?: string;
+  TaskId: number;
 }
 
 export interface ILogForm {

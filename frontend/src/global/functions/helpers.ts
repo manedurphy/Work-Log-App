@@ -36,4 +36,4 @@ export const getToken = (): string | null => {
 };
 
 export const getFilterTasksDue = (tasks: ITask[], date: string) =>
-  tasks.filter((task) => task.dueDate.slice(0, 10) === date && task);
+  tasks.filter((task) => task.dueDate.toString().slice(0, 10) === date && task);

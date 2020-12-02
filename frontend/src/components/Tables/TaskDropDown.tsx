@@ -40,7 +40,9 @@ const TaskDropDown: React.FC<{
                   <TableCell>{props.row.hoursRequiredByBim}</TableCell>
                   <TableCell>{props.row.reviewHours}</TableCell>
                   <TableCell>{props.row.hoursRemaining}</TableCell>
-                  <TableCell>{props.row.dueDate.slice(0, 10)}</TableCell>
+                  <TableCell>
+                    {props.row.dueDate.toString().slice(0, 10)}
+                  </TableCell>
                   <TableCell>{props.row.notes}</TableCell>
                 </TableRow>
               </TableBody>

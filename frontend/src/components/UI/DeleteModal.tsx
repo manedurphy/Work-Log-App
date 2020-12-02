@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 import { Commands } from '../../enums';
+import { HandleActionType } from '../../global/types/type';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,7 +26,12 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-const DeleteModal = (props: any) => {
+const DeleteModal: React.FC<{
+  id: number;
+  open: boolean;
+  handleClose: () => void;
+  handleAction: HandleActionType;
+}> = (props) => {
   const classes = useStyles();
 
   return (

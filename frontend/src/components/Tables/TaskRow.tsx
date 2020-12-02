@@ -36,7 +36,7 @@ const TaskRow: React.FC<{
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell>{props.row.dateAssigned.slice(0, 10)}</TableCell>
+        <TableCell>{props.row.dateAssigned.toString().slice(0, 10)}</TableCell>
         <TableCell>{props.row.name}</TableCell>
         <TableCell>{props.row.projectNumber}</TableCell>
         <TableCell>{props.row.hoursAvailableToWork}</TableCell>
