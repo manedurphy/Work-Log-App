@@ -38,7 +38,7 @@ const IncompleteTasks: React.FC<{
   row: ITask | ILog;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
-}> = (props) => {
+}> = (props): JSX.Element => {
   const { state, dispatch } = useContext(GlobalContext);
   const { showLog } = state.log;
   const classes = useStyles();

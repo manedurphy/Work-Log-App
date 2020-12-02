@@ -5,13 +5,13 @@ import { GlobalContext } from '../../context/GlobalState';
 import { getTasks, getLogs, deleteTask } from '../../global/functions/axios';
 import { useContext } from 'react';
 import { Alerts, Commands, Logs, Tasks } from '../../enums';
+import { Delete as DeleteIcon, LibraryBooks } from '@material-ui/icons';
 import {
   HandleActionType,
   ILog,
   ITask,
   MessageType,
 } from '../../global/types/type';
-import { Delete as DeleteIcon, LibraryBooks } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,7 +25,7 @@ const CompletedTasks: React.FC<{
   row: ITask | ILog;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
-}> = (props) => {
+}> = (props): JSX.Element => {
   const { state, dispatch } = useContext(GlobalContext);
   const { showLog } = state.log;
   const classes = useStyles();

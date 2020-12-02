@@ -1,5 +1,6 @@
 import React, { ChangeEvent, FormEvent, useState, useContext } from 'react';
 import SnackBarComponent from '../UI/SnackBar';
+import Copyright from './Copyright';
 import axios, { AxiosResponse } from 'axios';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { Redirect } from 'react-router-dom';
@@ -22,19 +23,6 @@ import {
   makeStyles,
 } from '@material-ui/core';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        ACCO Work Log
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -55,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+const Login = (): JSX.Element => {
   const classes = useStyles();
   const { state, dispatch } = useContext(GlobalContext);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -173,4 +161,6 @@ export default function SignIn() {
       ))}
     </Container>
   );
-}
+};
+
+export default Login;

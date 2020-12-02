@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { getDateAndTime } from '../global/functions/helpers';
 
-const Date = () => {
+const Date = (): JSX.Element => {
   const [date, setDate] = useState(getDateAndTime());
   useEffect(() => {
     const interval = setInterval(() => setDate(getDateAndTime()), 1000);

@@ -12,7 +12,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-const Chart = () => {
+const Chart = (): JSX.Element => {
   const tasks = useContext(GlobalContext).state.tasks.currentTasks;
   const data: { name: string; completion: number }[] = [];
 

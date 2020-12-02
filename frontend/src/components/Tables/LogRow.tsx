@@ -21,7 +21,7 @@ const Row: React.FC<{
   row: ILog;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
-}> = (props) => {
+}> = (props): JSX.Element => {
   const [open, setOpen] = useState(false);
   const classes = useRowStyles();
 

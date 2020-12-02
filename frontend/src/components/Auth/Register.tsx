@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useState, FormEvent, useContext } from 'react';
 import SnackBarComponent from '../UI/SnackBar';
+import Copyright from './Copyright';
 import { Redirect } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -18,19 +19,6 @@ import {
   Typography,
   Container,
 } from '@material-ui/core';
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        ACCO Work Log
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -52,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+const SignUp = (): JSX.Element => {
   const classes = useStyles();
   const [signUpSuccess, setSignUpSuccess] = useState(false);
   const { state, dispatch } = useContext(GlobalContext);
@@ -199,4 +187,6 @@ export default function SignUp() {
       ))}
     </Container>
   );
-}
+};
+
+export default SignUp;

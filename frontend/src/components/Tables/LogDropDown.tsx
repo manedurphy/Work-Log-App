@@ -16,7 +16,7 @@ const TaskDropDown: React.FC<{
   open: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
-}> = (props) => {
+}> = (props): JSX.Element => {
   return (
     <TableRow>
       <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>

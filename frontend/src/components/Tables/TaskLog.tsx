@@ -13,7 +13,7 @@ import {
 const TaskLog: React.FC<{
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
-}> = (props) => {
+}> = (props): JSX.Element => {
   const [showLogBody, setShowLogBody] = useState(true);
   const currentLogs = useContext(GlobalContext).state.log.currentLogs;
 

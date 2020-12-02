@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-const Deposits = () => {
+const Deposits = (): JSX.Element => {
   const classes = useStyles();
   const { dispatch } = useContext(GlobalContext);
   const { user, tasks, date } = useContext(GlobalContext).state;

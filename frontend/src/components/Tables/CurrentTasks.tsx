@@ -13,7 +13,7 @@ import {
 const CurrentTasks: React.FC<{
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
-}> = (props) => {
+}> = (props): JSX.Element => {
   const [showTaskBody, setShowTaskBody] = useState(false);
   const tasks = useContext(GlobalContext).state.tasks.currentTasks;
 

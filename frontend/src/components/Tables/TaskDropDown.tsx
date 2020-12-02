@@ -18,7 +18,7 @@ const TaskDropDown: React.FC<{
   open: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
-}> = (props) => {
+}> = (props): JSX.Element => {
   const { showCompleted } = useContext(GlobalContext).state.tasks;
   return (
     <TableRow>

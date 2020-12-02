@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { VerifyProps } from '../../global/types/type';
 
-const Verify: React.FC<VerifyProps> = ({ match: { params } }) => {
+const Verify: React.FC<VerifyProps> = ({ match: { params } }): JSX.Element => {
   const [isVerified, setIsVerified] = useState(false);
 
   useEffect(() => {

@@ -108,7 +108,7 @@ export class Task
   public hoursRequiredByBim!: number;
   public complete!: boolean;
   public UserId!: number;
-  public dateAssigned!: string;
+  public dateAssigned!: Date;
   public dueDate!: Date;
 
   public readonly createdAt!: Date;

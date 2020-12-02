@@ -3,19 +3,19 @@ import DeleteModal from '../UI/DeleteModal';
 import { IconButton } from '@material-ui/core';
 import { GlobalContext } from '../../context/GlobalState';
 import { deleteLog, getLog, getLogs } from '../../global/functions/axios';
+import { Alerts, Commands, Logs } from '../../enums';
+import { Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons';
 import {
   HandleLogActionType,
   ILog,
   MessageType,
 } from '../../global/types/type';
-import { Alerts, Commands, Logs } from '../../enums';
-import { Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons';
 
 const LogActions: React.FC<{
   row: ILog;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
-}> = (props) => {
+}> = (props): JSX.Element => {
   const { dispatch } = useContext(GlobalContext);
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);

@@ -7,6 +7,8 @@ import React, {
 } from 'react';
 import Title from '../Title';
 import { Alerts, Commands, Tasks } from '../../enums';
+import CloseIcon from '@material-ui/icons/Close';
+import { getFormDate } from '../../global/functions/helpers';
 import { GlobalContext } from '../../context/GlobalState';
 import {
   createNewTask,
@@ -26,8 +28,6 @@ import {
   Theme,
   Box,
 } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import { getFormDate } from '../../global/functions/helpers';
 
 const useStyles = makeStyles((theme: Theme) => ({
   form: {
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const JobForm: React.FC = () => {
+const JobForm: React.FC = (): JSX.Element => {
   const classes = useStyles();
   const { state, dispatch } = useContext(GlobalContext);
   const { edit, currentTask } = state.tasks;

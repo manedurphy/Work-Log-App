@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Verified = () => {
+const Verified = (): JSX.Element => {
   return (
     <div>
       Your account has been verified! Click{' '}

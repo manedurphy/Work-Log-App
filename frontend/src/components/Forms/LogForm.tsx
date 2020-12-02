@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LogForm: React.FC = () => {
+const LogForm: React.FC = (): JSX.Element => {
   const classes = useStyles();
   const { state, dispatch } = useContext(GlobalContext);
   const { edit, currentLog } = state.log;
