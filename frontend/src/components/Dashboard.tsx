@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
+import AppBarComponent from './AppBar';
 import SearchBar from './SearchBar';
 import DrawerComponent from './Drawer';
 import clsx from 'clsx';
@@ -153,113 +154,18 @@ const Dashboard: React.FC = (): JSX.Element => {
     })();
   }, [showCompleted]);
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-
-  const handleLogOut = () => {
-    localStorage.removeItem('token');
-    window.location.reload();
-  };
-
   return !isLoggedIn ? (
     <Redirect to="/login" />
   ) : (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar
-        position="absolute"
-        className={clsx(classes.appBar, open && classes.appBarShift)}
-      >
-        <Toolbar className={classes.toolbar}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            className={clsx(
-              classes.menuButton,
-              open && classes.menuButtonHidden
-            )}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            component="h1"
-            variant="h6"
-            color="inherit"
-            noWrap
-            className={classes.title}
-          >
-            Dashboard
-          </Typography>
-          <SearchBar />
-          <IconButton color="inherit">
-            <Badge badgeContent={1} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <IconButton color="inherit" onClick={handleLogOut}>
-            <Badge color="secondary">
-              <ExitToAppIcon />
-            </Badge>
-          </IconButton>
-        </Toolbar>
-      </AppBar>
+      <AppBarComponent setOpen={setOpen} open={open} />
       <DrawerComponent
         setLoadingTasks={setLoadingTasks}
         showCompleted={showCompleted}
         open={open}
         setOpen={setOpen}
       />
-      {/* <Drawer
-        variant="permanent"
-        classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-        }}
-        open={open}
-      >
-        <div className={classes.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
-        <Divider />
-        <List>
-          <ListItem
-            button
-            onClick={() => {
-              if (showCompleted) {
-                setLoadingTasks(true);
-
-                dispatch({ type: Tasks.setShowCompleted, payload: false });
-              }
-            }}
-          >
-            <ListItemIcon>
-              <AssignmentIcon />
-            </ListItemIcon>
-            <ListItemText primary="Current Tasks" />
-          </ListItem>
-          <ListItem
-            button
-            onClick={() => {
-              if (!showCompleted) {
-                setLoadingTasks(true);
-                dispatch({ type: Tasks.setShowCompleted, payload: true });
-              }
-            }}
-          >
-            <ListItemIcon>
-              <DataUsageIcon />
-            </ListItemIcon>
-            <ListItemText primary="Archive" />
-          </ListItem>
-        </List>
-      </Drawer> */}
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         {loadingTasks ? (
