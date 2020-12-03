@@ -16,7 +16,7 @@ export class HTTPResponse {
     return res.status(200).json(data);
   };
 
-  public static OKWithMessage: ResponseWithMessagetype = (
+  public static okWithMessage: ResponseWithMessagetype = (
     res,
     message,
     type

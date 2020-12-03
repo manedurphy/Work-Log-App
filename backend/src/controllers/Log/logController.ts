@@ -68,7 +68,7 @@ export class LogController {
         );
 
       await LogServices.deleteTaskLogItem(taskLogItem);
-      HTTPResponse.OKWithMessage(
+      HTTPResponse.okWithMessage(
         res,
         LogHttpResponseMessage.LOG_DELETED,
         AlertResponse.WARNING
@@ -93,7 +93,7 @@ export class LogController {
 
       await LogServices.updateTaskLog(req, taskLogItem);
 
-      HTTPResponse.OKWithMessage(
+      HTTPResponse.okWithMessage(
         res,
         LogHttpResponseMessage.LOG_UPDATED,
         AlertResponse.UPDATE

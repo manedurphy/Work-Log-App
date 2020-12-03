@@ -200,7 +200,7 @@ export class TaskController {
       await TaskServices.completeTask(task);
       await LogServices.updateCompleteStatus(log[0]);
 
-      HTTPResponse.OKWithMessage(
+      HTTPResponse.okWithMessage(
         res,
         TaskHttpResponseMessages.TASK_COMPLETED,
         AlertResponse.SUCCESS

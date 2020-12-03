@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
+import SearchBar from './SearchBar';
+import DrawerComponent from './Drawer';
 import clsx from 'clsx';
 import MenuIcon from '@material-ui/icons/Menu';
 import SnackBarComponent from './UI/SnackBar';
@@ -20,7 +22,7 @@ import { getTasks } from '../global/functions/axios';
 import { getToken } from '../global/functions/helpers';
 import { Users, Tasks, Logs, Alerts } from '../enums';
 import { VerifyType } from '../global/types/type';
-import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { fade, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import {
   makeStyles,
   CssBaseline,
@@ -194,6 +196,7 @@ const Dashboard: React.FC = (): JSX.Element => {
           >
             Dashboard
           </Typography>
+          <SearchBar />
           <IconButton color="inherit">
             <Badge badgeContent={1} color="secondary">
               <NotificationsIcon />
@@ -206,7 +209,13 @@ const Dashboard: React.FC = (): JSX.Element => {
           </IconButton>
         </Toolbar>
       </AppBar>
-      <Drawer
+      <DrawerComponent
+        setLoadingTasks={setLoadingTasks}
+        showCompleted={showCompleted}
+        open={open}
+        setOpen={setOpen}
+      />
+      {/* <Drawer
         variant="permanent"
         classes={{
           paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
@@ -250,7 +259,7 @@ const Dashboard: React.FC = (): JSX.Element => {
             <ListItemText primary="Archive" />
           </ListItem>
         </List>
-      </Drawer>
+      </Drawer> */}
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         {loadingTasks ? (
