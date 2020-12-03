@@ -35,7 +35,7 @@ const Chart = (): JSX.Element => {
           <YAxis label={{ value: '%', position: 'insideLeft' }} />
           <Tooltip />
           <Legend />
-          <Bar dataKey="completion" fill="#8884d8" />
+          <Bar dataKey="completion" fill="purple" />
         </BarChart>
       </ResponsiveContainer>
     </React.Fragment>

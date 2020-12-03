@@ -22,6 +22,8 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
+    backgroundColor: 'black',
+    height: '250px',
   },
   appBarShift: {
     marginLeft: 240,
@@ -62,6 +64,7 @@ const AppBarComponent: React.FC<{
   return (
     <AppBar
       position="absolute"
+      elevation={0}
       className={clsx(classes.appBar, props.open && classes.appBarShift)}
     >
       <Toolbar className={classes.toolbar}>

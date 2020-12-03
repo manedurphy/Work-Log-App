@@ -7,7 +7,6 @@ import Spinner from './UI/Spinner';
 import { Redirect } from 'react-router-dom';
 import { GlobalContext } from '../context/GlobalState';
 import { getTasks, verifyUser } from '../global/functions/axios';
-import { getToken } from '../global/functions/helpers';
 import { Users, Tasks, Logs, Alerts } from '../enums';
 import { VerifyType } from '../global/types/type';
 import { makeStyles } from '@material-ui/core';
@@ -19,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
-    height: '100vh',
+    // height: '100vh',
     overflow: 'auto',
   },
 }));

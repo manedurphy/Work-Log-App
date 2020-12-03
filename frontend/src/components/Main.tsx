@@ -23,11 +23,19 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 240,
   },
+  overlap: {
+    zIndex: theme.zIndex.drawer + 1,
+    position: 'relative',
+  },
 }));
 
 const Main: React.FC = (): JSX.Element => {
   const classes = useStyles();
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const fixedHeightPaper = clsx(
+    classes.paper,
+    classes.fixedHeight,
+    classes.overlap
+  );
   const { state } = useContext(GlobalContext);
   return (
     <Container maxWidth="lg" className={classes.container}>
