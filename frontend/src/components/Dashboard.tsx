@@ -1,21 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import AppBarComponent from './AppBar';
-import SearchBar from './SearchBar';
+import MainComponent from './Main';
 import DrawerComponent from './Drawer';
-import clsx from 'clsx';
-import MenuIcon from '@material-ui/icons/Menu';
-import SnackBarComponent from './UI/SnackBar';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import AssignmentIcon from '@material-ui/icons/Assignment';
-import DataUsageIcon from '@material-ui/icons/DataUsage';
-import Chart from './Chart';
-import CurrentWeek from './CurrentWeek';
-import TasksComponent from './Tasks';
-import JobForm from './Forms/JobForm';
-import LogForm from './Forms/LogForm';
 import Spinner from './UI/Spinner';
 import { Redirect } from 'react-router-dom';
 import { GlobalContext } from '../context/GlobalState';
@@ -23,82 +10,11 @@ import { getTasks } from '../global/functions/axios';
 import { getToken } from '../global/functions/helpers';
 import { Users, Tasks, Logs, Alerts } from '../enums';
 import { VerifyType } from '../global/types/type';
-import { fade, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import {
-  makeStyles,
-  CssBaseline,
-  Drawer,
-  AppBar,
-  Toolbar,
-  List,
-  Typography,
-  Divider,
-  IconButton,
-  Badge,
-  Container,
-  Grid,
-  Paper,
-} from '@material-ui/core';
-
-const drawerWidth = 240;
+import { makeStyles, CssBaseline } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
-  },
-  toolbar: {
-    paddingRight: 24,
-  },
-  toolbarIcon: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: '0 8px',
-    ...theme.mixins.toolbar,
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  menuButton: {
-    marginRight: 36,
-  },
-  menuButtonHidden: {
-    display: 'none',
-  },
-  title: {
-    flexGrow: 1,
-  },
-  drawerPaper: {
-    position: 'relative',
-    whiteSpace: 'nowrap',
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerPaperClose: {
-    overflowX: 'hidden',
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    width: theme.spacing(7),
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9),
-    },
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
@@ -106,30 +22,15 @@ const useStyles = makeStyles((theme) => ({
     height: '100vh',
     overflow: 'auto',
   },
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
-  },
-  paper: {
-    padding: theme.spacing(2),
-    display: 'flex',
-    overflow: 'auto',
-    flexDirection: 'column',
-  },
-  fixedHeight: {
-    height: 240,
-  },
 }));
 
 const Dashboard: React.FC = (): JSX.Element => {
   const classes = useStyles();
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [open, setOpen] = useState(true);
   const [loadingTasks, setLoadingTasks] = useState(true);
   const { state, dispatch } = useContext(GlobalContext);
   const { showCompleted } = state.tasks;
-  const { showLog } = state.log;
 
   useEffect((): void => {
     (async (): Promise<void> => {
@@ -168,40 +69,7 @@ const Dashboard: React.FC = (): JSX.Element => {
       />
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        {loadingTasks ? (
-          <Spinner />
-        ) : (
-          <Container maxWidth="lg" className={classes.container}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={8} lg={7}>
-                <Paper className={fixedHeightPaper}>
-                  <Chart />
-                </Paper>
-              </Grid>
-
-              <Grid item xs={12} md={4} lg={5}>
-                <Paper className={fixedHeightPaper}>
-                  <CurrentWeek />
-                </Paper>
-              </Grid>
-              <Grid item xs={12}>
-                <Paper className={classes.paper}>
-                  <TasksComponent showCompleted={showCompleted} />
-                </Paper>
-              </Grid>
-            </Grid>
-            {showLog && <LogForm />}
-            {!showLog && !showCompleted && <JobForm />}
-            {state.alerts.map((alert, i) => (
-              <SnackBarComponent
-                key={i}
-                message={alert.message}
-                type={alert.type}
-                anchor={{ vertical: 'bottom', horizontal: 'center' }}
-              />
-            ))}
-          </Container>
-        )}
+        {loadingTasks ? <Spinner /> : <MainComponent />}
       </main>
     </div>
   );
