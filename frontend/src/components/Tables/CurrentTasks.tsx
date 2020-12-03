@@ -15,7 +15,7 @@ const CurrentTasks: React.FC<{
   setLoadingEditTask: React.Dispatch<React.SetStateAction<boolean>>;
 }> = (props): JSX.Element => {
   const [showTaskBody, setShowTaskBody] = useState(false);
-  const tasks = useContext(GlobalContext).state.tasks.currentTasks;
+  const tasks = useContext(GlobalContext).state.tasks.displayTasks;
 
   useEffect(() => {
     tasks.length ? setShowTaskBody(true) : setShowTaskBody(false);

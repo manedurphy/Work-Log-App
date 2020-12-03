@@ -5,6 +5,7 @@ export enum Tasks {
   setShowForm = 'SET_SHOW_FORM',
   removeForm = 'REMOVE_FORM',
   setEdit = 'SET_EDIT',
+  setDisplayTasks = 'SET_DISPLAY_TASKS',
 }
 
 export enum Users {

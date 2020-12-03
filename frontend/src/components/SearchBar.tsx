@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import { Search as SearchIcon } from '@material-ui/icons';
 import { fade, InputBase, makeStyles } from '@material-ui/core';
+import { GlobalContext } from '../context/GlobalState';
+import { Tasks } from '../enums';
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -43,6 +45,20 @@ const useStyles = makeStyles((theme) => ({
 
 const SearchBar = () => {
   const classes = useStyles();
+  const [search, setSearch] = useState('');
+  const { state, dispatch } = useContext(GlobalContext);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ): void => {
+    dispatch({
+      type: Tasks.setDisplayTasks,
+      payload: state.tasks.currentTasks.filter(
+        (task) => task.name.indexOf(e.target.value) !== -1
+      ),
+    });
+  };
+
   return (
     <div className={classes.search}>
       <div className={classes.searchIcon}>
@@ -51,6 +67,7 @@ const SearchBar = () => {
       <InputBase
         placeholder="Search..."
         classes={{ root: classes.inputRoot, input: classes.inputInput }}
+        onChange={handleChange}
       />
     </div>
   );

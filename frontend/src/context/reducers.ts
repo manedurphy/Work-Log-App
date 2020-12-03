@@ -13,6 +13,14 @@ export const taskReducer = (
         edit: false,
         showForm: false,
       };
+
+    case Tasks.setDisplayTasks:
+      return {
+        ...taskState,
+        displayTasks: action.payload,
+        edit: false,
+        showForm: false,
+      };
     case Tasks.updateTask:
       return {
         ...taskState,

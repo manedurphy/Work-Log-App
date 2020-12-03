@@ -35,6 +35,7 @@ const Dashboard: React.FC = (): JSX.Element => {
   useEffect((): void => {
     (async (): Promise<void> => {
       try {
+        const tasks = await getTasks(showCompleted);
         const res: AxiosResponse<VerifyType> = await axios.get(
           '/api/auth/token',
           {
@@ -46,7 +47,11 @@ const Dashboard: React.FC = (): JSX.Element => {
         dispatch({ type: Alerts.removeAlerts, payload: [] });
         dispatch({
           type: Tasks.updateTasks,
-          payload: await getTasks(showCompleted),
+          payload: tasks,
+        });
+        dispatch({
+          type: Tasks.setDisplayTasks,
+          payload: tasks,
         });
         setLoadingTasks(false);
       } catch (error) {

@@ -37,6 +37,7 @@ export interface ITaskForm {
 export type TaskStateType = {
   currentTask: ITask;
   currentTasks: ITask[];
+  displayTasks: ITask[];
   edit: boolean;
   showForm: boolean;
   showCompleted: boolean;
@@ -48,7 +49,8 @@ export type TaskAction =
   | { type: Tasks.setShowCompleted; payload: boolean }
   | { type: Tasks.setShowForm; payload: boolean }
   | { type: Tasks.removeForm; payload: boolean }
-  | { type: Tasks.setEdit; payload: boolean };
+  | { type: Tasks.setEdit; payload: boolean }
+  | { type: Tasks.setDisplayTasks; payload: ITask[] };
 
 /**LOGS */
 export interface ILog {
