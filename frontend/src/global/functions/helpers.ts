@@ -23,7 +23,7 @@ export const getFormattedDate = (
   command: string,
   value: number,
   date: string
-) => {
+): string => {
   if (command === Dates.ADD) {
     return moment(date).add(value, Dates.DAYS).format().slice(0, 10);
   }
@@ -35,5 +35,5 @@ export const getToken = (): string | null => {
   return localStorage.getItem('token');
 };
 
-export const getFilterTasksDue = (tasks: ITask[], date: string) =>
+export const getFilterTasksDue = (tasks: ITask[], date: string): ITask[] =>
   tasks.filter((task) => task.dueDate.toString().slice(0, 10) === date && task);

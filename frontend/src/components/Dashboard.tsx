@@ -6,11 +6,11 @@ import DrawerComponent from './Drawer';
 import Spinner from './UI/Spinner';
 import { Redirect } from 'react-router-dom';
 import { GlobalContext } from '../context/GlobalState';
-import { getTasks } from '../global/functions/axios';
+import { getTasks, verifyUser } from '../global/functions/axios';
 import { getToken } from '../global/functions/helpers';
 import { Users, Tasks, Logs, Alerts } from '../enums';
 import { VerifyType } from '../global/types/type';
-import { makeStyles, CssBaseline } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,23 +35,13 @@ const Dashboard: React.FC = (): JSX.Element => {
   useEffect((): void => {
     (async (): Promise<void> => {
       try {
-        const tasks = await getTasks(showCompleted);
-        const res: AxiosResponse<VerifyType> = await axios.get(
-          '/api/auth/token',
-          {
-            headers: { Authorization: `Bearer ${getToken()}` },
-          }
-        );
+        const res: AxiosResponse<VerifyType> = await verifyUser();
         dispatch({ type: Users.setUser, payload: res.data.user });
         dispatch({ type: Logs.setShowLog, payload: false });
         dispatch({ type: Alerts.removeAlerts, payload: [] });
         dispatch({
           type: Tasks.updateTasks,
-          payload: tasks,
-        });
-        dispatch({
-          type: Tasks.setDisplayTasks,
-          payload: tasks,
+          payload: await getTasks(showCompleted),
         });
         setLoadingTasks(false);
       } catch (error) {
@@ -64,7 +54,6 @@ const Dashboard: React.FC = (): JSX.Element => {
     <Redirect to="/login" />
   ) : (
     <div className={classes.root}>
-      <CssBaseline />
       <AppBarComponent setOpen={setOpen} open={open} />
       <DrawerComponent
         setLoadingTasks={setLoadingTasks}

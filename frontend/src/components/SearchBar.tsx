@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { Search as SearchIcon } from '@material-ui/icons';
 import { fade, InputBase, makeStyles } from '@material-ui/core';
 import { GlobalContext } from '../context/GlobalState';
@@ -43,9 +43,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SearchBar = () => {
+const SearchBar = (): JSX.Element => {
   const classes = useStyles();
-  const [search, setSearch] = useState('');
   const { state, dispatch } = useContext(GlobalContext);
 
   const handleChange = (

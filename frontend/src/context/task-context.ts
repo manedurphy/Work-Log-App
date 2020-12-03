@@ -1,5 +1,6 @@
 import React from 'react';
 import { TaskAction, TaskStateType } from '../global/types/type';
+import { getFormDate } from '../global/functions/helpers';
 
 export const initialTaskState: TaskStateType = {
   currentTask: {
@@ -14,8 +15,8 @@ export const initialTaskState: TaskStateType = {
     reviewHours: 0,
     hoursRequiredByBim: 0,
     complete: false,
-    dateAssigned: new Date(),
-    dueDate: new Date(),
+    dateAssigned: getFormDate(),
+    dueDate: getFormDate(),
     UserId: -1,
     createdAt: '',
     updatedAt: '',

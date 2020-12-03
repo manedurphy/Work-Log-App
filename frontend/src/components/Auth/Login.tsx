@@ -1,4 +1,10 @@
-import React, { ChangeEvent, FormEvent, useState, useContext } from 'react';
+import React, {
+  ChangeEvent,
+  FormEvent,
+  useState,
+  useContext,
+  useEffect,
+} from 'react';
 import SnackBarComponent from '../UI/SnackBar';
 import Copyright from './Copyright';
 import axios, { AxiosResponse } from 'axios';
@@ -7,7 +13,7 @@ import { Redirect } from 'react-router-dom';
 import { Alerts, Tasks, Users } from '../../enums';
 import { GlobalContext } from '../../context/GlobalState';
 import { getToken } from '../../global/functions/helpers';
-import { LoginType, ITask } from '../../global/types/type';
+import { LoginType, ITask, VerifyType } from '../../global/types/type';
 import {
   Avatar,
   Button,
@@ -22,6 +28,7 @@ import {
   Container,
   makeStyles,
 } from '@material-ui/core';
+import { verifyUser } from '../../global/functions/axios';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -50,6 +57,13 @@ const Login = (): JSX.Element => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
+  });
+
+  useEffect(() => {
+    (async () => {
+      const res: AxiosResponse<VerifyType> = await verifyUser();
+      if (res.data.user) setIsLoggedIn(true);
+    })();
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

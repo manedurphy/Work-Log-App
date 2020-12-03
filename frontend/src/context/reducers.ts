@@ -10,6 +10,7 @@ export const taskReducer = (
       return {
         ...taskState,
         currentTasks: action.payload,
+        displayTasks: action.payload,
         edit: false,
         showForm: false,
       };

@@ -1,3 +1,6 @@
+import React from 'react';
+import { Commands } from '../../enums';
+import { HandleActionType } from '../../global/types/type';
 import {
   Box,
   Button,
@@ -7,9 +10,6 @@ import {
   Modal,
   Theme,
 } from '@material-ui/core';
-import React from 'react';
-import { Commands } from '../../enums';
-import { HandleActionType } from '../../global/types/type';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

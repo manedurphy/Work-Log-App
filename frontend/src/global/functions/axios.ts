@@ -139,3 +139,9 @@ export const deleteLog = async (logId: number) => {
 
   return res.data;
 };
+
+export const verifyUser = () => {
+  return axios.get('/api/auth/token', {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+};
