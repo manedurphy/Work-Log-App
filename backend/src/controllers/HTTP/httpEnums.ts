@@ -1,5 +1,6 @@
 export enum TaskHttpResponseMessages {
   TASK_NOT_FOUND = 'Task could not be found',
+  TASK_BAD_REQUEST = 'Tasks cannot be retrieved at this time',
   TASK_EXISTS = 'Task with that project number already exists',
   TASK_CREATED = 'Task Created!',
   TASK_DELETED = 'Task Deleted!',

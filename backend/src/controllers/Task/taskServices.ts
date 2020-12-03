@@ -1,9 +1,8 @@
 import { Task } from '../../models/models';
 import { Record } from '../Record/record';
 import {
-  CompleteTaskType,
   CreateNewTaskType,
-  DeleteTaskType,
+  DeleteOrCompleteTaskType,
   GetTasksType,
   GetTaskType,
   SaveNewTaskType,
@@ -44,7 +43,7 @@ export class TaskServices {
     await task.update(updatedTask);
   };
 
-  public static completeTask: CompleteTaskType = async (task) => {
+  public static completeTask: DeleteOrCompleteTaskType = async (task) => {
     await task.update({ complete: true });
   };
 
@@ -57,7 +56,7 @@ export class TaskServices {
     });
   };
 
-  public static deleteTask: DeleteTaskType = async (task) => {
+  public static deleteTask: DeleteOrCompleteTaskType = async (task) => {
     await task.destroy();
   };
 }

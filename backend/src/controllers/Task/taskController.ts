@@ -29,6 +29,13 @@ export class TaskController {
     Logger.Info(req.body, true);
     try {
       const tasks = await TaskServices.getTasks(+req.payload.id, false);
+      if (!tasks)
+        return HTTPResponse.badRequest(
+          res,
+          TaskHttpResponseMessages.TASK_BAD_REQUEST,
+          AlertResponse.ERROR
+        );
+
       HTTPResponse.OK(res, tasks);
     } catch (error) {
       HTTPResponse.serverError(res);
