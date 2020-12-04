@@ -103,11 +103,6 @@ const Login = (): JSX.Element => {
           Sign in
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
-          {alert && (
-            <div className="alert alert-danger" role="alert">
-              {alert}
-            </div>
-          )}
           <TextField
             variant="outlined"
             margin="normal"

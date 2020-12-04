@@ -39,3 +39,7 @@ export enum Dates {
   ADD = 'add',
   SUBTRACT = 'subtract',
 }
+
+export enum Errors {
+  WEATHER = 'Data unavailable',
+}

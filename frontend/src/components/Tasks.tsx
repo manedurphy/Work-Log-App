@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme) => ({
   link: {
     cursor: 'pointer',
   },
+  spinner: {
+    background: '#ffffff',
+  },
 }));
 
 const TasksComponent: React.FC<{
@@ -47,7 +50,9 @@ const TasksComponent: React.FC<{
         <Box>{loadingEditTask && <SmallSpinner />}</Box>
       </Box>
       {loading && !loadingEditTask ? (
-        <Spinner />
+        <Box className={classes.spinner}>
+          <Spinner one={false} />
+        </Box>
       ) : showLog ? (
         <>
           <TaskLog

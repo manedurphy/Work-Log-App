@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import Title from './Title';
-import { Grid, makeStyles, Paper } from '@material-ui/core';
-import { getToken } from '../global/functions/helpers';
+import React, { useContext, useEffect, useState } from 'react';
+import { Box, Grid, makeStyles, Paper } from '@material-ui/core';
+import { FormatListBulleted as FormatListBulletedIcon } from '@material-ui/icons';
 import { WeatherDataType } from '../global/types/type';
 import { getWeatherData } from '../global/functions/axios';
+import { GlobalContext } from '../context/GlobalState';
+import { Errors } from '../enums';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -71,17 +71,13 @@ const initialWeatherData: WeatherDataType = {
 
 const Breadcrumbs = (): JSX.Element => {
   const classes = useStyles();
+  const { state } = useContext(GlobalContext);
   const [weather, setWeather] = useState<WeatherDataType>(initialWeatherData);
 
   useEffect(() => {
     (async () => {
-      try {
-        const weatherData = await getWeatherData();
-        setWeather(weatherData);
-      } catch (err) {
-        //NEED TO HANDLE THIS
-        throw err;
-      }
+      const weatherData = await getWeatherData();
+      setWeather(weatherData);
     })();
   }, []);
 
@@ -104,12 +100,21 @@ const Breadcrumbs = (): JSX.Element => {
                 />
               </React.Fragment>
             ) : (
-              <p>Data unavailable</p>
+              <p>{Errors.WEATHER}</p>
             )}
           </Paper>
         </Grid>
         <Grid item xs={6} md={3}>
-          <Paper className={classes.paper}>Here is a component</Paper>
+          <Paper className={classes.paper}>
+            <Box display="flex">
+              <Box flexGrow={1}>
+                <h4>You have {state.date.tasksDue.length} tasks due today</h4>
+              </Box>
+              <Box>
+                <FormatListBulletedIcon />
+              </Box>
+            </Box>
+          </Paper>
         </Grid>
         <Grid item xs={6} md={3}>
           <Paper className={classes.paper}>Here is a component</Paper>

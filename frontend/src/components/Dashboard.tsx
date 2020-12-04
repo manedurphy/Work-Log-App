@@ -22,6 +22,8 @@ const useStyles = makeStyles((theme) => ({
   },
   spinner: {
     marginTop: '200px',
+    position: 'relative',
+    zIndex: theme.zIndex.drawer + 5,
   },
   mainBackground: {
     backgroundColor: '#F7F5FA',
@@ -77,7 +79,7 @@ const Dashboard: React.FC = (): JSX.Element => {
           <div className={classes.appBarSpacer} />
           {loadingTasks ? (
             <Box className={classes.spinner}>
-              <Spinner />
+              <Spinner one={true} />
             </Box>
           ) : (
             <MainComponent />
