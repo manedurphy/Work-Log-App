@@ -1,6 +1,15 @@
 import React, { useContext } from 'react';
 import clsx from 'clsx';
+import logo from '../assets/acco.jpeg';
+import { GlobalContext } from '../context/GlobalState';
+import { Tasks } from '../enums';
 import {
+  ChevronLeft as ChevronLeftIcon,
+  Assignment as AssignmentIcon,
+  DataUsage as DataUsageIcon,
+} from '@material-ui/icons';
+import {
+  Box,
   Divider,
   Drawer,
   IconButton,
@@ -10,13 +19,6 @@ import {
   ListItemText,
   makeStyles,
 } from '@material-ui/core';
-import {
-  ChevronLeft as ChevronLeftIcon,
-  Assignment as AssignmentIcon,
-  DataUsage as DataUsageIcon,
-} from '@material-ui/icons';
-import { Tasks } from '../enums';
-import { GlobalContext } from '../context/GlobalState';
 
 const useStyles = makeStyles((theme) => ({
   drawerPaper: {
@@ -48,6 +50,9 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-end',
     padding: '0 8px',
     ...theme.mixins.toolbar,
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
   },
 }));
 
@@ -74,10 +79,22 @@ const DrawerComponent: React.FC<{
       }}
       open={props.open}
     >
-      <div className={classes.toolbarIcon}>
+      <Box className={classes.toolbarIcon}>
         <IconButton onClick={handleDrawerClose}>
           <ChevronLeftIcon />
         </IconButton>
+      </Box>
+      <div
+        className=""
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          margin: '20px 0',
+          fontFamily: 'Fjalla One, sans-serif',
+        }}
+      >
+        <img src={logo} style={{ width: '25px', height: '25px' }} />
+        <h2 style={{ marginLeft: '3px' }}>Work Logger</h2>
       </div>
       <Divider />
       <List>

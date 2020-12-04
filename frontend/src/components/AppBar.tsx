@@ -1,5 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
+import SearchBar from './SearchBar';
 import {
   AppBar,
   Badge,
@@ -13,7 +14,6 @@ import {
   Notifications as NotificationsIcon,
   ExitToApp as ExitToAppIcon,
 } from '@material-ui/icons';
-import SearchBar from './SearchBar';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {

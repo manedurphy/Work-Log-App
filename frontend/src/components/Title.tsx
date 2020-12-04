@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    // color: 'purple',
     fontFamily: 'Arial, Helvetica, sans-serif',
     fontWeight: 600,
     opacity: '0.85',
