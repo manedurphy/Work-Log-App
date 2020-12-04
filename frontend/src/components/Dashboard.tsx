@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
-import axios, { AxiosResponse } from 'axios';
 import AppBarComponent from './AppBar';
 import MainComponent from './Main';
 import DrawerComponent from './Drawer';
 import Spinner from './UI/Spinner';
+import { AxiosResponse } from 'axios';
 import { Redirect } from 'react-router-dom';
 import { GlobalContext } from '../context/GlobalState';
 import { getTasks, verifyUser } from '../global/functions/axios';
@@ -22,6 +22,15 @@ const useStyles = makeStyles((theme) => ({
   },
   spinner: {
     marginTop: '200px',
+  },
+  mainBackground: {
+    backgroundColor: '#F7F5FA',
+    height: '100%',
+    top: 250,
+    left: 240,
+    width: `calc(100% - ${240}px)`,
+    position: 'absolute',
+    zIndex: theme.zIndex.drawer + 1,
   },
 }));
 
@@ -54,25 +63,28 @@ const Dashboard: React.FC = (): JSX.Element => {
   return !isLoggedIn ? (
     <Redirect to="/login" />
   ) : (
-    <div className={classes.root}>
-      <AppBarComponent setOpen={setOpen} open={open} />
-      <DrawerComponent
-        setLoadingTasks={setLoadingTasks}
-        showCompleted={showCompleted}
-        open={open}
-        setOpen={setOpen}
-      />
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        {loadingTasks ? (
-          <Box className={classes.spinner}>
-            <Spinner />
-          </Box>
-        ) : (
-          <MainComponent />
-        )}
-      </main>
-    </div>
+    <React.Fragment>
+      <div className={classes.mainBackground}></div>
+      <div className={classes.root}>
+        <AppBarComponent setOpen={setOpen} open={open} />
+        <DrawerComponent
+          setLoadingTasks={setLoadingTasks}
+          showCompleted={showCompleted}
+          open={open}
+          setOpen={setOpen}
+        />
+        <main className={classes.content}>
+          <div className={classes.appBarSpacer} />
+          {loadingTasks ? (
+            <Box className={classes.spinner}>
+              <Spinner />
+            </Box>
+          ) : (
+            <MainComponent />
+          )}
+        </main>
+      </div>
+    </React.Fragment>
   );
 };
 

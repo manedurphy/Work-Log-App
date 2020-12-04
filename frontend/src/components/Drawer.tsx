@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     whiteSpace: 'nowrap',
     width: 240,
+    border: 'none',
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -71,6 +72,7 @@ const DrawerComponent: React.FC<{
   return (
     <Drawer
       variant="permanent"
+      elevation={5}
       classes={{
         paper: clsx(
           classes.drawerPaper,

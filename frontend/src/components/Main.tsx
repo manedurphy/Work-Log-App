@@ -19,12 +19,14 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     overflow: 'auto',
     flexDirection: 'column',
+    zIndex: theme.zIndex.drawer + 10,
+    position: 'relative',
   },
   fixedHeight: {
     height: 240,
   },
   overlap: {
-    zIndex: theme.zIndex.drawer + 1,
+    zIndex: theme.zIndex.drawer + 10,
     position: 'relative',
   },
 }));

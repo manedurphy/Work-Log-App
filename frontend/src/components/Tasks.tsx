@@ -29,21 +29,23 @@ const TasksComponent: React.FC<{
   const [loadingEditTask, setLoadingEditTask] = useState(false);
 
   return (
-    <>
-      <div className="task-box-header">
-        <Title>
-          {loading
-            ? 'Loading'
-            : props.showCompleted && !showLog
-            ? 'Archive'
-            : props.showCompleted && showLog
-            ? 'Completed Task Log'
-            : !props.showCompleted && showLog
-            ? 'Task Log'
-            : 'Current Tasks'}
-        </Title>
-        {loadingEditTask && <SmallSpinner />}
-      </div>
+    <React.Fragment>
+      <Box display="flex">
+        <Box flexGrow={1}>
+          <Title>
+            {loading
+              ? 'Loading'
+              : props.showCompleted && !showLog
+              ? 'Archive'
+              : props.showCompleted && showLog
+              ? 'Completed Task Log'
+              : !props.showCompleted && showLog
+              ? 'Task Log'
+              : 'Current Tasks'}
+          </Title>
+        </Box>
+        <Box>{loadingEditTask && <SmallSpinner />}</Box>
+      </Box>
       {loading && !loadingEditTask ? (
         <Spinner />
       ) : showLog ? (
@@ -91,7 +93,7 @@ const TasksComponent: React.FC<{
           )}
         </>
       )}
-    </>
+    </React.Fragment>
   );
 };
 

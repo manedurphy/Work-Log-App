@@ -35,6 +35,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(3),
     margin: 'auto',
   },
+  paper: {
+    position: 'relative',
+    zIndex: theme.zIndex.drawer + 5,
+  },
 }));
 
 const JobForm: React.FC = (): JSX.Element => {
@@ -124,7 +128,7 @@ const JobForm: React.FC = (): JSX.Element => {
 
   return (
     <Fade in={state.tasks.showForm} timeout={500} enter exit={false}>
-      <Paper>
+      <Paper className={classes.paper}>
         <form
           className={classes.form}
           onSubmit={

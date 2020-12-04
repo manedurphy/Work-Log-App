@@ -9,6 +9,7 @@ import SnackBarComponent from '../UI/SnackBar';
 import Copyright from './Copyright';
 import axios, { AxiosResponse } from 'axios';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { verifyUser } from '../../global/functions/axios';
 import { Redirect } from 'react-router-dom';
 import { Alerts, Tasks, Users } from '../../enums';
 import { GlobalContext } from '../../context/GlobalState';
@@ -28,7 +29,6 @@ import {
   Container,
   makeStyles,
 } from '@material-ui/core';
-import { verifyUser } from '../../global/functions/axios';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -64,7 +64,7 @@ const Login = (): JSX.Element => {
       const res: AxiosResponse<VerifyType> = await verifyUser();
       if (res.data.user) setIsLoggedIn(true);
     })();
-  });
+  }, []);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
