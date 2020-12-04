@@ -1,16 +1,16 @@
 import customJwtManager from '../JWT/jwtController';
 import { LogServices } from './logServices';
 import { ISecureRequest } from '@overnightjs/jwt';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { TaskServices } from '../Task/taskServices';
 import { HTTPResponse } from '../HTTP/httpResponses';
+import { Logger } from '@overnightjs/logger';
 import { Get, Controller, Middleware, Delete, Put } from '@overnightjs/core';
 import {
   AlertResponse,
   LogHttpResponseMessage,
   TaskHttpResponseMessages,
 } from '../HTTP/httpEnums';
-import { Logger } from '@overnightjs/logger';
 
 @Controller('api/log')
 export class LogController {

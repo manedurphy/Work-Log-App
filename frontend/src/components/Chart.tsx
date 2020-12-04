@@ -16,7 +16,7 @@ const Chart = (): JSX.Element => {
   const tasks = useContext(GlobalContext).state.tasks.currentTasks;
   const data: { name: string; completion: number }[] = [];
 
-  for (let i = 0; i < 5; i++) {
+  for (let i: number = 0; i < 5; i++) {
     if (tasks[i]) {
       data.push({
         name: tasks[i].name,

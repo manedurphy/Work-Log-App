@@ -1,6 +1,13 @@
 import axios, { AxiosResponse } from 'axios';
 import moment from 'moment-timezone';
-import { ILog, ILogForm, ITask, ITaskForm, MessageType } from '../types/type';
+import {
+  ILog,
+  ILogForm,
+  ITask,
+  ITaskForm,
+  MessageType,
+  WeatherDataType,
+} from '../types/type';
 import { getToken, hoursRemaining } from './helpers';
 
 export const getTasks = async (showComplete: boolean) => {
@@ -144,4 +151,15 @@ export const verifyUser = () => {
   return axios.get('/api/auth/token', {
     headers: { Authorization: `Bearer ${getToken()}` },
   });
+};
+
+export const getWeatherData = async () => {
+  const weatherData: AxiosResponse<WeatherDataType> = await axios.get(
+    '/api/services/weather',
+    {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }
+  );
+
+  return weatherData.data;
 };

@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import clsx from 'clsx';
 import Chart from './Chart';
+import Breadcrumbs from './Breadcrumbs';
 import CurrentWeek from './CurrentWeek';
 import TasksComponent from './Tasks';
 import SnackBarComponent from './UI/SnackBar';
@@ -41,6 +42,7 @@ const Main: React.FC = (): JSX.Element => {
   const { state } = useContext(GlobalContext);
   return (
     <Container maxWidth="lg" className={classes.container}>
+      <Breadcrumbs />
       <Grid container spacing={3}>
         <Grid item xs={12} md={8} lg={7}>
           <Paper className={fixedHeightPaper}>
