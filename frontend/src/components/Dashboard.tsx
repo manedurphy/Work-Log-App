@@ -9,7 +9,7 @@ import { GlobalContext } from '../context/GlobalState';
 import { getTasks, verifyUser } from '../global/functions/axios';
 import { Users, Tasks, Logs, Alerts } from '../enums';
 import { VerifyType } from '../global/types/type';
-import { makeStyles } from '@material-ui/core';
+import { Box, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     overflow: 'auto',
+  },
+  spinner: {
+    marginTop: '200px',
   },
 }));
 
@@ -61,7 +64,13 @@ const Dashboard: React.FC = (): JSX.Element => {
       />
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        {loadingTasks ? <Spinner /> : <MainComponent />}
+        {loadingTasks ? (
+          <Box className={classes.spinner}>
+            <Spinner />
+          </Box>
+        ) : (
+          <MainComponent />
+        )}
       </main>
     </div>
   );
