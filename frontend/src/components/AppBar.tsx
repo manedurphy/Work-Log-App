@@ -1,19 +1,15 @@
 import React from 'react';
 import clsx from 'clsx';
 import SearchBar from './SearchBar';
+import LogoutMenu from './UI/NotificationsMenu';
 import {
   AppBar,
-  Badge,
   IconButton,
   makeStyles,
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import {
-  Menu as MenuIcon,
-  Notifications as NotificationsIcon,
-  ExitToApp as ExitToAppIcon,
-} from '@material-ui/icons';
+import { Menu as MenuIcon } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -57,10 +53,6 @@ const AppBarComponent: React.FC<{
     props.setOpen(true);
   };
 
-  const handleLogOut = () => {
-    localStorage.removeItem('token');
-    window.location.reload();
-  };
   return (
     <AppBar
       position="absolute"
@@ -90,16 +82,7 @@ const AppBarComponent: React.FC<{
           Dashboard
         </Typography>
         <SearchBar />
-        <IconButton color="inherit">
-          <Badge badgeContent={1} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <IconButton color="inherit" onClick={handleLogOut}>
-          <Badge color="secondary">
-            <ExitToAppIcon />
-          </Badge>
-        </IconButton>
+        <LogoutMenu />
       </Toolbar>
     </AppBar>
   );

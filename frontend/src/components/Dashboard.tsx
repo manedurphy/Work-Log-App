@@ -30,9 +30,14 @@ const useStyles = makeStyles((theme) => ({
     height: '100%',
     top: 250,
     left: 240,
+    bottom: 0,
+    right: 0,
     width: `calc(100% - ${240}px)`,
     position: 'absolute',
     zIndex: theme.zIndex.drawer + 1,
+  },
+  test: {
+    backgroundColor: '#F7F5FA',
   },
 }));
 
@@ -82,7 +87,9 @@ const Dashboard: React.FC = (): JSX.Element => {
               <Spinner one={true} />
             </Box>
           ) : (
-            <MainComponent />
+            <Box className={classes.test}>
+              <MainComponent />
+            </Box>
           )}
         </main>
       </div>

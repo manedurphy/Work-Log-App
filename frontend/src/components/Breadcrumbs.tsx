@@ -1,6 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
+import clsx from 'clsx';
 import { Box, Grid, makeStyles, Paper } from '@material-ui/core';
-import { FormatListBulleted as FormatListBulletedIcon } from '@material-ui/icons';
+import {
+  FormatListBulleted as FormatListBulletedIcon,
+  Work as WorkIcon,
+  ArrowUpward as ArrowUpwardIcon,
+} from '@material-ui/icons';
 import { WeatherDataType } from '../global/types/type';
 import { getWeatherData } from '../global/functions/axios';
 import { GlobalContext } from '../context/GlobalState';
@@ -15,13 +20,37 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     marginBottom: theme.spacing(3),
     height: '80px',
+    alignItems: 'center',
   },
   image: {
     height: '50px',
     width: '50px',
     position: 'absolute',
-    right: '5px',
-    bottom: '15px',
+    right: 10,
+    top: 0,
+  },
+  due: {
+    backgroundColor: 'purple',
+    color: 'white',
+    padding: '5px',
+    borderRadius: '100%',
+    width: '35px',
+    position: 'absolute',
+    right: 10,
+    top: 10,
+  },
+  productivity: {
+    backgroundColor: 'orange',
+    color: 'white',
+    padding: '5px',
+    borderRadius: '100%',
+    width: '35px',
+    position: 'absolute',
+    right: 10,
+    top: 10,
+  },
+  alignText: {
+    textAlign: 'center',
   },
 }));
 
@@ -84,7 +113,7 @@ const Breadcrumbs = (): JSX.Element => {
   return (
     <React.Fragment>
       <Grid container spacing={2}>
-        <Grid item xs={6} md={3}>
+        <Grid item xs={12} md={3}>
           <Paper className={classes.paper}>
             <h4 style={{ marginBottom: '3px' }}>Bay Point, CA</h4>
             {weather.weather[0].main !== 'unavailable' ? (
@@ -93,6 +122,7 @@ const Breadcrumbs = (): JSX.Element => {
                   Current temperature:{' '}
                   {Math.floor(weather.main.temp - 273) + '\u00B0'}C
                 </p>
+
                 <img
                   src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}.png`}
                   alt="weather"
@@ -104,22 +134,34 @@ const Breadcrumbs = (): JSX.Element => {
             )}
           </Paper>
         </Grid>
-        <Grid item xs={6} md={3}>
+        <Grid item xs={12} md={3}>
           <Paper className={classes.paper}>
-            <Box display="flex">
-              <Box flexGrow={1}>
-                <h4>You have {state.date.tasksDue.length} tasks due today</h4>
-              </Box>
-              <Box>
-                <FormatListBulletedIcon />
-              </Box>
+            <h4 className={classes.alignText}>Tasks Due</h4>
+            <p>You have {state.date.tasksDue.length} tasks due today</p>
+            <Box className={classes.due}>
+              <FormatListBulletedIcon />
             </Box>
           </Paper>
         </Grid>
-        <Grid item xs={6} md={3}>
-          <Paper className={classes.paper}>Here is a component</Paper>
+        <Grid item xs={12} md={3}>
+          <Paper className={classes.paper}>
+            <h4 className={classes.alignText}>Productivity</h4>
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              width="100%"
+            >
+              <ArrowUpwardIcon style={{ color: 'green' }} />
+              <p style={{ color: 'green', marginRight: '5px' }}>12%</p>
+              <p>Since last week</p>
+            </Box>
+            <Box className={classes.productivity}>
+              <WorkIcon />
+            </Box>
+          </Paper>
         </Grid>
-        <Grid item xs={6} md={3}>
+        <Grid item xs={12} md={3}>
           <Paper className={classes.paper}>Here is a component</Paper>
         </Grid>
       </Grid>
