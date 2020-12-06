@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import clsx from 'clsx';
 import { Box, Grid, makeStyles, Paper } from '@material-ui/core';
 import {
   FormatListBulleted as FormatListBulletedIcon,

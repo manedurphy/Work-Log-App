@@ -1,7 +1,8 @@
 import React from 'react';
 import clsx from 'clsx';
 import SearchBar from './SearchBar';
-import LogoutMenu from './UI/NotificationsMenu';
+import LogoutMenu from './UI/LogoutMenu';
+import { Menu as MenuIcon } from '@material-ui/icons';
 import {
   AppBar,
   IconButton,
@@ -9,7 +10,6 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import { Menu as MenuIcon } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {

@@ -1,7 +1,7 @@
 import customJwtManager from '../JWT/jwtController';
 import { LogServices } from './logServices';
 import { ISecureRequest } from '@overnightjs/jwt';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { TaskServices } from '../Task/taskServices';
 import { HTTPResponse } from '../HTTP/httpResponses';
 import { Logger } from '@overnightjs/logger';

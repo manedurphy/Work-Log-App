@@ -1,4 +1,4 @@
-import { Task } from '../../models/models';
+import { Task } from '../../models/';
 import { Record } from '../Record/record';
 import {
   CreateNewTaskType,

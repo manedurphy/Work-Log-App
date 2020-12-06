@@ -37,6 +37,7 @@ const NotificationsMenu: React.FC = (): JSX.Element => {
         TransitionComponent={Fade}
       >
         <MenuItem onClick={handleLogOut}>Logout</MenuItem>
+        <MenuItem onClick={handleClose}>Close</MenuItem>
       </Menu>
     </div>
   );
