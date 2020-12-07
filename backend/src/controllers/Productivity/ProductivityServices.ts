@@ -43,4 +43,19 @@ export class ProductivityServices {
       .tz('America/Los_Angeles')
       .format();
   };
+
+  update = async (): Promise<void> => {
+    const prodInstance = await Productivity.findOne({
+      where: {
+        LogId: this.logId,
+      },
+    });
+
+    prodInstance?.update({
+      day: this.day,
+      weekOf: this.date.slice(0, 10),
+      hours: this.hours,
+      LogId: this.logId,
+    });
+  };
 }

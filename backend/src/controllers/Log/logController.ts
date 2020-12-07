@@ -11,6 +11,7 @@ import {
   LogHttpResponseMessage,
   TaskHttpResponseMessages,
 } from '../HTTP/httpEnums';
+import { ProductivityServices } from '../Productivity/ProductivityServices';
 
 @Controller('api/log')
 export class LogController {
@@ -92,6 +93,16 @@ export class LogController {
         );
 
       await LogServices.updateTaskLog(req, taskLogItem);
+
+      const logs = await LogServices.getLatestLogs(taskLogItem.TaskId);
+
+      const productivity = new ProductivityServices(
+        logs[1].hoursRemaining - logs[0].hoursRemaining,
+        logs[0].id,
+        logs[0].loggedAt
+      );
+
+      await productivity.update();
 
       HTTPResponse.okWithMessage(
         res,
