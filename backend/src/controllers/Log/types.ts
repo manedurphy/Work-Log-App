@@ -17,7 +17,7 @@ export type CreateTaskLogType = (
   req: ISecureRequest,
   taskId: number,
   complete: boolean
-) => Promise<void>;
+) => Promise<Log>;
 
 export type DeleteTaskLogItemType = (log: Log) => Promise<void>;
 

@@ -229,7 +229,7 @@ Productivity.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    UserId: {
+    LogId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -240,9 +240,10 @@ Productivity.init(
 );
 
 Models.User.hasMany(Models.Task);
-Models.User.hasMany(Productivity);
+Models.Log.hasOne(Productivity);
 Models.User.hasOne(Models.ActivationPassword);
 Models.ActivationPassword.belongsTo(Models.User);
+Models.Productivity.belongsTo(Models.Log);
 Models.Task.hasMany(Models.Log);
 Models.Task.belongsTo(Models.User);
 

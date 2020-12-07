@@ -5,7 +5,7 @@ export interface ProductivityAttributes {
   day: number;
   weekOf: string;
   hours: number;
-  UserId: number;
+  LogId: number;
 }
 
 export interface ProductivityCreationAttributes

@@ -7,8 +7,7 @@ import { TaskValidation } from './taskValidation';
 import { CheckUserExistance } from '../JWT/checkUserExistance';
 import { HTTPResponse } from '../HTTP/httpResponses';
 import { LogServices } from '../Log/logServices';
-import { Productivity } from '../../models/models';
-import { getSunday } from './helpers';
+import { ProductivityServices } from '../Productivity/ProductivityServices';
 import {
   AlertResponse,
   TaskHttpResponseMessages,
@@ -22,7 +21,6 @@ import {
   Post,
   Delete,
 } from '@overnightjs/core';
-import * as moment from 'moment-timezone';
 
 @Controller('api/task')
 export class TaskController {
@@ -97,15 +95,18 @@ export class TaskController {
       }
 
       const newTask = await TaskServices.saveNewTask(req, user.id);
-      const date = getSunday(new Date());
+      const newLog = await LogServices.createTaskLog(
+        req,
+        newTask.id as number,
+        false
+      );
 
-      await Productivity.create({
-        day: new Date().getDay(),
-        weekOf: date.toString().slice(0, 10),
-        hours: 5,
-        UserId: user.id,
-      });
-      await LogServices.createTaskLog(req, newTask.id as number, false);
+      const productivity = new ProductivityServices(
+        newTask.hoursAvailableToWork - newTask.hoursRemaining,
+        newLog.id
+      );
+
+      await productivity.create();
 
       HTTPResponse.created(
         res,
@@ -150,6 +151,16 @@ export class TaskController {
 
       await TaskServices.updateTask(req, task, false);
       await LogServices.createTaskLog(req, task.id, false);
+
+      const logs = await LogServices.getLatestLogs(task.id);
+
+      const productivity = new ProductivityServices(
+        logs[1].hoursRemaining - logs[0].hoursRemaining,
+        logs[0].id,
+        logs[0].loggedAt
+      );
+
+      await productivity.create();
 
       HTTPResponse.OK(res, {
         message: TaskHttpResponseMessages.TASK_UPDATED,

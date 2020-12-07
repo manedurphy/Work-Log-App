@@ -1,4 +1,4 @@
-import { Log } from '../../models/models';
+import { Log, Task } from '../../models/models';
 import { Record } from '../Record/record';
 import { UpdateTaskLogType } from './types';
 import {
@@ -29,7 +29,7 @@ export class LogServices {
     const log = Record.createRecord(req);
     if (complete) log.complete = true;
 
-    await Log.create({
+    return Log.create({
       ...log,
       loggedAt: req.body.loggedAt || new Date(),
       TaskId: taskId,
@@ -53,5 +53,13 @@ export class LogServices {
 
   public static deleteTaskLogItem: DeleteTaskLogItemType = async (log) => {
     await log.destroy();
+  };
+
+  public static getLatestLogs = async (taskId: number) => {
+    return Log.findAll({
+      where: { TaskId: taskId },
+      order: [['id', 'DESC']],
+      limit: 2,
+    });
   };
 }
