@@ -1,5 +1,4 @@
 import customJwtManager from '../JWT/jwtController';
-import { LogServices } from './logServices';
 import { ISecureRequest } from '@overnightjs/jwt';
 import { Response } from 'express';
 import { HTTPResponse } from '../HTTP/httpResponses';
@@ -11,7 +10,8 @@ import {
   TaskHttpResponseMessages,
 } from '../HTTP/httpEnums';
 import { ProductivityService } from '../Productivity/ProductivityService';
-import { TaskService } from '../Task/TaskService';
+import { TaskService } from '../Task/taskService';
+import { LogService } from './logService';
 
 @Controller('api/log')
 export class LogController {
@@ -27,10 +27,8 @@ export class LogController {
       const task = await taskService.getTask();
 
       if (task) {
-        const taskLog = await LogServices.getLog(
-          +req.params.projectNumber,
-          task.id
-        );
+        const logService = new LogService(task.id, +req.params.projectNumber);
+        const taskLog = await logService.getLog();
 
         HTTPResponse.OK(res, taskLog);
       }
@@ -43,7 +41,8 @@ export class LogController {
   @Middleware(customJwtManager.middleware)
   private async getSingleLogItem(req: ISecureRequest, res: Response) {
     try {
-      const taskLogItem = await LogServices.getTaskLogItem(+req.params.id);
+      const logService = new LogService(+req.params.id);
+      const taskLogItem = await logService.getLogItem();
 
       if (!taskLogItem)
         return HTTPResponse.notFound(
@@ -62,7 +61,9 @@ export class LogController {
   @Middleware(customJwtManager.middleware)
   private async deleteTaskLogItem(req: ISecureRequest, res: Response) {
     try {
-      const taskLogItem = await LogServices.getTaskLogItem(+req.params.id);
+      const logService = new LogService(+req.params.id);
+      const taskLogItem = await logService.getLogItem();
+
       if (!taskLogItem)
         return HTTPResponse.notFound(
           res,
@@ -70,7 +71,7 @@ export class LogController {
           AlertResponse.ERROR
         );
 
-      await LogServices.deleteTaskLogItem(taskLogItem);
+      await taskLogItem.destroy();
       HTTPResponse.okWithMessage(
         res,
         LogHttpResponseMessage.LOG_DELETED,
@@ -86,7 +87,8 @@ export class LogController {
   private async updateTaskLogItem(req: ISecureRequest, res: Response) {
     Logger.Info(req.body, true);
     try {
-      const taskLogItem = await LogServices.getTaskLogItem(+req.params.id);
+      const logService = new LogService(+req.params.id);
+      const taskLogItem = await logService.getLogItem();
       if (!taskLogItem)
         return HTTPResponse.notFound(
           res,
@@ -94,9 +96,9 @@ export class LogController {
           AlertResponse.ERROR
         );
 
-      await LogServices.updateTaskLog(req, taskLogItem);
+      await logService.updateLogItem(req, taskLogItem);
 
-      const logs = await LogServices.getLatestLogs(taskLogItem.TaskId);
+      const logs = await logService.getLatestLogs(taskLogItem.TaskId);
 
       const productivity = new ProductivityService(
         logs[1].hoursRemaining - logs[0].hoursRemaining,

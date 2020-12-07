@@ -10,7 +10,7 @@ export class TaskService extends Record {
     this.projectNumber = projectNumber;
   }
 
-  getTask(): Promise<Task | null> {
+  public getTask(): Promise<Task | null> {
     return Task.findOne({
       where: {
         projectNumber: this.projectNumber,
@@ -19,14 +19,14 @@ export class TaskService extends Record {
     });
   }
 
-  getTasks(complete: boolean): Promise<Task[] | null> {
+  public getTasks(complete: boolean): Promise<Task[] | null> {
     return Task.findAll({
       where: { UserId: this.userId, complete },
       order: [['id', 'DESC']],
     });
   }
 
-  create(req: ISecureRequest) {
+  public create(req: ISecureRequest) {
     const record = this.createARecord(req);
     return {
       ...record,
@@ -35,7 +35,7 @@ export class TaskService extends Record {
     };
   }
 
-  save(req: ISecureRequest): Promise<Task> {
+  public save(req: ISecureRequest): Promise<Task> {
     const task = this.create(req);
 
     return Task.create({
@@ -44,18 +44,18 @@ export class TaskService extends Record {
     });
   }
 
-  update(req: ISecureRequest, task: Task, complete: boolean): void {
+  public update(req: ISecureRequest, task: Task, complete: boolean): void {
     const updatedTask = this.create(req);
     if (complete) updatedTask.complete = true;
 
     task.update(updatedTask);
   }
 
-  delete(task: Task): void {
+  public delete(task: Task): void {
     task.destroy();
   }
 
-  completeTask(task: Task): void {
+  public completeTask(task: Task): void {
     task.update({ complete: true });
   }
 }

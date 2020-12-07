@@ -7,7 +7,7 @@ import { CheckUserExistance } from '../JWT/checkUserExistance';
 import { HTTPResponse } from '../HTTP/httpResponses';
 import { LogServices } from '../Log/logServices';
 import { ProductivityService } from '../Productivity/ProductivityService';
-import { TaskService } from './TaskService';
+import { TaskService } from './taskService';
 import {
   AlertResponse,
   TaskHttpResponseMessages,
