@@ -6,7 +6,8 @@ import { TaskValidation } from './taskValidation';
 import { CheckUserExistance } from '../JWT/checkUserExistance';
 import { HTTPResponse } from '../HTTP/httpResponses';
 import { LogServices } from '../Log/logServices';
-import { ProductivityServices } from '../Productivity/ProductivityServices';
+import { ProductivityService } from '../Productivity/ProductivityService';
+import { TaskService } from './TaskService';
 import {
   AlertResponse,
   TaskHttpResponseMessages,
@@ -20,7 +21,6 @@ import {
   Post,
   Delete,
 } from '@overnightjs/core';
-import { RevisedTaskServices } from './revisedTaskServices';
 
 @Controller('api/task')
 export class TaskController {
@@ -29,8 +29,7 @@ export class TaskController {
   private async getAllTasks(req: ISecureRequest, res: Response) {
     Logger.Info(req.body, true);
     try {
-      const taskService = new RevisedTaskServices(+req.payload.id);
-
+      const taskService = new TaskService(+req.payload.id);
       const tasks = await taskService.getTasks(false);
 
       if (!tasks)
@@ -51,11 +50,7 @@ export class TaskController {
   private async getSingleTask(req: ISecureRequest, res: Response) {
     Logger.Info(req.params.id);
     try {
-      const taskService = new RevisedTaskServices(
-        +req.payload.id,
-        +req.params.id
-      );
-
+      const taskService = new TaskService(+req.payload.id, +req.params.id);
       const task = await taskService.getTask();
 
       if (!task)
@@ -94,12 +89,9 @@ export class TaskController {
           AlertResponse.ERROR
         );
 
-      const taskService = new RevisedTaskServices(
-        user.id,
-        +req.body.projectNumber
-      );
-
+      const taskService = new TaskService(user.id, +req.body.projectNumber);
       const task = await taskService.getTask();
+
       if (task) {
         return HTTPResponse.badRequest(
           res,
@@ -115,7 +107,7 @@ export class TaskController {
         false
       );
 
-      const productivity = new ProductivityServices(
+      const productivity = new ProductivityService(
         newTask.hoursAvailableToWork - newTask.hoursRemaining,
         newLog.id
       );
@@ -147,11 +139,7 @@ export class TaskController {
           AlertResponse.ERROR
         );
 
-      const taskService = new RevisedTaskServices(
-        +req.payload.id,
-        +req.params.id
-      );
-
+      const taskService = new TaskService(+req.payload.id, +req.params.id);
       const task = await taskService.getTask();
 
       if (!task)
@@ -161,12 +149,12 @@ export class TaskController {
           AlertResponse.ERROR
         );
 
-      await taskService.update(req, task, false);
+      taskService.update(req, task, false);
       await LogServices.createTaskLog(req, task.id, false);
 
       const logs = await LogServices.getLatestLogs(task.id);
 
-      const productivity = new ProductivityServices(
+      const productivity = new ProductivityService(
         logs[1].hoursRemaining - logs[0].hoursRemaining,
         logs[0].id,
         logs[0].loggedAt
@@ -197,12 +185,9 @@ export class TaskController {
           AlertResponse.ERROR
         );
 
-      const taskService = new RevisedTaskServices(
-        +req.payload.id,
-        +req.params.id
-      );
-
+      const taskService = new TaskService(+req.payload.id, +req.params.id);
       const task = await taskService.getTask();
+
       if (!task)
         return HTTPResponse.notFound(
           res,
@@ -210,8 +195,18 @@ export class TaskController {
           AlertResponse.ERROR
         );
 
-      await taskService.update(req, task, true);
-      await LogServices.createTaskLog(req, task.id, true);
+      taskService.update(req, task, true);
+
+      const taskLogItem = await LogServices.createTaskLog(req, task.id, true);
+      const taskLogItems = await LogServices.getLatestLogs(taskLogItem.TaskId);
+
+      const productivity = new ProductivityService(
+        taskLogItems[1].hoursRemaining - taskLogItems[0].hoursRemaining,
+        taskLogItems[0].id,
+        taskLogItems[0].loggedAt
+      );
+
+      productivity.create();
       return HTTPResponse.OK(res, {
         message: TaskHttpResponseMessages.TASK_COMPLETED,
       });
@@ -224,11 +219,7 @@ export class TaskController {
   @Middleware(customJwtManager.middleware)
   private async completeTaskNoForm(req: ISecureRequest, res: Response) {
     try {
-      const taskService = new RevisedTaskServices(
-        +req.payload.id,
-        +req.params.id
-      );
-
+      const taskService = new TaskService(+req.payload.id, +req.params.id);
       const task = await taskService.getTask();
 
       if (!task)
@@ -257,12 +248,9 @@ export class TaskController {
   @Middleware(customJwtManager.middleware)
   private async deleteTask(req: ISecureRequest, res: Response) {
     try {
-      const taskService = new RevisedTaskServices(
-        +req.payload.id,
-        +req.params.id
-      );
-
+      const taskService = new TaskService(+req.payload.id, +req.params.id);
       const task = await taskService.getTask();
+
       if (!task)
         return HTTPResponse.notFound(
           res,

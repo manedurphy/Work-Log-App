@@ -10,8 +10,8 @@ import {
   LogHttpResponseMessage,
   TaskHttpResponseMessages,
 } from '../HTTP/httpEnums';
-import { ProductivityServices } from '../Productivity/ProductivityServices';
-import { RevisedTaskServices } from '../Task/revisedTaskServices';
+import { ProductivityService } from '../Productivity/ProductivityService';
+import { TaskService } from '../Task/TaskService';
 
 @Controller('api/log')
 export class LogController {
@@ -19,7 +19,7 @@ export class LogController {
   @Middleware(customJwtManager.middleware)
   private async getLogOfSingleTask(req: ISecureRequest, res: Response) {
     try {
-      const taskService = new RevisedTaskServices(
+      const taskService = new TaskService(
         +req.payload.id,
         +req.params.projectNumber
       );
@@ -98,7 +98,7 @@ export class LogController {
 
       const logs = await LogServices.getLatestLogs(taskLogItem.TaskId);
 
-      const productivity = new ProductivityServices(
+      const productivity = new ProductivityService(
         logs[1].hoursRemaining - logs[0].hoursRemaining,
         logs[0].id,
         logs[0].loggedAt
