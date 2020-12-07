@@ -2,7 +2,7 @@ import { Response } from 'express';
 
 export type ResponseOnlyType = (res: Response) => Response;
 export type ResponseOkType = (res: Response, data: object) => Response;
-export type ResponseWithMessagetype = (
+export type ResponseWithMessageType = (
   res: Response,
   message: string,
   type: string

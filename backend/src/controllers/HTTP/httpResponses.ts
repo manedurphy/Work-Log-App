@@ -2,7 +2,7 @@ import { AlertResponse } from './httpEnums';
 import {
   ResponseOkType,
   ResponseOnlyType,
-  ResponseWithMessagetype,
+  ResponseWithMessageType,
 } from './types';
 
 export class HTTPResponse {
@@ -16,7 +16,7 @@ export class HTTPResponse {
     return res.status(200).json(data);
   };
 
-  public static okWithMessage: ResponseWithMessagetype = (
+  public static okWithMessage: ResponseWithMessageType = (
     res,
     message,
     type
@@ -24,15 +24,15 @@ export class HTTPResponse {
     return res.status(200).json({ message, type });
   };
 
-  public static notFound: ResponseWithMessagetype = (res, message, type) => {
+  public static notFound: ResponseWithMessageType = (res, message, type) => {
     return res.status(404).json({ message, type });
   };
 
-  public static badRequest: ResponseWithMessagetype = (res, message, type) => {
+  public static badRequest: ResponseWithMessageType = (res, message, type) => {
     return res.status(400).json({ message, type });
   };
 
-  public static created: ResponseWithMessagetype = (res, message, type) => {
+  public static created: ResponseWithMessageType = (res, message, type) => {
     return res.status(201).json({ message, type });
   };
 }

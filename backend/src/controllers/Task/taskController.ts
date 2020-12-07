@@ -7,6 +7,7 @@ import { CheckUserExistance } from '../JWT/checkUserExistance';
 import { HTTPResponse } from '../HTTP/httpResponses';
 import { ProductivityService } from '../Productivity/ProductivityService';
 import { TaskService } from './taskService';
+import { LogService } from '../Log/logService';
 import {
   AlertResponse,
   TaskHttpResponseMessages,
@@ -20,7 +21,6 @@ import {
   Post,
   Delete,
 } from '@overnightjs/core';
-import { LogService } from '../Log/logService';
 
 @Controller('api/task')
 export class TaskController {

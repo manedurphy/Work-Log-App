@@ -3,10 +3,12 @@ import { Task } from '../../models/models';
 import { Record } from '../Record/record';
 
 export class TaskService extends Record {
+  private userId: number;
   private projectNumber: number | null;
 
-  constructor(private userId: number, projectNumber: number | null = null) {
+  constructor(userId: number, projectNumber: number | null = null) {
     super();
+    this.userId = userId;
     this.projectNumber = projectNumber;
   }
 
