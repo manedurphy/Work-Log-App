@@ -8,6 +8,7 @@ import { CheckUserExistance } from '../JWT/checkUserExistance';
 import { HTTPResponse } from '../HTTP/httpResponses';
 import { LogServices } from '../Log/logServices';
 import { Productivity } from '../../models/models';
+import { getSunday } from './helpers';
 import {
   AlertResponse,
   TaskHttpResponseMessages,
@@ -21,14 +22,7 @@ import {
   Post,
   Delete,
 } from '@overnightjs/core';
-
-function getSunday(d: any) {
-  d = new Date(d);
-  const day = d.getDay();
-  const diff = d.getDate() - day + (day === 0 ? 0 : 1);
-
-  return new Date(new Date(d.setDate(diff)));
-}
+import * as moment from 'moment-timezone';
 
 @Controller('api/task')
 export class TaskController {
@@ -103,9 +97,11 @@ export class TaskController {
       }
 
       const newTask = await TaskServices.saveNewTask(req, user.id);
+      const date = getSunday(new Date());
+
       await Productivity.create({
         day: new Date().getDay(),
-        weekOf: getSunday(new Date()),
+        weekOf: date.toString().slice(0, 10),
         hours: 5,
         UserId: user.id,
       });

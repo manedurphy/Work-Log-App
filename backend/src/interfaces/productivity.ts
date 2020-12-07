@@ -3,7 +3,7 @@ import { Optional } from 'sequelize';
 export interface ProductivityAttributes {
   id: number;
   day: number;
-  weekOf: Date;
+  weekOf: string;
   hours: number;
   UserId: number;
 }

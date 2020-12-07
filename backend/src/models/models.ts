@@ -222,7 +222,7 @@ Productivity.init(
       allowNull: false,
     },
     weekOf: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     hours: {
