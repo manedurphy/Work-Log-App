@@ -5,7 +5,6 @@ import { Logger } from '@overnightjs/logger';
 import { TaskValidation } from './taskValidation';
 import { CheckUserExistance } from '../JWT/checkUserExistance';
 import { HTTPResponse } from '../HTTP/httpResponses';
-import { LogServices } from '../Log/logServices';
 import { ProductivityService } from '../Productivity/ProductivityService';
 import { TaskService } from './taskService';
 import {
@@ -21,6 +20,7 @@ import {
   Post,
   Delete,
 } from '@overnightjs/core';
+import { LogService } from '../Log/logService';
 
 @Controller('api/task')
 export class TaskController {
@@ -48,7 +48,7 @@ export class TaskController {
   @Get(':id')
   @Middleware(customJwtManager.middleware)
   private async getSingleTask(req: ISecureRequest, res: Response) {
-    Logger.Info(req.params.id);
+    Logger.Info(req.params.id, true);
     try {
       const taskService = new TaskService(+req.payload.id, +req.params.id);
       const task = await taskService.getTask();
@@ -101,11 +101,8 @@ export class TaskController {
       }
 
       const newTask = await taskService.save(req);
-      const newLog = await LogServices.createTaskLog(
-        req,
-        newTask.id as number,
-        false
-      );
+      const logService = new LogService(newTask.id);
+      const newLog = await logService.createLogItem(req, false);
 
       const productivity = new ProductivityService(
         newTask.hoursAvailableToWork - newTask.hoursRemaining,
@@ -149,11 +146,12 @@ export class TaskController {
           AlertResponse.ERROR
         );
 
-      taskService.update(req, task, false);
-      await LogServices.createTaskLog(req, task.id, false);
+      await taskService.update(req, task, false);
 
-      const logs = await LogServices.getLatestLogs(task.id);
+      const logService = new LogService(task.id);
+      await logService.createLogItem(req, false);
 
+      const logs = await logService.getLatestLogs();
       const productivity = new ProductivityService(
         logs[1].hoursRemaining - logs[0].hoursRemaining,
         logs[0].id,
@@ -197,16 +195,17 @@ export class TaskController {
 
       taskService.update(req, task, true);
 
-      const taskLogItem = await LogServices.createTaskLog(req, task.id, true);
-      const taskLogItems = await LogServices.getLatestLogs(taskLogItem.TaskId);
+      const logService = new LogService(task.id);
+      await logService.createLogItem(req, true);
 
+      const taskLogItems = await logService.getLatestLogs();
       const productivity = new ProductivityService(
         taskLogItems[1].hoursRemaining - taskLogItems[0].hoursRemaining,
         taskLogItems[0].id,
         taskLogItems[0].loggedAt
       );
 
-      productivity.create();
+      await productivity.create();
       return HTTPResponse.OK(res, {
         message: TaskHttpResponseMessages.TASK_COMPLETED,
       });
@@ -229,10 +228,13 @@ export class TaskController {
           AlertResponse.ERROR
         );
 
-      const log = await LogServices.getLog(+req.params.id, task.id);
+      const logService = new LogService(task.id, +req.params.id);
+      const mostRecentLogItem = await logService.getMostRecentLogItem();
+
       await taskService.completeTask(task);
 
-      await LogServices.updateCompleteStatus(log[0]);
+      if (mostRecentLogItem)
+        await logService.updateCompleteStatus(mostRecentLogItem);
 
       HTTPResponse.okWithMessage(
         res,

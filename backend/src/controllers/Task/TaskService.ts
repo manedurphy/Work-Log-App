@@ -44,18 +44,22 @@ export class TaskService extends Record {
     });
   }
 
-  public update(req: ISecureRequest, task: Task, complete: boolean): void {
+  public update(
+    req: ISecureRequest,
+    task: Task,
+    complete: boolean
+  ): Promise<Task> {
     const updatedTask = this.create(req);
     if (complete) updatedTask.complete = true;
 
-    task.update(updatedTask);
+    return task.update(updatedTask);
   }
 
-  public delete(task: Task): void {
-    task.destroy();
+  public delete(task: Task): Promise<void> {
+    return task.destroy();
   }
 
-  public completeTask(task: Task): void {
-    task.update({ complete: true });
+  public completeTask(task: Task): Promise<Task> {
+    return task.update({ complete: true });
   }
 }

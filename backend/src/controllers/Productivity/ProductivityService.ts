@@ -21,8 +21,8 @@ export class ProductivityService {
     this.logId = logId;
   }
 
-  create(): void {
-    Productivity.create({
+  create(): Promise<Productivity> {
+    return Productivity.create({
       day: this.day,
       weekOf: this.date.slice(0, 10),
       hours: this.hours,
