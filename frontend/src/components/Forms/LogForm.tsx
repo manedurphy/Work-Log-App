@@ -6,6 +6,7 @@ import React, {
   useEffect,
 } from 'react';
 import CloseIcon from '@material-ui/icons/Close';
+import { getFormDate } from '../../global/functions/helpers';
 import Title from '../Title';
 import { Alerts, Commands, Logs } from '../../enums';
 import { GlobalContext } from '../../context/GlobalState';
@@ -21,13 +22,16 @@ import {
   Fade,
   Box,
 } from '@material-ui/core';
-import { getFormDate } from '../../global/functions/helpers';
 
 const useStyles = makeStyles((theme) => ({
   form: {
     width: '97%',
     marginTop: theme.spacing(3),
     margin: 'auto',
+  },
+  paper: {
+    position: 'relative',
+    zIndex: theme.zIndex.drawer + 5,
   },
 }));
 
@@ -96,7 +100,7 @@ const LogForm: React.FC = (): JSX.Element => {
 
   return (
     <Fade in={state.log.edit} timeout={500} enter exit>
-      <Paper>
+      <Paper className={classes.paper}>
         <form
           className={classes.form}
           onSubmit={

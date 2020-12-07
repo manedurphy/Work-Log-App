@@ -9,7 +9,8 @@ export class Productivity extends Model<
   ProductivityCreationAttributes
 > {
   public id!: number;
-  public day!: string;
+  public day!: number;
   public weekOf!: Date;
   public hours!: number;
+  public UserId!: number;
 }

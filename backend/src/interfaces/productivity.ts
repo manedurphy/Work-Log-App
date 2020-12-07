@@ -2,9 +2,10 @@ import { Optional } from 'sequelize';
 
 export interface ProductivityAttributes {
   id: number;
-  day: string;
+  day: number;
   weekOf: Date;
   hours: number;
+  UserId: number;
 }
 
 export interface ProductivityCreationAttributes

@@ -218,7 +218,7 @@ Productivity.init(
       autoIncrement: true,
     },
     day: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     weekOf: {
@@ -226,6 +226,10 @@ Productivity.init(
       allowNull: false,
     },
     hours: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    UserId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

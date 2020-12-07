@@ -7,6 +7,7 @@ import { TaskValidation } from './taskValidation';
 import { CheckUserExistance } from '../JWT/checkUserExistance';
 import { HTTPResponse } from '../HTTP/httpResponses';
 import { LogServices } from '../Log/logServices';
+import { Productivity } from '../../models/models';
 import {
   AlertResponse,
   TaskHttpResponseMessages,
@@ -20,6 +21,14 @@ import {
   Post,
   Delete,
 } from '@overnightjs/core';
+
+function getSunday(d: any) {
+  d = new Date(d);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? 0 : 1);
+
+  return new Date(new Date(d.setDate(diff)));
+}
 
 @Controller('api/task')
 export class TaskController {
@@ -94,6 +103,12 @@ export class TaskController {
       }
 
       const newTask = await TaskServices.saveNewTask(req, user.id);
+      await Productivity.create({
+        day: new Date().getDay(),
+        weekOf: getSunday(new Date()),
+        hours: 5,
+        UserId: user.id,
+      });
       await LogServices.createTaskLog(req, newTask.id as number, false);
 
       HTTPResponse.created(
