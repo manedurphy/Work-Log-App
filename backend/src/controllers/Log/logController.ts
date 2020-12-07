@@ -2,7 +2,6 @@ import customJwtManager from '../JWT/jwtController';
 import { LogServices } from './logServices';
 import { ISecureRequest } from '@overnightjs/jwt';
 import { Response } from 'express';
-import { TaskServices } from '../Task/taskServices';
 import { HTTPResponse } from '../HTTP/httpResponses';
 import { Logger } from '@overnightjs/logger';
 import { Get, Controller, Middleware, Delete, Put } from '@overnightjs/core';
@@ -12,6 +11,7 @@ import {
   TaskHttpResponseMessages,
 } from '../HTTP/httpEnums';
 import { ProductivityServices } from '../Productivity/ProductivityServices';
+import { RevisedTaskServices } from '../Task/revisedTaskServices';
 
 @Controller('api/log')
 export class LogController {
@@ -19,10 +19,12 @@ export class LogController {
   @Middleware(customJwtManager.middleware)
   private async getLogOfSingleTask(req: ISecureRequest, res: Response) {
     try {
-      const task = await TaskServices.getTask(
-        +req.params.projectNumber,
-        +req.payload.id
+      const taskService = new RevisedTaskServices(
+        +req.payload.id,
+        +req.params.projectNumber
       );
+
+      const task = await taskService.getTask();
 
       if (task) {
         const taskLog = await LogServices.getLog(

@@ -2,7 +2,6 @@ import customJwtManager from '../JWT/jwtController';
 import { Response } from 'express';
 import { ISecureRequest } from '@overnightjs/jwt';
 import { Logger } from '@overnightjs/logger';
-import { TaskServices } from './taskServices';
 import { TaskValidation } from './taskValidation';
 import { CheckUserExistance } from '../JWT/checkUserExistance';
 import { HTTPResponse } from '../HTTP/httpResponses';
@@ -21,6 +20,7 @@ import {
   Post,
   Delete,
 } from '@overnightjs/core';
+import { RevisedTaskServices } from './revisedTaskServices';
 
 @Controller('api/task')
 export class TaskController {
@@ -29,7 +29,10 @@ export class TaskController {
   private async getAllTasks(req: ISecureRequest, res: Response) {
     Logger.Info(req.body, true);
     try {
-      const tasks = await TaskServices.getTasks(+req.payload.id, false);
+      const taskService = new RevisedTaskServices(+req.payload.id);
+
+      const tasks = await taskService.getTasks(false);
+
       if (!tasks)
         return HTTPResponse.badRequest(
           res,
@@ -48,7 +51,13 @@ export class TaskController {
   private async getSingleTask(req: ISecureRequest, res: Response) {
     Logger.Info(req.params.id);
     try {
-      const task = await TaskServices.getTask(+req.params.id, +req.payload.id);
+      const taskService = new RevisedTaskServices(
+        +req.payload.id,
+        +req.params.id
+      );
+
+      const task = await taskService.getTask();
+
       if (!task)
         return HTTPResponse.notFound(
           res,
@@ -85,7 +94,12 @@ export class TaskController {
           AlertResponse.ERROR
         );
 
-      const task = await TaskServices.getTask(req.body.projectNumber, user.id);
+      const taskService = new RevisedTaskServices(
+        user.id,
+        +req.body.projectNumber
+      );
+
+      const task = await taskService.getTask();
       if (task) {
         return HTTPResponse.badRequest(
           res,
@@ -94,7 +108,7 @@ export class TaskController {
         );
       }
 
-      const newTask = await TaskServices.saveNewTask(req, user.id);
+      const newTask = await taskService.save(req);
       const newLog = await LogServices.createTaskLog(
         req,
         newTask.id as number,
@@ -133,7 +147,13 @@ export class TaskController {
           AlertResponse.ERROR
         );
 
-      const task = await TaskServices.getTask(+req.params.id, +req.payload.id);
+      const taskService = new RevisedTaskServices(
+        +req.payload.id,
+        +req.params.id
+      );
+
+      const task = await taskService.getTask();
+
       if (!task)
         return HTTPResponse.notFound(
           res,
@@ -141,15 +161,7 @@ export class TaskController {
           AlertResponse.ERROR
         );
 
-      if (req.body.complete) {
-        await TaskServices.updateTask(req, task, true);
-        await LogServices.createTaskLog(req, task.id, true);
-        return HTTPResponse.OK(res, {
-          message: TaskHttpResponseMessages.TASK_COMPLETED,
-        });
-      }
-
-      await TaskServices.updateTask(req, task, false);
+      await taskService.update(req, task, false);
       await LogServices.createTaskLog(req, task.id, false);
 
       const logs = await LogServices.getLatestLogs(task.id);
@@ -185,8 +197,12 @@ export class TaskController {
           AlertResponse.ERROR
         );
 
-      const task = await TaskServices.getTask(+req.params.id, req.payload.id);
+      const taskService = new RevisedTaskServices(
+        +req.payload.id,
+        +req.params.id
+      );
 
+      const task = await taskService.getTask();
       if (!task)
         return HTTPResponse.notFound(
           res,
@@ -194,7 +210,7 @@ export class TaskController {
           AlertResponse.ERROR
         );
 
-      await TaskServices.updateTask(req, task, true);
+      await taskService.update(req, task, true);
       await LogServices.createTaskLog(req, task.id, true);
       return HTTPResponse.OK(res, {
         message: TaskHttpResponseMessages.TASK_COMPLETED,
@@ -208,7 +224,12 @@ export class TaskController {
   @Middleware(customJwtManager.middleware)
   private async completeTaskNoForm(req: ISecureRequest, res: Response) {
     try {
-      const task = await TaskServices.getTask(+req.params.id, +req.payload.id);
+      const taskService = new RevisedTaskServices(
+        +req.payload.id,
+        +req.params.id
+      );
+
+      const task = await taskService.getTask();
 
       if (!task)
         return HTTPResponse.notFound(
@@ -218,8 +239,8 @@ export class TaskController {
         );
 
       const log = await LogServices.getLog(+req.params.id, task.id);
+      await taskService.completeTask(task);
 
-      await TaskServices.completeTask(task);
       await LogServices.updateCompleteStatus(log[0]);
 
       HTTPResponse.okWithMessage(
@@ -236,7 +257,12 @@ export class TaskController {
   @Middleware(customJwtManager.middleware)
   private async deleteTask(req: ISecureRequest, res: Response) {
     try {
-      const task = await TaskServices.getTask(+req.params.id, +req.payload.id);
+      const taskService = new RevisedTaskServices(
+        +req.payload.id,
+        +req.params.id
+      );
+
+      const task = await taskService.getTask();
       if (!task)
         return HTTPResponse.notFound(
           res,
@@ -244,7 +270,7 @@ export class TaskController {
           AlertResponse.ERROR
         );
 
-      await TaskServices.deleteTask(task);
+      await taskService.delete(task);
       HTTPResponse.OK(res, {
         message: TaskHttpResponseMessages.TASK_DELETED,
         type: AlertResponse.WARNING,
