@@ -1,5 +1,5 @@
 import { ISecureRequest } from '@overnightjs/jwt';
-import { Log, Task } from '../../models/models';
+import { Log } from '../../models/models';
 import { Record } from '../Record/record';
 
 export class LogService extends Record {

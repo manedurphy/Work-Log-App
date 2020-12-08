@@ -2,14 +2,12 @@ import { Productivity } from '../../models/models';
 import * as moment from 'moment-timezone';
 
 export class ProductivityService {
-  private day: number;
+  private hours: number;
+  private logId: number;
   private date: string;
+  private day: number;
 
-  constructor(
-    private hours: number,
-    private logId: number,
-    date: Date | null = null
-  ) {
+  constructor(hours: number, logId: number, date: Date | null = null) {
     if (date) {
       this.day = this.formatDate(date).getDay();
       this.date = this.getSunday(date);
@@ -35,13 +33,10 @@ export class ProductivityService {
   }
 
   public getSunday(d: Date): string {
-    d = new Date(d);
-    const day = d.getDay();
-    const diff = d.getDate() - day + (day === 0 ? 0 : 1);
+    const Sunday = new Date();
+    Sunday.setDate(d.getDate() - (d.getDay() || 7));
 
-    return moment(new Date(new Date(d.setDate(diff))))
-      .tz('America/Los_Angeles')
-      .format();
+    return moment(Sunday).tz('America/Los_Angeles').format();
   }
 
   public async update(): Promise<void> {
@@ -52,10 +47,10 @@ export class ProductivityService {
     });
 
     prodInstance?.update({
-      day: this.day,
-      weekOf: this.date.slice(0, 10),
       hours: this.hours,
       LogId: this.logId,
+      weekOf: this.date.slice(0, 10),
+      day: this.day,
     });
   }
 }

@@ -12,7 +12,6 @@ import {
 import { ProductivityService } from '../../services/Productivity/ProductivityService';
 import { TaskService } from '../../services/Task/TaskService';
 import { LogService } from '../../services/Log/logService';
-import { Log } from 'src/models';
 
 @Controller('api/log')
 export class LogController {
@@ -102,7 +101,7 @@ export class LogController {
 
       const log = await logService.getLog();
 
-      for (let i = 0; i < log.length - 1; i++) {
+      for (let i: number = 0; i < log.length - 1; i++) {
         const productivity = new ProductivityService(
           log[i + 1].hoursRemaining - log[i].hoursRemaining,
           log[i].id,
