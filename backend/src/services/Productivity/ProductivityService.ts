@@ -21,7 +21,7 @@ export class ProductivityService {
     this.logId = logId;
   }
 
-  create(): Promise<Productivity> {
+  public create(): Promise<Productivity> {
     return Productivity.create({
       day: this.day,
       weekOf: this.date.slice(0, 10),
@@ -30,11 +30,11 @@ export class ProductivityService {
     });
   }
 
-  formatDate(date: Date): Date {
+  public formatDate(date: Date): Date {
     return new Date(moment(date).tz('America/Los_Angeles').format());
   }
 
-  getSunday(d: Date): string {
+  public getSunday(d: Date): string {
     d = new Date(d);
     const day = d.getDay();
     const diff = d.getDate() - day + (day === 0 ? 0 : 1);
@@ -44,7 +44,7 @@ export class ProductivityService {
       .format();
   }
 
-  update = async (): Promise<void> => {
+  public async update(): Promise<void> {
     const prodInstance = await Productivity.findOne({
       where: {
         LogId: this.logId,
@@ -57,5 +57,5 @@ export class ProductivityService {
       hours: this.hours,
       LogId: this.logId,
     });
-  };
+  }
 }

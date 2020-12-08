@@ -12,6 +12,7 @@ import {
 import { ProductivityService } from '../../services/Productivity/ProductivityService';
 import { TaskService } from '../../services/Task/TaskService';
 import { LogService } from '../../services/Log/logService';
+import { Log } from 'src/models';
 
 @Controller('api/log')
 export class LogController {
@@ -97,16 +98,19 @@ export class LogController {
         );
 
       await logService.updateLogItem(req, taskLogItem);
+      logService.id = taskLogItem.TaskId;
 
-      const logs = await logService.getLatestLogs(taskLogItem.TaskId);
+      const log = await logService.getLog();
 
-      const productivity = new ProductivityService(
-        logs[1].hoursRemaining - logs[0].hoursRemaining,
-        logs[0].id,
-        logs[0].loggedAt
-      );
+      for (let i = 0; i < log.length - 1; i++) {
+        const productivity = new ProductivityService(
+          log[i + 1].hoursRemaining - log[i].hoursRemaining,
+          log[i].id,
+          log[i].loggedAt
+        );
 
-      await productivity.update();
+        await productivity.update();
+      }
 
       HTTPResponse.okWithMessage(
         res,
