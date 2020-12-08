@@ -1,11 +1,12 @@
 import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
 import { Get, Post, Controller, Middleware } from '@overnightjs/core';
 import { Request, Response } from 'express';
-import { CheckUserExistance } from './checkUserExistance';
 import { HTTPResponse } from '../HTTP/httpResponses';
 import { AlertResponse, UserHttpResponseMessages } from '../HTTP/httpEnums';
-import { JWTServices } from './jwtServices';
 import { UserValidation } from './userValidation';
+import { UserService } from './userService';
+import { AuthService } from './authService';
+import { VerifyAccountService } from './verifyService';
 
 const customJwtManager = new JwtManager(
   process.env.OVERNIGHT_JWT_SECRET as string,
@@ -18,7 +19,8 @@ export class JWTController {
   @Middleware(customJwtManager.middleware)
   private async checkToken(req: ISecureRequest, res: Response) {
     try {
-      const user = await CheckUserExistance.findUser(req.payload.email);
+      const userService = new UserService(-1, req.payload.email);
+      const user = await userService.findByEmail();
 
       if (!user)
         return HTTPResponse.notFound(
@@ -27,14 +29,15 @@ export class JWTController {
           AlertResponse.ERROR
         );
 
-      if (!JWTServices.verifyAccountIsActive(user))
+      if (!user.active)
         return HTTPResponse.badRequest(
           res,
           UserHttpResponseMessages.USER_NOT_ACTIVE,
           AlertResponse.ERROR
         );
 
-      HTTPResponse.OK(res, JWTServices.tokenSuccess(user));
+      const authService = new AuthService(user);
+      HTTPResponse.OK(res, authService.tokenSuccess());
     } catch (error) {
       HTTPResponse.serverError(res);
     }
@@ -43,7 +46,8 @@ export class JWTController {
   @Get('verify/:hash')
   private async verifyAccount(req: Request, res: Response) {
     try {
-      const activationPassword = await JWTServices.getActivationPassword(req);
+      const verifyAccountService = new VerifyAccountService(req.params.hash);
+      const activationPassword = await verifyAccountService.getActivationPassword();
 
       if (!activationPassword)
         return HTTPResponse.badRequest(
@@ -52,9 +56,8 @@ export class JWTController {
           AlertResponse.ERROR
         );
 
-      const user = await CheckUserExistance.findUserByPk(
-        activationPassword.UserId
-      );
+      const userService = new UserService(activationPassword.UserId);
+      const user = await userService.findByPk();
 
       if (!user)
         return HTTPResponse.notFound(
@@ -63,9 +66,9 @@ export class JWTController {
           AlertResponse.ERROR
         );
 
-      await JWTServices.activateUser(user, activationPassword);
+      await userService.activateUser(user, activationPassword);
 
-      HTTPResponse.OK(res, JWTServices.getAccountVerifiedResponse());
+      HTTPResponse.OK(res, verifyAccountService.getAccountVerifiedResponse());
     } catch (error) {
       HTTPResponse.serverError(res);
     }
@@ -75,7 +78,10 @@ export class JWTController {
   @Middleware(UserValidation.saveUserValidation)
   private async register(req: Request, res: Response) {
     try {
-      const userValidator = new UserValidation();
+      const userValidator = new UserValidation(
+        req.body.password,
+        req.body.password2
+      );
 
       if (!userValidator.validateInput(req))
         return HTTPResponse.badRequest(
@@ -84,7 +90,9 @@ export class JWTController {
           AlertResponse.ERROR
         );
 
-      const existingUser = await CheckUserExistance.findUser(req.body.email);
+      const userService = new UserService(-1, req.body.email);
+      const existingUser = await userService.findByEmail();
+
       if (existingUser)
         return HTTPResponse.badRequest(
           res,
@@ -92,14 +100,14 @@ export class JWTController {
           AlertResponse.ERROR
         );
 
-      if (!JWTServices.verifyPasswordsMatch(req.body))
+      if (!userValidator.verifyPasswordsMatch())
         return HTTPResponse.badRequest(
           res,
           UserHttpResponseMessages.PASSWORD_NOT_MATCH,
           AlertResponse.ERROR
         );
 
-      const user = await JWTServices.createNewUser(req.body, 12);
+      const user = await userService.create(req.body, 12);
       if (!user)
         return HTTPResponse.badRequest(
           res,
@@ -107,9 +115,10 @@ export class JWTController {
           AlertResponse.ERROR
         );
 
-      await JWTServices.createActivationPassword(user.id);
+      const authService = new AuthService(user);
+      await authService.createActivationPassword();
 
-      HTTPResponse.OK(res, JWTServices.getRegisterUserSuccessResponse());
+      HTTPResponse.OK(res, authService.getRegisterUserSuccessResponse());
     } catch (error) {
       HTTPResponse.serverError(res);
     }
@@ -118,7 +127,8 @@ export class JWTController {
   @Post('login')
   private async login(req: Request, res: Response) {
     try {
-      const existingUser = await CheckUserExistance.findUser(req.body.email);
+      const userService = new UserService(-1, req.body.email);
+      const existingUser = await userService.findByEmail();
 
       if (!existingUser)
         return HTTPResponse.badRequest(
@@ -127,17 +137,18 @@ export class JWTController {
           AlertResponse.ERROR
         );
 
-      if (!JWTServices.verifyAccountIsActive(existingUser))
+      if (!existingUser.active)
         return HTTPResponse.badRequest(
           res,
           UserHttpResponseMessages.USER_NOT_ACTIVE,
           AlertResponse.ERROR
         );
 
-      const passwordVerified = await JWTServices.verifyLoginPassword(
-        req.body.password,
-        existingUser.password
+      const authService = new AuthService(existingUser);
+      const passwordVerified = await authService.verifyLoginPassword(
+        req.body.password
       );
+
       if (!passwordVerified)
         return HTTPResponse.badRequest(
           res,
@@ -145,7 +156,7 @@ export class JWTController {
           AlertResponse.ERROR
         );
 
-      HTTPResponse.OK(res, JWTServices.loginSuccess(existingUser));
+      HTTPResponse.OK(res, authService.loginSuccess());
     } catch (error) {
       HTTPResponse.serverError(res);
     }

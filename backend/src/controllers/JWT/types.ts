@@ -1,11 +1,10 @@
 import { Request } from 'express';
 import { ActivationPassword, User } from 'src/models/models';
 
-export type TokenSuccessType = (
-  user: User
-) => {
+export type TokenSuccessReturnType = {
   message: string;
   user: {
+    id: number;
     firstName: string;
     lastName: string;
     email: string;
@@ -56,11 +55,10 @@ export type VerifyLoginPasswordType = (
   existingPassword: string
 ) => Promise<boolean>;
 
-export type LoginSuccessType = (
-  user: User
-) => {
+export type LoginSuccessType = () => {
   jwt: string;
   user: {
+    id: number;
     firstName: string;
     lastName: string;
     email: string;

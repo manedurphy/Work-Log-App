@@ -3,7 +3,6 @@ import { compare, hash } from 'bcrypt';
 import { ActivationPassword, User } from '../../models/models';
 import customJwtManager from './jwtController';
 import {
-  TokenSuccessType,
   VerifyAccountResponseGetterType,
   ActivateUserType,
   GetActivationPasswordType,
@@ -34,16 +33,16 @@ export class JWTServices {
     return { isVerified: true };
   };
 
-  public static tokenSuccess: TokenSuccessType = (user) => {
-    return {
-      message: 'Currently logged in',
-      user: {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-      },
-    };
-  };
+  // public static tokenSuccess: TokenSuccessType = (user) => {
+  //   return {
+  //     message: 'Currently logged in',
+  //     user: {
+  //       firstName: user.firstName,
+  //       lastName: user.lastName,
+  //       email: user.email,
+  //     },
+  //   };
+  // };
 
   public static getActivationPassword: GetActivationPasswordType = async (
     req
@@ -102,14 +101,14 @@ export class JWTServices {
     return await compare(passwordInput, existingPassword);
   };
 
-  public static loginSuccess: LoginSuccessType = (user) => {
-    return {
-      jwt: customJwtManager.jwt({ email: user.email, id: user.id }),
-      user: {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-      },
-    };
-  };
+  // public static loginSuccess: LoginSuccessType = (user) => {
+  //   return {
+  //     jwt: customJwtManager.jwt({ email: user.email, id: user.id }),
+  //     user: {
+  //       firstName: user.firstName,
+  //       lastName: user.lastName,
+  //       email: user.email,
+  //     },
+  //   };
+  // };
 }
