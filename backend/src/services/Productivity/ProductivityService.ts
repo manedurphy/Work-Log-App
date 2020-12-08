@@ -39,6 +39,30 @@ export class ProductivityService {
     return moment(Sunday).tz('America/Los_Angeles').format();
   }
 
+  public async compareProductivity() {
+    const today = new Date();
+    const currentSunday = this.date;
+    const lastSunday = moment(
+      new Date().setDate(today.getDate() - (today.getDay() || 7) - 7)
+    )
+      .tz('America/Los_Angeles')
+      .format();
+
+    const hoursThisWeek = await Productivity.sum('hours', {
+      where: {
+        weekOf: currentSunday.slice(0, 10),
+      },
+    });
+
+    const hoursLastWeek = await Productivity.sum('hours', {
+      where: {
+        weekOf: lastSunday.slice(0, 10),
+      },
+    });
+
+    return (hoursThisWeek / hoursLastWeek) * 100;
+  }
+
   public async update(): Promise<void> {
     const prodInstance = await Productivity.findOne({
       where: {
