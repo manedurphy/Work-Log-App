@@ -1,12 +1,15 @@
 import { JwtManager, ISecureRequest } from '@overnightjs/jwt';
 import { Get, Post, Controller, Middleware } from '@overnightjs/core';
 import { Request, Response } from 'express';
-import { HTTPResponse } from '../HTTP/httpResponses';
-import { AlertResponse, UserHttpResponseMessages } from '../HTTP/httpEnums';
-import { UserValidation } from './userValidation';
-import { UserService } from './userService';
-import { AuthService } from './authService';
-import { VerifyAccountService } from './verifyService';
+import { HTTPResponse } from '../../constants/HTTP/httpResponses';
+import { UserValidation } from '../../services/User/userValidation';
+import { UserService } from '../../services/User/userService';
+import { AuthService } from '../../services/Auth/authService';
+import { VerifyAccountService } from '../../services/Auth/verifyService';
+import {
+  AlertResponse,
+  UserHttpResponseMessages,
+} from '../../constants/HTTP/httpEnums';
 
 const customJwtManager = new JwtManager(
   process.env.OVERNIGHT_JWT_SECRET as string,

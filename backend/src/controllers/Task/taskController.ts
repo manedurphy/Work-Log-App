@@ -2,17 +2,17 @@ import customJwtManager from '../JWT/jwtController';
 import { Response } from 'express';
 import { ISecureRequest } from '@overnightjs/jwt';
 import { Logger } from '@overnightjs/logger';
-import { TaskValidation } from './taskValidation';
+import { TaskValidation } from '../../services/Task/taskValidation';
 import { CheckUserExistance } from '../JWT/checkUserExistance';
-import { HTTPResponse } from '../HTTP/httpResponses';
-import { ProductivityService } from '../Productivity/ProductivityService';
-import { TaskService } from './taskService';
-import { LogService } from '../Log/logService';
+import { HTTPResponse } from '../../constants/HTTP/httpResponses';
+import { ProductivityService } from '../../services/Productivity/ProductivityService';
+import { TaskService } from '../../services/Task/TaskService';
+import { LogService } from '../../services/Log/logService';
 import {
   AlertResponse,
   TaskHttpResponseMessages,
   UserHttpResponseMessages,
-} from '../HTTP/httpEnums';
+} from '../../constants/HTTP/httpEnums';
 import {
   Controller,
   Middleware,

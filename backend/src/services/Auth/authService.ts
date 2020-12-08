@@ -1,8 +1,8 @@
 import sgMail = require('@sendgrid/mail');
 import { compare } from 'bcrypt';
 import { ActivationPassword, User } from '../../models/models';
-import customJwtManager from './jwtController';
-import { LoginSuccessType, TokenSuccessReturnType } from './types';
+import customJwtManager from '../../controllers/JWT/jwtController';
+import { LoginSuccessType, TokenSuccessReturnType } from '../User/types';
 
 export class AuthService {
   private user: User;

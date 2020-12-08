@@ -1,5 +1,5 @@
 import { ActivationPassword } from '../../models/models';
-import { VerifyAccountResponseGetterType } from './types';
+import { VerifyAccountResponseGetterType } from '../User/types';
 
 export class VerifyAccountService {
   private hash: string;

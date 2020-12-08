@@ -2,8 +2,8 @@ import customJwtManager from '../JWT/jwtController';
 import { Controller, Middleware, Get } from '@overnightjs/core';
 import { Response } from 'express';
 import { ISecureRequest } from '@overnightjs/jwt';
-import { ArchiveServices } from './archiveServices';
-import { HTTPResponse } from '../HTTP/httpResponses';
+import { ArchiveService } from '../../services/Archive/archiveService';
+import { HTTPResponse } from '../../constants/HTTP/httpResponses';
 
 @Controller('api/archive')
 export class Archive {
@@ -11,10 +11,8 @@ export class Archive {
   @Middleware(customJwtManager.middleware)
   private async getCompletedTasks(req: ISecureRequest, res: Response) {
     try {
-      HTTPResponse.OK(
-        res,
-        await ArchiveServices.getCompletedTasks(+req.payload.id, true)
-      );
+      const archiveService = new ArchiveService(+req.payload.id, true);
+      HTTPResponse.OK(res, await archiveService.getCompletedTasks());
     } catch (error) {
       HTTPResponse.serverError(res);
     }

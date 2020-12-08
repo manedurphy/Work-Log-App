@@ -1,5 +1,5 @@
 import { ISecureRequest } from '@overnightjs/jwt';
-import { Task } from '../../models/';
+import { Task } from '../../models';
 
 export interface RecordType {
   id?: number;

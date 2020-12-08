@@ -1,5 +1,5 @@
 import { validationResult } from 'express-validator';
-import { ValidateInputType } from '../JWT/types';
+import { ValidateInputType } from './types';
 
 export class Validation {
   constructor(private _errorMessage: string = '') {}

@@ -1,7 +1,7 @@
 import { Controller, Get, Middleware } from '@overnightjs/core';
 import { ISecureRequest } from '@overnightjs/jwt';
 import { Request, Response } from 'express';
-import { HTTPResponse } from '../HTTP/httpResponses';
+import { HTTPResponse } from '../../constants/HTTP/httpResponses';
 import customJwtManager from '../JWT/jwtController';
 import { ServicesHelpers } from './helpers';
 
