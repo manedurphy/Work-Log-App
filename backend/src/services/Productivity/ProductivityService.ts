@@ -77,12 +77,19 @@ export class ProductivityService {
       },
     });
 
-    const calc = 100 - (hoursThisWeek / (hoursLastWeek || 1)) * 100;
+    let calc: number;
 
-    if (calc < 0) {
-      return { percent: calc * -1, status: 'increase', color: 'green' };
-    } else {
+    console.log(hoursThisWeek);
+    console.log(hoursLastWeek);
+
+    if (hoursThisWeek < hoursLastWeek) {
+      calc = 100 - (hoursThisWeek / (hoursLastWeek || 1)) * 100;
       return { percent: calc, status: 'decrease', color: 'red' };
+    } else if (hoursThisWeek > hoursLastWeek) {
+      calc = (hoursThisWeek / (hoursLastWeek || 1)) * 100;
+      return { percent: calc, status: 'increase', color: 'green' };
+    } else {
+      return { percent: 0, status: 'increase', color: 'blue' };
     }
   }
 

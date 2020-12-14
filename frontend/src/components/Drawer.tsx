@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import logo from '../assets/acco.jpeg';
 import { GlobalContext } from '../context/GlobalState';
 import { Tasks } from '../enums';
+import UseWindow from './UseWindow';
 import {
   Assignment as AssignmentIcon,
   DataUsage as DataUsageIcon,
@@ -16,7 +17,6 @@ import {
   ListItemText,
   makeStyles,
 } from '@material-ui/core';
-import UseWindow from './UseWindow';
 
 const useStyles = makeStyles((theme) => ({
   drawerPaper: {
