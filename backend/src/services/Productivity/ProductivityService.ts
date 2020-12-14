@@ -80,9 +80,9 @@ export class ProductivityService {
     const calc = 100 - (hoursThisWeek / (hoursLastWeek || 1)) * 100;
 
     if (calc < 0) {
-      return { percent: calc * -1, status: 'increase' };
+      return { percent: calc * -1, status: 'increase', color: 'green' };
     } else {
-      return { percent: calc, status: 'decrease' };
+      return { percent: calc, status: 'decrease', color: 'red' };
     }
   }
 

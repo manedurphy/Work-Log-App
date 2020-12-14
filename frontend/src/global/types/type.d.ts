@@ -1,5 +1,5 @@
 import * as H from 'history';
-import { Tasks, Users, Logs, Alerts, Dates } from '../../enums';
+import { Tasks, Users, Logs, Alerts, Dates, Productivities } from '../../enums';
 
 /** TASKS  */
 export interface ITask {
@@ -188,6 +188,7 @@ export type GlobalStateType = {
   log: LogStateType;
   alerts: AlertStateType;
   date: DateStateType;
+  productivity: ProductivityStateType;
 };
 
 export type GlobalAction =
@@ -195,7 +196,8 @@ export type GlobalAction =
   | UserAction
   | LogAction
   | AlertAction
-  | DateAction;
+  | DateAction
+  | ProductivityAction;
 
 export type GlobalReducer = (
   state: GlobalStateType,
@@ -260,7 +262,14 @@ export type WeatherDataType = {
 };
 
 // PRODUCTIVITY
-export type ProductivityDataType = {
+
+export type ProductivityStateType = {
   percent: number;
   status: string;
+  color: string;
+};
+
+export type ProductivityAction = {
+  type: Productivities.setProductivity;
+  payload: ProductivityStateType;
 };

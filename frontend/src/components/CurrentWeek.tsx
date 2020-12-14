@@ -5,12 +5,13 @@ import Title from './Title';
 import Date from './Date';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { GlobalContext } from '../context/GlobalState';
-import { Dates } from '../enums';
+import { Dates, Productivities } from '../enums';
 import {
   getDispatchDate,
   getFilterTasksDue,
   getFormattedDate,
 } from '../global/functions/helpers';
+import { getProductivityData } from '../global/functions/axios';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -42,6 +43,13 @@ const Deposits = (): JSX.Element => {
         tasksDue: getFilterTasksDue(tasks.currentTasks, resetDate),
       },
     });
+
+    (async () => {
+      dispatch({
+        type: Productivities.setProductivity,
+        payload: await getProductivityData(),
+      });
+    })();
     setPage(1);
   }, [tasks.currentTasks]);
 

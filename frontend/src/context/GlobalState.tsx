@@ -5,6 +5,7 @@ import { initialUserState } from './user-context';
 import { initialLogState } from './log-context';
 import { initialAlertState } from './alert-context';
 import { initialDateState } from './date-context';
+import { initialProductivityState } from './productivity-context';
 import {
   GlobalStateType,
   GlobalAction,
@@ -14,6 +15,7 @@ import {
   alertReducer,
   dateReducer,
   logReducer,
+  productivityReducer,
   taskReducer,
   userReducer,
 } from './reducers';
@@ -24,6 +26,7 @@ const [globalReducer, initialGlobalState] = combineReducers<GlobalReducer>({
   log: [logReducer, initialLogState],
   alerts: [alertReducer, initialAlertState],
   date: [dateReducer, initialDateState],
+  productivity: [productivityReducer, initialProductivityState],
 });
 
 export const GlobalContext = React.createContext<{

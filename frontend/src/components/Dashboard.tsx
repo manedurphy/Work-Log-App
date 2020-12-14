@@ -6,8 +6,12 @@ import Spinner from './UI/Spinner';
 import { AxiosResponse } from 'axios';
 import { Redirect } from 'react-router-dom';
 import { GlobalContext } from '../context/GlobalState';
-import { getTasks, verifyUser } from '../global/functions/axios';
-import { Users, Tasks, Logs, Alerts } from '../enums';
+import {
+  getProductivityData,
+  getTasks,
+  verifyUser,
+} from '../global/functions/axios';
+import { Users, Tasks, Logs, Alerts, Productivities } from '../enums';
 import { VerifyType } from '../global/types/type';
 import { Box, makeStyles } from '@material-ui/core';
 
@@ -59,6 +63,10 @@ const Dashboard: React.FC = (): JSX.Element => {
         dispatch({
           type: Tasks.updateTasks,
           payload: await getTasks(showCompleted),
+        });
+        dispatch({
+          type: Productivities.setProductivity,
+          payload: await getProductivityData(),
         });
         setLoadingTasks(false);
       } catch (error) {

@@ -43,3 +43,7 @@ export enum Dates {
 export enum Errors {
   WEATHER = 'Data unavailable',
 }
+
+export enum Productivities {
+  setProductivity = 'SET_PRODUCTIVITY',
+}

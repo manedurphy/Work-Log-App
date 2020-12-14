@@ -1,5 +1,5 @@
 import { TaskStateType, TaskAction } from '../global/types/type';
-import { Alerts, Dates, Logs, Tasks, Users } from '../enums';
+import { Alerts, Dates, Logs, Productivities, Tasks, Users } from '../enums';
 
 export const taskReducer = (
   taskState: TaskStateType,
@@ -93,5 +93,14 @@ export const dateReducer = (dateState: any, action: any) => {
       };
     default:
       return dateState;
+  }
+};
+
+export const productivityReducer = (productivityState: any, action: any) => {
+  switch (action.type) {
+    case Productivities.setProductivity:
+      return action.payload;
+    default:
+      return productivityState;
   }
 };
