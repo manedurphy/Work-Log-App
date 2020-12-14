@@ -1,24 +1,22 @@
-import React, { useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import logo from '../assets/acco.jpeg';
 import { GlobalContext } from '../context/GlobalState';
 import { Tasks } from '../enums';
 import {
-  ChevronLeft as ChevronLeftIcon,
   Assignment as AssignmentIcon,
   DataUsage as DataUsageIcon,
 } from '@material-ui/icons';
 import {
-  Box,
   Divider,
   Drawer,
-  IconButton,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   makeStyles,
 } from '@material-ui/core';
+import UseWindow from './UseWindow';
 
 const useStyles = makeStyles((theme) => ({
   drawerPaper: {
@@ -64,11 +62,17 @@ const DrawerComponent: React.FC<{
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }> = (props): JSX.Element => {
   const classes = useStyles();
+  const size = UseWindow();
   const { dispatch } = useContext(GlobalContext);
 
-  const handleDrawerClose = () => {
-    props.setOpen(false);
-  };
+  useEffect(() => {
+    if (window.innerWidth <= 960) {
+      props.setOpen(false);
+    } else if (window.innerWidth > 960) {
+      props.setOpen(true);
+    }
+  }, [window.innerWidth]);
+
   return (
     <Drawer
       variant="permanent"
@@ -79,13 +83,8 @@ const DrawerComponent: React.FC<{
           !props.open && classes.drawerPaperClose
         ),
       }}
-      open={props.open}
+      open={window.innerWidth > 960 ? true : false}
     >
-      <Box className={classes.toolbarIcon}>
-        <IconButton onClick={handleDrawerClose}>
-          <ChevronLeftIcon />
-        </IconButton>
-      </Box>
       <div
         className=""
         style={{
@@ -95,8 +94,12 @@ const DrawerComponent: React.FC<{
           fontFamily: 'Fjalla One, sans-serif',
         }}
       >
-        <img src={logo} style={{ width: '25px', height: '25px' }} />
-        <h2 style={{ marginLeft: '3px' }}>Work Logger</h2>
+        {props.open && (
+          <React.Fragment>
+            <img src={logo} style={{ width: '25px', height: '25px' }} />
+            <h2 style={{ marginLeft: '3px' }}>Work Logger</h2>
+          </React.Fragment>
+        )}
       </div>
       <Divider />
       <List>
