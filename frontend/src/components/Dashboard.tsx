@@ -6,14 +6,14 @@ import Spinner from './UI/Spinner';
 import { AxiosResponse } from 'axios';
 import { Redirect } from 'react-router-dom';
 import { GlobalContext } from '../context/GlobalState';
+import { Users, Tasks, Logs, Alerts, Productivities } from '../enums';
+import { VerifyType } from '../global/types/type';
+import { Box, makeStyles } from '@material-ui/core';
 import {
   getProductivityData,
   getTasks,
   verifyUser,
 } from '../global/functions/axios';
-import { Users, Tasks, Logs, Alerts, Productivities } from '../enums';
-import { VerifyType } from '../global/types/type';
-import { Box, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {

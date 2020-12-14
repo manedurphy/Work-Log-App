@@ -23,7 +23,7 @@ const TasksDue: React.FC<{
   const classes = useStyles();
   const { state } = useContext(GlobalContext);
   return (
-    <Grid item xs={12} md={3}>
+    <Grid item xs={12} md={6} lg={3}>
       <Paper className={props.paper}>
         <h4 className={props.alignText}>Tasks Due</h4>
         <p>You have {state.date.tasksDue.length} tasks due today</p>

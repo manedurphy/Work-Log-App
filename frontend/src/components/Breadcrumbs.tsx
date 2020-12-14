@@ -30,7 +30,7 @@ const Breadcrumbs = (): JSX.Element => {
         <Weather paper={classes.paper} />
         <TasksDue paper={classes.paper} alignText={classes.alignText} />
         <Productivity paper={classes.paper} alignText={classes.alignText} />
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={6} lg={3}>
           <Paper className={classes.paper}>Here is a component</Paper>
         </Grid>
       </Grid>

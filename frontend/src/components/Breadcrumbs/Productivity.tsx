@@ -26,7 +26,7 @@ const Productivity: React.FC<{ paper: string; alignText: string }> = (
   const classes = useStyles();
   const { state } = useContext(GlobalContext);
   return (
-    <Grid item xs={12} md={3}>
+    <Grid item xs={12} md={6} lg={3}>
       <Paper className={props.paper}>
         <h4 className={props.alignText}>Productivity</h4>
         {state.productivity.status !== 'unavailable' ? (

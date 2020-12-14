@@ -78,7 +78,7 @@ const Weather: React.FC<{
   }, []);
 
   return (
-    <Grid item xs={12} md={3}>
+    <Grid item xs={12} md={6} lg={3}>
       <Paper className={props.paper}>
         <h4 style={{ marginBottom: '3px' }}>Bay Point, CA</h4>
         {weather.weather[0].main !== 'unavailable' ? (

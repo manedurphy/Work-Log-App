@@ -44,13 +44,13 @@ const Main: React.FC = (): JSX.Element => {
     <Container maxWidth="lg" className={classes.container}>
       <Breadcrumbs />
       <Grid container spacing={3}>
-        <Grid item xs={12} md={8} lg={7}>
+        <Grid item xs={12} lg={7}>
           <Paper className={fixedHeightPaper}>
             <Chart />
           </Paper>
         </Grid>
 
-        <Grid item xs={12} md={4} lg={5}>
+        <Grid item xs={12} lg={5}>
           <Paper className={fixedHeightPaper}>
             <CurrentWeek />
           </Paper>
