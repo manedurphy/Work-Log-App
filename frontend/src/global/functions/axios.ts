@@ -6,6 +6,7 @@ import {
   ITask,
   ITaskForm,
   MessageType,
+  ProductivityDataType,
   WeatherDataType,
 } from '../types/type';
 import { getToken, hoursRemaining } from './helpers';
@@ -162,4 +163,13 @@ export const getWeatherData = async () => {
   );
 
   return weatherData.data;
+};
+
+export const getProductivityData = async () => {
+  const productivity: AxiosResponse<ProductivityDataType> = await axios.get(
+    '/api/services/productivity',
+    { headers: { Authorization: `Bearer ${getToken()}` } }
+  );
+
+  return productivity.data;
 };

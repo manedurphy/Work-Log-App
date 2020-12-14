@@ -2,7 +2,6 @@ import { Controller, Get, Middleware } from '@overnightjs/core';
 import { ISecureRequest } from '@overnightjs/jwt';
 import { Request, Response } from 'express';
 import { ProductivityService } from '../../services/Productivity/ProductivityService';
-import { UserService } from '../../services/User/userService';
 import { HTTPResponse } from '../../constants/HTTP/httpResponses';
 import customJwtManager from '../JWT/jwtController';
 import { ServicesHelpers } from './helpers';

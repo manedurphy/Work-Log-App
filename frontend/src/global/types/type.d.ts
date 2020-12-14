@@ -258,3 +258,9 @@ export type WeatherDataType = {
   name: string;
   cod: number;
 };
+
+// PRODUCTIVITY
+export type ProductivityDataType = {
+  percent: number;
+  status: string;
+};

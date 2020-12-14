@@ -4,9 +4,10 @@ import {
   FormatListBulleted as FormatListBulletedIcon,
   Work as WorkIcon,
   ArrowUpward as ArrowUpwardIcon,
+  ArrowDownward as ArrowDownwardIcon,
 } from '@material-ui/icons';
 import { WeatherDataType } from '../global/types/type';
-import { getWeatherData } from '../global/functions/axios';
+import { getProductivityData, getWeatherData } from '../global/functions/axios';
 import { GlobalContext } from '../context/GlobalState';
 import { Errors } from '../enums';
 
@@ -101,13 +102,26 @@ const Breadcrumbs = (): JSX.Element => {
   const classes = useStyles();
   const { state } = useContext(GlobalContext);
   const [weather, setWeather] = useState<WeatherDataType>(initialWeatherData);
+  const [color, setColor] = useState('red');
+  const [productivity, setProductivity] = useState({
+    percent: 0,
+    status: 'unavailable',
+  });
 
   useEffect(() => {
     (async () => {
       const weatherData = await getWeatherData();
+      const productivityData = await getProductivityData();
+
       setWeather(weatherData);
+      setProductivity(productivityData);
+
+      if (productivityData.status === 'increase') {
+        setColor('green');
+      }
     })();
   }, []);
+  console.log(productivity);
 
   return (
     <React.Fragment>
@@ -145,16 +159,33 @@ const Breadcrumbs = (): JSX.Element => {
         <Grid item xs={12} md={3}>
           <Paper className={classes.paper}>
             <h4 className={classes.alignText}>Productivity</h4>
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              width="100%"
-            >
-              <ArrowUpwardIcon style={{ color: 'green' }} />
-              <p style={{ color: 'green', marginRight: '5px' }}>12%</p>
-              <p>Since last week</p>
-            </Box>
+            {productivity.status !== 'unavailable' ? (
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                width="100%"
+              >
+                {productivity.status === 'increase' ? (
+                  <ArrowUpwardIcon style={{ color }} />
+                ) : (
+                  <ArrowDownwardIcon style={{ color }} />
+                )}
+                <p style={{ color, marginRight: '5px' }}>
+                  {productivity.percent}%
+                </p>
+                <p>Since last week</p>
+              </Box>
+            ) : (
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                width="100%"
+              >
+                <p>Calcluating...</p>
+              </Box>
+            )}
             <Box className={classes.productivity}>
               <WorkIcon />
             </Box>
