@@ -42,10 +42,10 @@ export class ProductivityService {
   }
 
   public getSunday(d: Date): string {
-    const Sunday = new Date();
-    Sunday.setDate(d.getDate() - d.getDay());
+    const sunday = new Date();
+    sunday.setDate(d.getDate() - d.getDay());
 
-    return moment(Sunday).tz('America/Los_Angeles').format();
+    return moment(sunday).tz('America/Los_Angeles').format();
   }
 
   public async compareProductivity() {
@@ -78,9 +78,6 @@ export class ProductivityService {
     });
 
     let calc: number;
-
-    console.log(hoursThisWeek);
-    console.log(hoursLastWeek);
 
     if (hoursThisWeek < hoursLastWeek) {
       calc = 100 - (hoursThisWeek / (hoursLastWeek || 1)) * 100;
