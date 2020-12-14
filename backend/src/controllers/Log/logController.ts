@@ -12,7 +12,6 @@ import {
 import { ProductivityService } from '../../services/Productivity/ProductivityService';
 import { TaskService } from '../../services/Task/TaskService';
 import { LogService } from '../../services/Log/logService';
-import { Task } from '../../models/Task';
 
 @Controller('api/log')
 export class LogController {

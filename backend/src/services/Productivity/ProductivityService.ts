@@ -1,5 +1,6 @@
 import { Productivity } from '../../models/models';
 import * as moment from 'moment-timezone';
+import { Op } from 'sequelize';
 
 export class ProductivityService {
   private hours: number;
@@ -42,7 +43,7 @@ export class ProductivityService {
 
   public getSunday(d: Date): string {
     const Sunday = new Date();
-    Sunday.setDate(d.getDate() - (d.getDay() || 7));
+    Sunday.setDate(d.getDate() - d.getDay());
 
     return moment(Sunday).tz('America/Los_Angeles').format();
   }
@@ -51,7 +52,7 @@ export class ProductivityService {
     const today = new Date();
     const currentSunday = this.date;
     const lastSunday = moment(
-      new Date().setDate(today.getDate() - (today.getDay() || 7) - 7)
+      new Date().setDate(today.getDate() - (today.getDay() || 7))
     )
       .tz('America/Los_Angeles')
       .format();
@@ -59,16 +60,30 @@ export class ProductivityService {
     const hoursThisWeek = await Productivity.sum('hours', {
       where: {
         weekOf: currentSunday.slice(0, 10),
+        UserId: this.userId,
+        day: {
+          [Op.lte]: this.day,
+        },
       },
     });
 
     const hoursLastWeek = await Productivity.sum('hours', {
       where: {
         weekOf: lastSunday.slice(0, 10),
+        UserId: this.userId,
+        day: {
+          [Op.lte]: this.day,
+        },
       },
     });
 
-    return (hoursThisWeek / hoursLastWeek) * 100;
+    const calc = 100 - (hoursThisWeek / (hoursLastWeek || 1)) * 100;
+
+    if (calc < 0) {
+      return { percent: calc * -1, status: 'increase' };
+    } else {
+      return { percent: calc, status: 'decrease' };
+    }
   }
 
   public async update(): Promise<void> {

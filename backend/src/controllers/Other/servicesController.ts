@@ -1,7 +1,8 @@
 import { Controller, Get, Middleware } from '@overnightjs/core';
 import { ISecureRequest } from '@overnightjs/jwt';
 import { Request, Response } from 'express';
-import { UserService } from 'src/services/User/userService';
+import { ProductivityService } from '../../services/Productivity/ProductivityService';
+import { UserService } from '../../services/User/userService';
 import { HTTPResponse } from '../../constants/HTTP/httpResponses';
 import customJwtManager from '../JWT/jwtController';
 import { ServicesHelpers } from './helpers';
@@ -29,11 +30,21 @@ export class MiscServices {
     }
   }
 
-  // @Get('productivity')
-  // @Middleware(customJwtManager.middleware)
-  // private async getProductivity(req: ISecureRequest, res: Response) {
-  //   const userServer = new UserService(req.payload.id, req.payload.email);
-  //   const user = await userServer.findByPk();
+  @Get('productivity')
+  @Middleware(customJwtManager.middleware)
+  private async getProductivity(req: ISecureRequest, res: Response) {
+    try {
+      const productivityService = new ProductivityService(
+        -1,
+        -1,
+        +req.payload.id
+      );
 
-  // }
+      const calculatedProductivity = await productivityService.compareProductivity();
+
+      HTTPResponse.OK(res, calculatedProductivity);
+    } catch (error) {
+      HTTPResponse.serverError(res);
+    }
+  }
 }
