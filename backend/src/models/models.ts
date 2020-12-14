@@ -176,6 +176,10 @@ Models.Log.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    UserId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   },
   {
     sequelize,
@@ -233,6 +237,10 @@ Productivity.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    UserId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   },
   {
     sequelize,
@@ -240,12 +248,17 @@ Productivity.init(
 );
 
 Models.User.hasMany(Models.Task);
+Models.User.hasMany(Models.Log);
+Models.User.hasMany(Models.Productivity);
 Models.Log.hasOne(Productivity);
 Models.User.hasOne(Models.ActivationPassword);
 Models.ActivationPassword.belongsTo(Models.User);
 Models.Productivity.belongsTo(Models.Log);
+Models.Productivity.belongsTo(Models.User);
 Models.Task.hasMany(Models.Log);
 Models.Task.belongsTo(Models.User);
+Models.Log.belongsTo(Models.User);
+Models.Log.belongsTo(Models.Task);
 
 (async () => {
   await Models.User.sync();

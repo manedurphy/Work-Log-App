@@ -59,6 +59,7 @@ export class LogService extends Record {
       ...log,
       loggedAt: req.body.loggedAt || new Date(),
       TaskId: this._id,
+      UserId: req.payload.id,
     });
   }
 

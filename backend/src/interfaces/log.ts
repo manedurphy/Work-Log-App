@@ -14,6 +14,7 @@ export interface LogAttributes {
   complete: boolean;
   loggedAt: Date;
   TaskId: number;
+  UserId: number;
 }
 
 export interface LogCreationAttributes extends Optional<LogAttributes, 'id'> {}

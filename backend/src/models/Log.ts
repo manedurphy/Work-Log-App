@@ -16,6 +16,7 @@ export class Log
   public complete!: boolean;
   public loggedAt!: Date;
   public TaskId!: number;
+  public UserId!: number;
 
   public readonly createdAt!: Date;
 }

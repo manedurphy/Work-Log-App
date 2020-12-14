@@ -6,8 +6,14 @@ export class ProductivityService {
   private logId: number;
   private date: string;
   private day: number;
+  private userId: number;
 
-  constructor(hours: number, logId: number, date: Date | null = null) {
+  constructor(
+    hours: number,
+    logId: number,
+    userId: number,
+    date: Date | null = null
+  ) {
     if (date) {
       this.day = this.formatDate(date).getDay();
       this.date = this.getSunday(date);
@@ -17,6 +23,7 @@ export class ProductivityService {
     }
     this.hours = hours;
     this.logId = logId;
+    this.userId = userId;
   }
 
   public create(): Promise<Productivity> {
@@ -25,6 +32,7 @@ export class ProductivityService {
       weekOf: this.date.slice(0, 10),
       hours: this.hours,
       LogId: this.logId,
+      UserId: this.userId,
     });
   }
 

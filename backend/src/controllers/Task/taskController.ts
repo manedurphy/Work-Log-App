@@ -106,7 +106,8 @@ export class TaskController {
 
       const productivity = new ProductivityService(
         newTask.hoursAvailableToWork - newTask.hoursRemaining,
-        newLog.id
+        newLog.id,
+        newTask.UserId
       );
 
       await productivity.create();
@@ -155,6 +156,7 @@ export class TaskController {
       const productivity = new ProductivityService(
         logs[1].hoursRemaining - logs[0].hoursRemaining,
         logs[0].id,
+        task.UserId,
         logs[0].loggedAt
       );
 
@@ -202,6 +204,7 @@ export class TaskController {
       const productivity = new ProductivityService(
         taskLogItems[1].hoursRemaining - taskLogItems[0].hoursRemaining,
         taskLogItems[0].id,
+        task.UserId,
         taskLogItems[0].loggedAt
       );
 

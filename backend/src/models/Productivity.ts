@@ -12,5 +12,6 @@ export class Productivity extends Model<
   public day!: number;
   public weekOf!: string;
   public hours!: number;
+  public LogId!: number;
   public UserId!: number;
 }

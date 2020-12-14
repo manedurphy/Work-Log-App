@@ -12,6 +12,7 @@ import {
 import { ProductivityService } from '../../services/Productivity/ProductivityService';
 import { TaskService } from '../../services/Task/TaskService';
 import { LogService } from '../../services/Log/logService';
+import { Task } from '../../models/Task';
 
 @Controller('api/log')
 export class LogController {
@@ -89,6 +90,7 @@ export class LogController {
     try {
       const logService = new LogService(+req.params.id);
       const taskLogItem = await logService.getLogItem();
+
       if (!taskLogItem)
         return HTTPResponse.notFound(
           res,
@@ -105,6 +107,7 @@ export class LogController {
         const productivity = new ProductivityService(
           log[i + 1].hoursRemaining - log[i].hoursRemaining,
           log[i].id,
+          taskLogItem.UserId,
           log[i].loggedAt
         );
 
