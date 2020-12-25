@@ -4,7 +4,10 @@
   "description": "Work week time tracker",
   "main": "build/start.js",
   "scripts": {
-    "start": "cd backend && npm install && cd ../frontend && npm install && npm run build && cd .. && node backend/build/server/serverStart.js"
+    "start": "node backend/build/server/serverStart.js",
+    "build": "cd backend && npm install && cd ../frontend && npm install && npm run build",
+    "tsc": "cd backend && tsc",
+    "heroku-postbuild": "cd backend && npm run tsc"
   },
   "tsc": "cd backend tsc",
   "postinstall": "npm run tsc",
