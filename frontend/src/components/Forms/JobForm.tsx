@@ -290,7 +290,6 @@ const JobForm: React.FC = (): JSX.Element => {
                   shrink: true,
                 }}
                 onChange={(date) => {
-                  console.log(date.target.value);
                   setFormData({ ...formData, dateAssigned: date.target.value });
                 }}
               />

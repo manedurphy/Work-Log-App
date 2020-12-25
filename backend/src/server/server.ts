@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as controllers from '../controllers';
 import * as cors from 'cors';
+import * as path from 'path';
 import { Server } from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
 
@@ -27,8 +28,23 @@ class MyServer extends Server {
   }
 
   public start(port: number): void {
+    this.app.use(
+      express.static(
+        path.join(__dirname, '..', '..', '..', 'frontend', 'build')
+      )
+    );
     this.app.get('*', (req, res) => {
-      res.send(this.SERVER_STARTED + port);
+      res.sendFile(
+        path.join(
+          __dirname,
+          '..',
+          '..',
+          '..',
+          'frontend',
+          'build',
+          'index.html'
+        )
+      );
     });
     this.app.listen(port, () => {
       Logger.Imp(this.SERVER_STARTED + port);

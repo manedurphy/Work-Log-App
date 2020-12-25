@@ -46,7 +46,7 @@ const GlobalState: React.FC = ({ children }) => {
     initialGlobalState
   );
 
-  useEffect(() => console.log('STATE: ', state), [state]);
+  // useEffect(() => console.log('STATE: ', state), [state]);
 
   return (
     <GlobalContext.Provider value={{ state, dispatch }}>

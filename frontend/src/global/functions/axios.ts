@@ -181,7 +181,5 @@ export const getHoursWorked = async () => {
     { headers: { Authorization: `Bearer ${getToken()}` } }
   );
 
-  console.log('HOURS WORKED: ', hoursWorked);
-
   return hoursWorked.data;
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react';
 import clsx from 'clsx';
-import logo from '../assets/acco.jpeg';
+// import logo from '../assets/acco.jpeg';
 import { GlobalContext } from '../context/GlobalState';
 import { Tasks } from '../enums';
 import UseWindow from './UseWindow';
@@ -96,7 +96,7 @@ const DrawerComponent: React.FC<{
       >
         {props.open && (
           <React.Fragment>
-            <img src={logo} style={{ width: '25px', height: '25px' }} />
+            {/* <img src={logo} style={{ width: '25px', height: '25px' }} /> */}
             <h2 style={{ marginLeft: '3px' }}>Work Logger</h2>
           </React.Fragment>
         )}
