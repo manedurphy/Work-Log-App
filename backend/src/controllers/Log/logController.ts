@@ -72,6 +72,23 @@ export class LogController {
         );
 
       await taskLogItem.destroy();
+      logService.id = taskLogItem.TaskId;
+
+      const log = await logService.getLog();
+
+      console.log('LOG: ', log);
+
+      for (let i: number = 0; i < log.length - 1; i++) {
+        const productivity = new ProductivityService(
+          log[i + 1].hoursRemaining - log[i].hoursRemaining,
+          log[i].id,
+          taskLogItem.UserId,
+          log[i].loggedAt
+        );
+
+        await productivity.update();
+      }
+
       HTTPResponse.okWithMessage(
         res,
         LogHttpResponseMessage.LOG_DELETED,
