@@ -12,12 +12,17 @@ export class AuthService {
   }
 
   private sendVerificationEmail(activationPassword: string) {
+    const verificationLink =
+      process.env.NODE_ENV === 'production'
+        ? `https://work-log-connor-app.herokuapp.com/verify/${activationPassword}`
+        : `http://localhost:3000/verify/${activationPassword}`;
+
     sgMail.setApiKey(process.env.SENDGRID_API as string);
     const msg = {
-      to: process.env.TEST_EMAIL as string,
+      to: this.user.email,
       from: process.env.ETHEREAL_EMAIL as string,
       subject: 'Verify your account',
-      html: `<p>Click the link to verify your account http://localhost:3000/verify/${activationPassword}</p>`,
+      html: `<p>Click the link to verify your account: ${verificationLink}</p>`,
     };
     return sgMail.send(msg);
   }

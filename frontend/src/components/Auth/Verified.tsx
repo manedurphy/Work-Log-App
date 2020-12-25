@@ -3,8 +3,7 @@ import React from 'react';
 const Verified = (): JSX.Element => {
   return (
     <div>
-      Your account has been verified! Click{' '}
-      <a href="http://localhost:3000/login">here</a> to log in
+      Your account has been verified! Click <a href="/login">here</a> to log in
     </div>
   );
 };
