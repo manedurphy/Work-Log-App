@@ -1,1 +1,1 @@
-node backend/build/server/serverStart.js
+web: node backend/build/server/serverStart.js
