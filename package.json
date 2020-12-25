@@ -6,6 +6,9 @@
   "scripts": {
     "start": "cd backend && npm install && tsc && cd ../frontend && npm install && npm run build && cd .. && node backend/build/server/serverStart.js"
   },
+  "engines": {
+    "node": "15.3.0"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC"
