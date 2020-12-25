@@ -4,7 +4,7 @@
   "description": "Work week time tracker",
   "main": "build/start.js",
   "scripts": {
-    "build": "npm install && cd backend && npm install && tsc && cd ../frontend && npm install && npm run build",
+    "build": "d backend && npm install && tsc && cd ../frontend && npm install && npm run build",
     "postinstall": "npm run build"
   },
   "engines": {
