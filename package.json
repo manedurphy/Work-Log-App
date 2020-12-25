@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node backend/build/server/serverStart.js",
     "build": "cd backend && npm install && cd ../frontend && npm install && npm run build",
-    "tsc": "cd backend && tsc",
+    "tsc": "tsc",
     "postinstall": "npm run build",
     "heroku-postbuild": "cd backend && npm run tsc"
   },
