@@ -1,2 +1,9 @@
 import server from './server';
-server.start(5000);
+
+let port = 5000;
+
+if (process.env.NODE_ENV === 'production' && process.env.PORT) {
+  port = parseFloat(process.env.PORT);
+}
+
+server.start(port);
