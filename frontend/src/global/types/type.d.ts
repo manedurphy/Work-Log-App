@@ -1,5 +1,14 @@
 import * as H from 'history';
-import { Tasks, Users, Logs, Alerts, Dates, Productivities } from '../../enums';
+import { hoursWorkedReducer } from '../../context/reducers';
+import {
+  Tasks,
+  Users,
+  Logs,
+  Alerts,
+  Dates,
+  Productivities,
+  Hours,
+} from '../../enums';
 
 /** TASKS  */
 export interface ITask {
@@ -127,6 +136,11 @@ export type AlertAction =
   | { type: Alerts.setAlerts; payload: MessageType }
   | { type: Alerts.removeAlerts; payload: [] };
 
+/** HOURSWORKED */
+export type HoursStateType = number;
+
+export type HoursWorkedAction = { type: Hours.setHours; payload: number };
+
 /** DATE STATE */
 export type DateStateType = { dueDate: string; tasksDue: ITask[] };
 
@@ -189,6 +203,7 @@ export type GlobalStateType = {
   alerts: AlertStateType;
   date: DateStateType;
   productivity: ProductivityStateType;
+  hoursWorked: HoursStateType;
 };
 
 export type GlobalAction =
@@ -197,7 +212,8 @@ export type GlobalAction =
   | LogAction
   | AlertAction
   | DateAction
-  | ProductivityAction;
+  | ProductivityAction
+  | HoursWorkedAction;
 
 export type GlobalReducer = (
   state: GlobalStateType,

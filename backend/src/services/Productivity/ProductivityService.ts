@@ -92,6 +92,22 @@ export class ProductivityService {
     }
   }
 
+  public async getWeeklyHours() {
+    const currentSunday = this.date;
+    const hoursThisWeek =
+      (await Productivity.sum('hours', {
+        where: {
+          weekOf: currentSunday.slice(0, 10),
+          UserId: this.userId,
+          day: {
+            [Op.lte]: this.day,
+          },
+        },
+      })) || 0;
+
+    return hoursThisWeek;
+  }
+
   public async update(): Promise<void> {
     const prodInstance = await Productivity.findOne({
       where: {

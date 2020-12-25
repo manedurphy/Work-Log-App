@@ -6,10 +6,11 @@ import Spinner from './UI/Spinner';
 import { AxiosResponse } from 'axios';
 import { Redirect } from 'react-router-dom';
 import { GlobalContext } from '../context/GlobalState';
-import { Users, Tasks, Logs, Alerts, Productivities } from '../enums';
+import { Users, Tasks, Logs, Alerts, Productivities, Hours } from '../enums';
 import { VerifyType } from '../global/types/type';
 import { Box, makeStyles } from '@material-ui/core';
 import {
+  getHoursWorked,
   getProductivityData,
   getTasks,
   verifyUser,
@@ -67,6 +68,10 @@ const Dashboard: React.FC = (): JSX.Element => {
         dispatch({
           type: Productivities.setProductivity,
           payload: await getProductivityData(),
+        });
+        dispatch({
+          type: Hours.setHours,
+          payload: await getHoursWorked(),
         });
         setLoadingTasks(false);
       } catch (error) {

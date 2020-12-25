@@ -46,4 +46,21 @@ export class MiscServices {
       HTTPResponse.serverError(res);
     }
   }
+
+  @Get('hours')
+  @Middleware(customJwtManager.middleware)
+  private async getHours(req: ISecureRequest, res: Response) {
+    try {
+      const productivityService = new ProductivityService(
+        -1,
+        -1,
+        +req.payload.id
+      );
+
+      const hoursWorkedThisWeek = await productivityService.getWeeklyHours();
+      HTTPResponse.OK(res, { hoursWorkedThisWeek });
+    } catch (error) {
+      HTTPResponse.serverError(res);
+    }
+  }
 }

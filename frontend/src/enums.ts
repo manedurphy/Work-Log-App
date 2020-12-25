@@ -47,3 +47,7 @@ export enum Errors {
 export enum Productivities {
   setProductivity = 'SET_PRODUCTIVITY',
 }
+
+export enum Hours {
+  setHours = 'SET_HOURS',
+}

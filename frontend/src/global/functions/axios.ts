@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import moment from 'moment-timezone';
 import {
+  HoursStateType,
   ILog,
   ILogForm,
   ITask,
@@ -172,4 +173,15 @@ export const getProductivityData = async () => {
   );
 
   return productivity.data;
+};
+
+export const getHoursWorked = async () => {
+  const hoursWorked: AxiosResponse<HoursStateType> = await axios.get(
+    '/api/services/hours',
+    { headers: { Authorization: `Bearer ${getToken()}` } }
+  );
+
+  console.log('HOURS WORKED: ', hoursWorked);
+
+  return hoursWorked.data;
 };
