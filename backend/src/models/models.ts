@@ -2,15 +2,21 @@ import { DataTypes, Sequelize } from 'sequelize';
 import { Productivity } from './Productivity';
 import * as Models from './index';
 
-const sequelize = new Sequelize(
-  'workLogger',
-  process.env.MySQL_USERNAME as string,
-  process.env.MySQL_PASSWORD as string,
-  {
-    host: 'localhost',
-    dialect: 'mysql',
-  }
-);
+let sequelize;
+
+if (process.env.NODE_ENV === 'production' && process.env.DATABASE_URL) {
+  sequelize = new Sequelize(process.env.DATABASE_URL);
+} else {
+  sequelize = new Sequelize(
+    'workLogger',
+    process.env.MySQL_USERNAME as string,
+    process.env.MySQL_PASSWORD as string,
+    {
+      host: 'localhost',
+      dialect: 'mysql',
+    }
+  );
+}
 
 Models.User.init(
   {
