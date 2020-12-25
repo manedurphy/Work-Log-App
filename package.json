@@ -4,7 +4,7 @@
   "description": "Work week time tracker",
   "main": "build/start.js",
   "scripts": {
-    "start": "node backend/build/server/serverStart.js"
+    "start": "cd backend && tsc && cd ../frontend && npm run build && cd .. && node backend/build/server/serverStart.js"
   },
   "keywords": [],
   "author": "",
