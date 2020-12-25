@@ -26,7 +26,11 @@ const TasksDue: React.FC<{
     <Grid item xs={12} md={6} lg={3}>
       <Paper className={props.paper}>
         <h4 className={props.alignText}>Tasks Due</h4>
-        <p>You have {state.date.tasksDue.length} tasks due today</p>
+        {state.date.tasksDue.length ? (
+          <p>You have {state.date.tasksDue.length} tasks due today</p>
+        ) : (
+          <p>No tasks due</p>
+        )}
         <Box className={classes.due}>
           <FormatListBulletedIcon />
         </Box>

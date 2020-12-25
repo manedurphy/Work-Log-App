@@ -4,14 +4,14 @@ import { Response } from 'express';
 import { HTTPResponse } from '../../constants/HTTP/httpResponses';
 import { Logger } from '@overnightjs/logger';
 import { Get, Controller, Middleware, Delete, Put } from '@overnightjs/core';
+import { ProductivityService } from '../../services/Productivity/ProductivityService';
+import { TaskService } from '../../services/Task/TaskService';
+import { LogService } from '../../services/Log/logService';
 import {
   AlertResponse,
   LogHttpResponseMessage,
   TaskHttpResponseMessages,
 } from '../../constants/HTTP/httpEnums';
-import { ProductivityService } from '../../services/Productivity/ProductivityService';
-import { TaskService } from '../../services/Task/TaskService';
-import { LogService } from '../../services/Log/logService';
 
 @Controller('api/log')
 export class LogController {
@@ -75,9 +75,6 @@ export class LogController {
       logService.id = taskLogItem.TaskId;
 
       const log = await logService.getLog();
-
-      console.log('LOG: ', log);
-
       for (let i: number = 0; i < log.length - 1; i++) {
         const productivity = new ProductivityService(
           log[i + 1].hoursRemaining - log[i].hoursRemaining,

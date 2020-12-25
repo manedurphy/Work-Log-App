@@ -57,9 +57,6 @@ export class ProductivityService {
       .tz('America/Los_Angeles')
       .format();
 
-    console.log('LAST SUNDAY: ', lastSunday);
-    console.log('THIS SUNDAY', currentSunday);
-
     const hoursThisWeek =
       (await Productivity.sum('hours', {
         where: {
@@ -84,19 +81,13 @@ export class ProductivityService {
 
     let calc: number;
 
-    console.log('HOURS LAST WEEK', hoursLastWeek);
-    console.log('HOURS THIS WEEK', hoursThisWeek);
-
     if (hoursThisWeek < hoursLastWeek) {
-      console.log('HIT FIRST');
       calc = 100 - (hoursThisWeek / (hoursLastWeek || 1)) * 100;
       return { percent: calc, status: 'decrease', color: 'red' };
     } else if (hoursThisWeek > hoursLastWeek) {
-      console.log('HIT SECOND');
       calc = (hoursThisWeek / (hoursLastWeek || 1)) * 100;
       return { percent: calc, status: 'increase', color: 'green' };
     } else {
-      console.log('HIT THIRD');
       return { percent: 0, status: 'increase', color: 'blue' };
     }
   }
