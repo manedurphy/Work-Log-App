@@ -9,9 +9,6 @@
   "engines": {
     "node": "15.3.0"
   },
-  "dependencies": {
-    "typescript": "^4.0.3"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC"
