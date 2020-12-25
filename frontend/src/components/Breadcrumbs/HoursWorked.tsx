@@ -26,7 +26,11 @@ const Calendar: React.FC<{
     <Grid item xs={12} md={6} lg={3}>
       <Paper className={props.paper}>
         <h4 className={props.alignText}>Hours Worked</h4>
-        <p>13 hours this week</p>
+        {state.hoursWorked ? (
+          <p>{state.hoursWorked} hours this week</p>
+        ) : (
+          <p>No hours logged</p>
+        )}
         <Box className={classes.worked}>
           <CheckBoxIcon />
         </Box>
